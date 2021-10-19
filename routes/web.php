@@ -85,3 +85,14 @@ Route::group(array('domain' => '127.0.0.1'), function () {
     Route::post('/admin/sistema/menu/{id}', 'ControladorMenu@guardar');
 
 });
+
+/* --------------------------------------------- */
+/* CONTROLADOR PATENTES                          */
+/* --------------------------------------------- */
+Route::get('/admin/patentes', 'ControladorPatente@index');
+Route::get('/admin/patente/nuevo', 'ControladorPatente@nuevo');
+Route::post('/admin/patente/nuevo', 'ControladorPatente@guardar');
+Route::get('/admin/patente/cargarGrilla', 'ControladorPatente@cargarGrilla')->name('patente.cargarGrilla');
+Route::get('/admin/patente/eliminar', 'ControladorPatente@eliminar');
+Route::get('/admin/patente/nuevo/{id}', 'ControladorPatente@editar');
+Route::post('/admin/patente/nuevo/{id}', 'ControladorPatente@guardar');
