@@ -4,14 +4,12 @@
  Source Server         : MySQL-TEST
  Source Server Type    : MariaDB
  Source Server Version : 100148
- Source Host           : 192.168.0.211:3310
- Source Schema         : proyecto_plantilla
 
  Target Server Type    : MariaDB
  Target Server Version : 100148
  File Encoding         : 65001
 
- Date: 07/10/2021 20:55:25
+ Date: 29/10/2021 11:21:59
 */
 
 SET NAMES utf8mb4;
@@ -70,14 +68,29 @@ CREATE TABLE `sistema_menu_area`  (
 -- ----------------------------
 -- Records of sistema_menu_area
 -- ----------------------------
+INSERT INTO `sistema_menu_area` VALUES (10, 1);
+INSERT INTO `sistema_menu_area` VALUES (8, 1);
+INSERT INTO `sistema_menu_area` VALUES (17, 1);
 INSERT INTO `sistema_menu_area` VALUES (85, 1);
+INSERT INTO `sistema_menu_area` VALUES (9, 1);
 INSERT INTO `sistema_menu_area` VALUES (137, 1);
+INSERT INTO `sistema_menu_area` VALUES (140, 1);
 INSERT INTO `sistema_menu_area` VALUES (147, 1);
 INSERT INTO `sistema_menu_area` VALUES (157, 1);
 INSERT INTO `sistema_menu_area` VALUES (7, 1);
 INSERT INTO `sistema_menu_area` VALUES (158, 1);
+INSERT INTO `sistema_menu_area` VALUES (168, 1);
+INSERT INTO `sistema_menu_area` VALUES (169, 1);
 INSERT INTO `sistema_menu_area` VALUES (177, 1);
+INSERT INTO `sistema_menu_area` VALUES (200, 1);
+INSERT INTO `sistema_menu_area` VALUES (198, 1);
+INSERT INTO `sistema_menu_area` VALUES (201, 1);
+INSERT INTO `sistema_menu_area` VALUES (202, 1);
 INSERT INTO `sistema_menu_area` VALUES (203, 1);
+INSERT INTO `sistema_menu_area` VALUES (204, 1);
+INSERT INTO `sistema_menu_area` VALUES (206, 1);
+INSERT INTO `sistema_menu_area` VALUES (208, 1);
+INSERT INTO `sistema_menu_area` VALUES (209, 1);
 
 -- ----------------------------
 -- Table structure for sistema_menues
@@ -93,15 +106,30 @@ CREATE TABLE `sistema_menues`  (
   `css` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci NULL DEFAULT '0',
   `activo` tinyint(1) NULL DEFAULT 0,
   PRIMARY KEY (`idmenu`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 223 CHARACTER SET = utf8 COLLATE = utf8_spanish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 210 CHARACTER SET = utf8 COLLATE = utf8_spanish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sistema_menues
 -- ----------------------------
 INSERT INTO `sistema_menues` VALUES (7, '', 100, 'Sistema', 0, NULL, 'fa fa-lock fa-fw', 1);
+INSERT INTO `sistema_menues` VALUES (8, '/admin/grupos', 3, 'Áreas de trabajo', 7, NULL, '', 1);
+INSERT INTO `sistema_menues` VALUES (9, '/admin/usuarios', 1, 'Usuarios', 7, NULL, 'fas fa-users', 1);
+INSERT INTO `sistema_menues` VALUES (10, '/admin/permisos', 2, 'Permisos', 7, NULL, '', 1);
 INSERT INTO `sistema_menues` VALUES (85, '/admin/sistema/menu', 1, 'Menú', 7, NULL, '', 1);
 INSERT INTO `sistema_menues` VALUES (137, '/admin/patentes', 2, 'Patentes', 7, NULL, '', 1);
+INSERT INTO `sistema_menues` VALUES (140, '/admin/cliente/nuevo', 2, 'Nuevo cliente', 168, NULL, '', 1);
 INSERT INTO `sistema_menues` VALUES (158, '/admin', -1, 'Inicio', 0, NULL, 'fas fa-home', 1);
+INSERT INTO `sistema_menues` VALUES (168, NULL, 1, 'Clientes', 0, NULL, 'fas fa-user', 1);
+INSERT INTO `sistema_menues` VALUES (169, '/admin/clientes', 0, 'Listado de clientes', 168, NULL, '', 1);
+INSERT INTO `sistema_menues` VALUES (198, '/admin/productos', 1, 'Listado de Productos', 200, NULL, 'fas fa-hamburger', 1);
+INSERT INTO `sistema_menues` VALUES (200, '', 2, 'Productos', 0, NULL, 'fas fa-hamburger', 1);
+INSERT INTO `sistema_menues` VALUES (201, '/admin/producto/nuevo', 2, 'Nuevo producto', 200, NULL, 'fas fa-hamburger', 1);
+INSERT INTO `sistema_menues` VALUES (202, NULL, 3, 'Pedidos', 0, NULL, 'fas fa-shopping-cart', 1);
+INSERT INTO `sistema_menues` VALUES (203, '/admin/pedidos', 1, 'Listado de pedidos', 202, NULL, NULL, 1);
+INSERT INTO `sistema_menues` VALUES (204, NULL, 4, 'Postulaciones', 0, NULL, 'fas fa-user-plus', 1);
+INSERT INTO `sistema_menues` VALUES (206, '/admin/postulaciones', 1, 'Listado de postulaciones', 204, NULL, NULL, 1);
+INSERT INTO `sistema_menues` VALUES (208, NULL, 6, 'Sucursales', NULL, NULL, 'fas fa-store', 1);
+INSERT INTO `sistema_menues` VALUES (209, '/admin/sucursales', 1, 'Listado de sucursales', 208, NULL, NULL, 1);
 
 -- ----------------------------
 -- Table structure for sistema_patente_familia
@@ -231,7 +259,7 @@ CREATE TABLE `sistema_patentes`  (
   `log_operacion` smallint(6) NOT NULL DEFAULT 0,
   `descripcion` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`idpatente`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 226 CHARACTER SET = utf8 COLLATE = utf8_spanish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 227 CHARACTER SET = utf8 COLLATE = utf8_spanish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sistema_patentes
@@ -295,9 +323,6 @@ INSERT INTO `sistema_patentes` VALUES (186, 'ALTA', 'Nueva consulta', 'CONSULTAA
 INSERT INTO `sistema_patentes` VALUES (187, 'BAJA', 'Listar consultas', 'CONSULTAELIMINAR', 'Consultas', 1, 'Elimina una consulta');
 INSERT INTO `sistema_patentes` VALUES (188, 'EDITAR', 'Listar consultas', 'CONSULTAMODIFICACION', 'Consultas', 1, 'Modifica una consulta');
 INSERT INTO `sistema_patentes` VALUES (209, 'ALTA', 'Patentes', 'PATENTEALTA', 'Patentes', 0, 'Permite ingresar una nueva patente');
-INSERT INTO `sistema_patentes` VALUES (210, 'BAJA', 'sistema', 'CLIENTEELIMINAR', 'clientes', 0, 'Eliminar cliente');
-INSERT INTO `sistema_patentes` VALUES (211, 'CONSULTA', 'Cliente', 'CLIENTECONSULTA', 'Cliente', 1, 'Accede al listado de clientes');
-INSERT INTO `sistema_patentes` VALUES (212, 'BAJA', 'Cliente', 'CLIENTEBAJA', 'Cliente', 1, 'PERMITE ELIMINAR UN CLIENTE');
 INSERT INTO `sistema_patentes` VALUES (214, 'ALTA', 'Pedido', 'PEDIDOALTA', 'Pedido', 1, 'permite ingresar un nuevo pedido');
 INSERT INTO `sistema_patentes` VALUES (215, 'EDITAR', 'Pedido', 'PEDIDOEDITAR', 'Pedido', 1, 'permite editar un pedido existente');
 INSERT INTO `sistema_patentes` VALUES (216, 'BAJA', 'Pedido', 'PEDIDOBAJA', 'Pedido', 1, 'permite eliminar un pedido');
@@ -351,8 +376,6 @@ CREATE TABLE `sistema_usuarios`  (
 -- ----------------------------
 -- Records of sistema_usuarios
 -- ----------------------------
-INSERT INTO `sistema_usuarios` VALUES (1, 'admin', 'Administrador', '', 'lalalejandrahc@gmail.com', '$2y$10$FeFXjlupKImULPF.aVRNueCALrpj55n.fotONLQ1QY3YvlYTelRP2', '2021-10-07 20:43:39', 'current_timestamp()', 1, '2019-09-17 16:05:57', 0, 1, 1);
-INSERT INTO `sistema_usuarios` VALUES (2, 'cliente', 'Juan', 'Perez', 'juanperez@correo.com', '$2y$10$FeFXjlupKImULPF.aVRNueCALrpj55n.fotONLQ1QY3YvlYTelRP2', '2021-09-01 16:57:31', 'current_timestamp()', 0, '2021-09-01 16:57:14', 0, 1, 1);
-INSERT INTO `sistema_usuarios` VALUES (47, '@Josefi', 'Josefina', 'Irala', 'josefinairala@gmail.com', '12345', '2021-09-01 16:57:48', 'current_timestamp()', 0, '2021-09-01 16:57:16', 0, 1, 1);
+INSERT INTO `sistema_usuarios` VALUES (1, 'admin', 'Administrador', '', 'admin@correo.com', '$2y$10$FeFXjlupKImULPF.aVRNueCALrpj55n.fotONLQ1QY3YvlYTelRP2', '2021-10-28 18:51:43', 'current_timestamp()', 1, '2021-09-17 16:05:57', 0, 1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
