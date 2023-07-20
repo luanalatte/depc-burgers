@@ -72,7 +72,7 @@ class ControladorPatente extends Controller
                 return view('sistema.pagina-error', compact('titulo', 'codigo', 'mensaje'));
             } else {
                 $patente = new Patente();
-                return view('sistema.patente-nuevo', compact('patente'));
+                return view('sistema.patente-nuevo', compact('patente', 'titulo'));
             }
         } else {
             return redirect('admin/login');
