@@ -153,12 +153,10 @@ if (isset($msg)) {
             success: function (data) {
                 if (data.err = "0") {
                     msgShow("Registro eliminado exitosamente.", "success");
-                    $("#btnEnviar").hide();
-                    $("#btnEliminar").hide();
-                    $('#mdlEliminar').modal('toggle');
                 } else {
-                    msgShow("Error al eliminar", "success");
+                    msgShow(data.err, "danger");
                 }
+                $('#mdlEliminar').modal('toggle');
             }
         });
     }
