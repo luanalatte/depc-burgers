@@ -13,6 +13,7 @@
 
 /*Route::get('/time' , function(){$date =new Carbon;echo $date ; } );*/
 
+use Illuminate\Support\Facades\Route;
 
 Route::group(array('domain' => '127.0.0.1'), function () {
 
@@ -96,3 +97,69 @@ Route::get('/admin/patente/cargarGrilla', 'ControladorPatente@cargarGrilla')->na
 Route::get('/admin/patente/eliminar', 'ControladorPatente@eliminar');
 Route::get('/admin/patente/nuevo/{id}', 'ControladorPatente@editar');
 Route::post('/admin/patente/nuevo/{id}', 'ControladorPatente@guardar');
+
+/* --------------------------------------------- */
+/* CONTROLADOR CLIENTE                           */
+/* --------------------------------------------- */
+Route::get('/admin/clientes', 'ControladorCliente@index');
+Route::get('/admin/cliente/nuevo', 'ControladorCliente@nuevo');
+Route::post('/admin/cliente/nuevo', 'ControladorCliente@guardar');
+Route::get('/admin/clientes/cargarGrilla', 'ControladorCliente@cargarGrilla')->name('clientes.cargarGrilla');
+Route::get('/admin/cliente/eliminar', 'ControladorCliente@eliminar');
+Route::get('/admin/cliente/nuevo/{id}', 'ControladorCliente@editar');
+Route::post('/admin/cliente/nuevo/{id}', 'ControladorCliente@guardar');
+
+/* --------------------------------------------- */
+/* CONTROLADOR PRODUCTO                          */
+/* --------------------------------------------- */
+Route::get('/admin/productos', 'ControladorProducto@index');
+Route::get('/admin/producto/nuevo', 'ControladorProducto@nuevo');
+Route::post('/admin/producto/nuevo', 'ControladorProducto@guardar');
+Route::get('/admin/productos/cargarGrilla', 'ControladorProducto@cargarGrilla')->name('productos.cargarGrilla');
+Route::get('/admin/producto/eliminar', 'ControladorProducto@eliminar');
+Route::get('/admin/producto/nuevo/{id}', 'ControladorProducto@editar');
+Route::post('/admin/producto/nuevo/{id}', 'ControladorProducto@guardar');
+
+/* --------------------------------------------- */
+/* CONTROLADOR PEDIDO                            */
+/* --------------------------------------------- */
+Route::get('/admin/pedidos', 'ControladorPedido@index');
+Route::get('/admin/pedido/nuevo', 'ControladorPedido@nuevo');
+Route::post('/admin/pedido/nuevo', 'ControladorPedido@guardar');
+Route::get('/admin/pedidos/cargarGrilla', 'ControladorPedido@cargarGrilla')->name('pedidos.cargarGrilla');
+Route::get('/admin/pedido/eliminar', 'ControladorPedido@eliminar');
+Route::get('/admin/pedido/nuevo/{id}', 'ControladorPedido@editar');
+Route::post('/admin/pedido/nuevo/{id}', 'ControladorPedido@guardar');
+
+/* --------------------------------------------- */
+/* CONTROLADOR POSTULACION                       */
+/* --------------------------------------------- */
+Route::get('/admin/postulaciones', 'ControladorPostulacion@index');
+Route::get('/admin/postulacion/nuevo', 'ControladorPostulacion@nuevo');
+Route::post('/admin/postulacion/nuevo', 'ControladorPostulacion@guardar');
+Route::get('/admin/postulaciones/cargarGrilla', 'ControladorPostulacion@cargarGrilla')->name('postulaciones.cargarGrilla');
+Route::get('/admin/postulacion/eliminar', 'ControladorPostulacion@eliminar');
+Route::get('/admin/postulacion/nuevo/{id}', 'ControladorPostulacion@editar');
+Route::post('/admin/postulacion/nuevo/{id}', 'ControladorPostulacion@guardar');
+
+/* --------------------------------------------- */
+/* CONTROLADOR SUCURSAL                          */
+/* --------------------------------------------- */
+Route::get('/admin/sucursales', 'ControladorSucursal@index');
+Route::get('/admin/sucursal/nuevo', 'ControladorSucursal@nuevo');
+Route::post('/admin/sucursal/nuevo', 'ControladorSucursal@guardar');
+Route::get('/admin/sucursales/cargarGrilla', 'ControladorSucursal@cargarGrilla')->name('sucursales.cargarGrilla');
+Route::get('/admin/sucursal/eliminar', 'ControladorSucursal@eliminar');
+Route::get('/admin/sucursal/nuevo/{id}', 'ControladorSucursal@editar');
+Route::post('/admin/sucursal/nuevo/{id}', 'ControladorSucursal@guardar');
+
+/* --------------------------------------------- */
+/* CONTROLADOR CATEGORIA                         */
+/* --------------------------------------------- */
+Route::get('/admin/categorias', 'ControladorCategoria@index');
+Route::get('/admin/categoria/nuevo', 'ControladorCategoria@nuevo');
+Route::post('/admin/categoria/nuevo', 'ControladorCategoria@guardar');
+Route::get('/admin/categorias/cargarGrilla', 'ControladorCategoria@cargarGrilla')->name('categorias.cargarGrilla');
+Route::get('/admin/categoria/eliminar', 'ControladorCategoria@eliminar');
+Route::get('/admin/categoria/nuevo/{id}', 'ControladorCategoria@editar');
+Route::post('/admin/categoria/nuevo/{id}', 'ControladorCategoria@guardar');
