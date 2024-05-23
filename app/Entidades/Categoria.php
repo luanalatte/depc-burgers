@@ -4,6 +4,7 @@ namespace App\Entidades;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Categoria extends Model
 {
@@ -15,6 +16,14 @@ class Categoria extends Model
     ];
 
     // protected $hidden = [];
+
+    public function cargarDesdeRequest(Request $request)
+    {
+        $this->idcategoria = $request->input('id') != "0" ? $request->input('id') : $this->idcategoria;
+
+        if ($nombre = $request->input('txtNombre'))
+            $this->nombre = trim($nombre);
+    }
 
     public function insertar() {
         $sql = "INSERT INTO categorias (
@@ -67,6 +76,32 @@ class Categoria extends Model
                   idcategoria,
                   nombre
                 FROM categorias ORDER BY nombre";
+
+        $lstRetorno = [];
+        foreach (DB::select($sql) as $fila) {
+            $lstRetorno[] = self::construirDesdeFila($fila);
+        }
+
+        return $lstRetorno;
+    }
+
+    public static function contarRegistros()
+    {
+        $sql = "SELECT COUNT(*) AS total FROM categorias";
+
+        if ($fila = DB::selectOne($sql)) {
+            return $fila->total;
+        }
+
+        return 0;
+    }
+
+    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
+    {
+        $sql = "SELECT
+                  idcategoria,
+                  nombre
+                FROM categorias ORDER BY nombre LIMIT $inicio, $cantidad";
 
         $lstRetorno = [];
         foreach (DB::select($sql) as $fila) {
