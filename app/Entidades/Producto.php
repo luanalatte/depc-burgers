@@ -4,6 +4,9 @@ namespace App\Entidades;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+
+require_once app_path() . "/start/funciones_generales.php";
 
 class Producto extends Model
 {
@@ -11,21 +14,39 @@ class Producto extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'idproducto', 'nombre', 'cantidad', 'precio', 'descripcion', 'imagen'
+        'idproducto', 'fk_idcategoria', 'nombre', 'cantidad', 'precio', 'descripcion', 'imagen'
     ];
+
+    public $categoria;
 
     // protected $hidden = [];
 
+    public function cargarDesdeRequest(Request $request)
+    {
+        $this->idproducto = $request->input('id') != "0" ? $request->input('id') : $this->idproducto;
+
+        $this->fk_idcategoria = $request->input('lstCategoria');
+
+        $this->nombre = trimIfString($request->input('txtNombre'));
+        $this->cantidad = trimIfString($request->input('txtCantidad'));
+        $this->precio = trimIfString($request->input('txtPrecio'));
+        $this->descripcion = trimIfString($request->input('txtDescripcion'));
+
+        // TODO: Imagen
+        // $this->imagen = trimIfString($request->input('txtImagen'));
+    }
+
     public function insertar() {
         $sql = "INSERT INTO productos (
+                  fk_idcategoria,
                   nombre,
                   cantidad,
                   precio,
                   descripcion,
                   imagen
-                ) VALUES (?, ?, ?, ?, ?)";
+                ) VALUES (?, ?, ?, ?, ?, ?)";
 
-        DB::insert($sql, [$this->nombre, $this->cantidad, $this->precio, $this->descripcion, $this->imagen]);
+        DB::insert($sql, [$this->fk_idcategoria, $this->nombre, $this->cantidad, $this->precio, $this->descripcion, $this->imagen]);
         $this->idproducto = DB::getPdo()->lastInsertId();
 
         return $this->idproducto;
@@ -33,6 +54,7 @@ class Producto extends Model
 
     public function actualizar() {
         $sql = "UPDATE productos SET
+                  fk_idcategoria = ?,
                   nombre = ?,
                   cantidad = ?,
                   precio = ?,
@@ -41,6 +63,7 @@ class Producto extends Model
                 WHERE idproducto = ?";
 
         DB::update($sql, [
+            $this->fk_idcategoria,
             $this->nombre,
             $this->cantidad,
             $this->precio,
@@ -61,11 +84,14 @@ class Producto extends Model
 
         $producto = new Producto();
         $producto->idproducto = $fila->idproducto;
+        $producto->fk_idcategoria = $fila->fk_idcategoria;
         $producto->nombre = $fila->nombre;
         $producto->cantidad = $fila->cantidad;
         $producto->precio = $fila->precio;
         $producto->descripcion = $fila->descripcion;
         $producto->imagen = $fila->imagen;
+
+        $producto->categoria = $fila->categoria ?? null;
 
         return $producto;
     }
@@ -74,6 +100,7 @@ class Producto extends Model
     {
         $sql = "SELECT
                   idproducto,
+                  fk_idcategoria,
                   nombre,
                   cantidad,
                   precio,
@@ -88,12 +115,47 @@ class Producto extends Model
     {
         $sql = "SELECT
                   idproducto,
+                  fk_idcategoria,
                   nombre,
                   cantidad,
                   precio,
                   descripcion,
                   imagen
                 FROM productos ORDER BY nombre";
+
+        $lstRetorno = [];
+        foreach (DB::select($sql) as $fila) {
+            $lstRetorno[] = self::construirDesdeFila($fila);
+        }
+
+        return $lstRetorno;
+    }
+
+    public static function contarRegistros()
+    {
+        $sql = "SELECT COUNT(*) AS total FROM productos";
+
+        if ($fila = DB::selectOne($sql)) {
+            return $fila->total;
+        }
+
+        return 0;
+    }
+
+    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
+    {
+        $sql = "SELECT
+                  A.idproducto,
+                  A.fk_idcategoria,
+                  A.nombre,
+                  A.cantidad,
+                  A.precio,
+                  A.descripcion,
+                  A.imagen,
+                  B.nombre AS categoria
+                FROM productos A
+                INNER JOIN categorias B ON A.fk_idcategoria = B.idcategoria
+                ORDER BY A.idproducto LIMIT $inicio, $cantidad";
 
         $lstRetorno = [];
         foreach (DB::select($sql) as $fila) {
