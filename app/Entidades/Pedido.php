@@ -4,6 +4,9 @@ namespace App\Entidades;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+
+require_once app_path() . "/start/funciones_generales.php";
 
 class Pedido extends Model
 {
@@ -14,7 +17,24 @@ class Pedido extends Model
         'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'comentarios'
     ];
 
+    public $cliente;
+    public $sucursal;
+    public $nombre;
+
     // protected $hidden = [];
+
+    public function cargarDesdeRequest(Request $request)
+    {
+        $this->idpedido = $request->input('id') != "0" ? $request->input('id') : $this->idpedido;
+
+        $this->fk_idcliente = $request->input('lstCliente');
+        $this->fk_idsucursal = $request->input('lstSucursal');
+        $this->fk_idestado = $request->input('lstEstado');
+
+        $this->fecha = trimIfString($request->input('txtFecha'));
+        $this->total = trimIfString($request->input('txtTotal'));
+        $this->comentarios = trimIfString($request->input('txtComentarios'));
+    }
 
     public function insertar() {
         $sql = "INSERT INTO pedidos (
@@ -71,6 +91,10 @@ class Pedido extends Model
         $pedido->total = $fila->total;
         $pedido->comentarios = $fila->comentarios;
 
+        $pedido->cliente = $fila->cliente ?? null;
+        $pedido->sucursal = $fila->sucursal ?? null;
+        $pedido->estado = $fila->estado ?? null;
+
         return $pedido;
     }
 
@@ -100,6 +124,44 @@ class Pedido extends Model
                   total,
                   comentarios
                 FROM pedidos ORDER BY fk_idcliente";
+
+        $lstRetorno = [];
+        foreach (DB::select($sql) as $fila) {
+            $lstRetorno[] = self::construirDesdeFila($fila);
+        }
+
+        return $lstRetorno;
+    }
+
+    public static function contarRegistros()
+    {
+        $sql = "SELECT COUNT(*) AS total FROM pedidos";
+
+        if ($fila = DB::selectOne($sql)) {
+            return $fila->total;
+        }
+
+        return 0;
+    }
+
+    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
+    {
+        $sql = "SELECT
+                  A.idpedido,
+                  A.fk_idcliente,
+                  A.fk_idsucursal,
+                  A.fk_idestado,
+                  A.fecha,
+                  A.total,
+                  A.comentarios,
+                  CONCAT(B.nombre, ' ', B.apellido) AS cliente,
+                  C.nombre AS sucursal,
+                  D.nombre AS estado
+                FROM pedidos A
+                INNER JOIN clientes B ON A.fk_idcliente = B.idcliente
+                INNER JOIN sucursales C ON A.fk_idsucursal = C.idsucursal
+                INNER JOIN estados D ON A.fk_idestado = D.idestado
+                ORDER BY A.fecha DESC LIMIT $inicio, $cantidad";
 
         $lstRetorno = [];
         foreach (DB::select($sql) as $fila) {
