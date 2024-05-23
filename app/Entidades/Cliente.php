@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
+require app_path() . "/start/funciones_generales.php";
+
 class Cliente extends Model
 {
     protected $table = 'clientes';
@@ -21,23 +23,15 @@ class Cliente extends Model
     {
         $this->idcliente = $request->input('id') != "0" ? $request->input('id') : $this->idcliente;
 
-        if ($nombre = $request->input('txtNombre'))
-            $this->nombre = trim($nombre);
-
-        if ($apellido = $request->input('txtApellido'))
-            $this->apellido = trim($apellido);
-
-        if ($dni = $request->input('txtDNI'))
-            $this->dni = trim($dni);
-
-        if ($email = $request->input('txtEmail'))
-            $this->email = trim($email);
+        $this->nombre = trimIfString($request->input('txtNombre'));
+        $this->apellido = trimIfString($request->input('txtApellido'));
+        $this->dni = trimIfString($request->input('txtDNI'));
+        $this->email = trimIfString($request->input('txtEmail'));
 
         if ($clave = $request->input('txtClave'))
-            $this->clave = password_hash(trim($clave), PASSWORD_DEFAULT);
+            $this->clave = password_hash(trimIfString($clave), PASSWORD_DEFAULT);
 
-        if ($telefono = $request->input('txtTelefono'))
-            $this->telefono = trim($telefono);
+        $this->telefono = trimIfString($request->input('txtTelefono'));
     }
 
     public function insertar() {

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
+require app_path() . "/start/funciones_generales.php";
+
 class Categoria extends Model
 {
     protected $table = 'categorias';
@@ -21,8 +23,7 @@ class Categoria extends Model
     {
         $this->idcategoria = $request->input('id') != "0" ? $request->input('id') : $this->idcategoria;
 
-        if ($nombre = $request->input('txtNombre'))
-            $this->nombre = trim($nombre);
+        $this->nombre = trimIfString($request->input('txtNombre'));
     }
 
     public function insertar() {

@@ -39,3 +39,7 @@ function fescape_string($vcparam)
     }
     return $targetString;
 }
+
+function trimIfString($value) {
+    return is_string($value) ? trim($value) : $value;
+}
