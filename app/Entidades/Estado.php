@@ -66,7 +66,7 @@ class Estado extends Model
         $sql = "SELECT
                   idestado,
                   nombre
-                FROM estados ORDER BY nombre";
+                FROM estados ORDER BY idestado";
 
         $lstRetorno = [];
         foreach (DB::select($sql) as $fila) {
