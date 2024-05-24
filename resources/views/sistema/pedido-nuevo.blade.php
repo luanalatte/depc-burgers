@@ -28,8 +28,8 @@ function fsalir(){
 </script>
 @endsection
 @section('contenido')
+<div id="msg"></div>
 @if(isset($msg))
-    <div id="msg"></div>
     <script>msgShow('{{ $msg["MSG"] }}', '{{ $msg["ESTADO"] }}')</script>
 @endif
 <div class="panel-body">
@@ -113,7 +113,7 @@ function eliminar() {
         async: true,
         dataType: "json",
         success: function (data) {
-            if (data.err = "0") {
+            if (data.err == "0") {
                 msgShow("Registro eliminado exitosamente.", "success");
             } else {
                 msgShow(data.err, "danger");

@@ -153,7 +153,6 @@ class ControladorPedido extends Controller
             $aResultado["err"] = "Error en la operación. No se pudo eliminar el pedido.";
         }
 
-        //FIXME: No redirecciona ni muestra el mensaje
         echo json_encode($aResultado);
     }
 

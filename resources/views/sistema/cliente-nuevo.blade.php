@@ -28,8 +28,8 @@ function fsalir(){
 </script>
 @endsection
 @section('contenido')
+<div id="msg"></div>
 @if(isset($msg))
-    <div id="msg"></div>
     <script>msgShow('{{ $msg["MSG"] }}', '{{ $msg["ESTADO"] }}')</script>
 @endif
 <div class="panel-body">
@@ -53,17 +53,14 @@ function fsalir(){
                 <label>Email: *</label>
                 <input type="email" id="txtEmail" name="txtEmail" class="form-control" value="{{ $cliente->email }}" required>
             </div>
+            @if(!$globalId)
             <div class="form-group col-lg-6">
-                @if($globalId)
-                <label>Clave:</label>
-                <input type="password" id="txtClave" name="txtClave" class="form-control" value="" placeholder="Reingrese una clave para editar la actual.">
-                @else
                 <label>Clave: *</label>
                 <input type="password" id="txtClave" name="txtClave" class="form-control" value="" required>
-                @endif
             </div>
+            @endif
             <div class="form-group col-lg-6">
-                <label>Telefono:</label>
+                <label>Teléfono:</label>
                 <input type="tel" id="txtTelefono" name="txtTelefono" class="form-control" value="{{ $cliente->telefono }}">
             </div>
         </div>
@@ -92,7 +89,7 @@ function eliminar() {
         async: true,
         dataType: "json",
         success: function (data) {
-            if (data.err = "0") {
+            if (data.err == "0") {
                 msgShow("Registro eliminado exitosamente.", "success");
             } else {
                 msgShow(data.err, "danger");

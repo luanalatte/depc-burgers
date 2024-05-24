@@ -9,7 +9,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/admin/home">Inicio</a></li>
-    <li class="breadcrumb-item"><a href="/admin/categorias">Categorias</a></li>
+    <li class="breadcrumb-item"><a href="/admin/categorias">Categorías</a></li>
     <li class="breadcrumb-item active">Modificar</li>
 </ol>
 <ol class="toolbar">
@@ -28,8 +28,8 @@ function fsalir(){
 </script>
 @endsection
 @section('contenido')
+<div id="msg"></div>
 @if(isset($msg))
-    <div id="msg"></div>
     <script>msgShow('{{ $msg["MSG"] }}', '{{ $msg["ESTADO"] }}')</script>
 @endif
 <div class="panel-body">
@@ -67,7 +67,7 @@ function eliminar() {
         async: true,
         dataType: "json",
         success: function (data) {
-            if (data.err = "0") {
+            if (data.err == "0") {
                 msgShow("Registro eliminado exitosamente.", "success");
             } else {
                 msgShow(data.err, "danger");

@@ -141,7 +141,6 @@ class ControladorCliente extends Controller
             $aResultado["err"] = "Error en la operación. No se pudo eliminar el cliente.";
         }
 
-        //FIXME: No redirecciona ni muestra el mensaje
         echo json_encode($aResultado);
     }
 

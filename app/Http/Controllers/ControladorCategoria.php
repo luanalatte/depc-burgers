@@ -139,7 +139,6 @@ class ControladorCategoria extends Controller
             $aResultado["err"] = "Error en la operación. No se pudo eliminar la categoría de productos.";
         }
 
-        //FIXME: No redirecciona ni muestra el mensaje
         echo json_encode($aResultado);
     }
 
