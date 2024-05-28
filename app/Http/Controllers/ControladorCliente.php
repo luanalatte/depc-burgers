@@ -76,35 +76,33 @@ class ControladorCliente extends Controller
         $entidad->cargarDesdeRequest($request);
 
         try {
-            $bEditando = $_POST["id"] > 0;
-
-            if (empty($entidad->nombre) || empty($entidad->apellido) || empty($entidad->dni) || empty($entidad->email) || (!$bEditando && empty($entidad->clave))) {
-                $msg["ESTADO"] = MSG_ERROR;
-                $msg["MSG"] = "Ingrese todos los datos requeridos.";
-            } else {
-                if ($bEditando) {
-                    if (!Patente::autorizarOperacion($codigo = "CLIENTEEDITAR")) {
-                        $mensaje = "No tiene pemisos para la operación.";
-                        return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
-                    }
-
-                    $entidad->actualizar();
-                } else {
-                    if (!Patente::autorizarOperacion($codigo = "CLIENTEALTA")) {
-                        $mensaje = "No tiene pemisos para la operación.";
-                        return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
-                    }
-
-                    $entidad->insertar();
+            if ($_POST["id"] > 0) {
+                if (!Patente::autorizarOperacion($codigo = "CLIENTEEDITAR")) {
+                    $mensaje = "No tiene pemisos para la operación.";
+                    return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
                 }
 
-                $_POST["id"] = $entidad->idcliente;
+                $entidad->actualizar();
+            } else {
+                if (!Patente::autorizarOperacion($codigo = "CLIENTEALTA")) {
+                    $mensaje = "No tiene pemisos para la operación.";
+                    return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+                }
 
-                $msg["ESTADO"] = MSG_SUCCESS;
-                $msg["MSG"] = OKINSERT;
-
-                return view("sistema.cliente-listar", compact("titulo", "msg"));
+                if (empty($entidad->nombre) || empty($entidad->apellido) || empty($entidad->dni) || empty($entidad->email) || empty($entidad->clave)) {
+                    $msg["ESTADO"] = MSG_ERROR;
+                    $msg["MSG"] = "Ingrese todos los datos requeridos.";
+                } else {
+                    $entidad->insertar();
+                }
             }
+
+            $_POST["id"] = $entidad->idcliente;
+
+            $msg["ESTADO"] = MSG_SUCCESS;
+            $msg["MSG"] = OKINSERT;
+
+            return view("sistema.cliente-listar", compact("titulo", "msg"));
         } catch (Exception $e) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = ERRORINSERT;

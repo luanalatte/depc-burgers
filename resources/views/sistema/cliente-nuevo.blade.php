@@ -37,6 +37,7 @@ function fsalir(){
         <div class="row">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
             <input type="hidden" id="id" name="id" class="form-control" value="{{$globalId}}" required>
+            @if(!$globalId)
             <div class="form-group col-lg-6">
                 <label>Nombre: *</label>
                 <input type="text" id="txtNombre" name="txtNombre" class="form-control" value="{{ $cliente->nombre }}" required>
@@ -53,16 +54,36 @@ function fsalir(){
                 <label>Email: *</label>
                 <input type="email" id="txtEmail" name="txtEmail" class="form-control" value="{{ $cliente->email }}" required>
             </div>
-            @if(!$globalId)
             <div class="form-group col-lg-6">
                 <label>Clave: *</label>
                 <input type="password" id="txtClave" name="txtClave" class="form-control" value="" required>
             </div>
-            @endif
             <div class="form-group col-lg-6">
                 <label>Teléfono:</label>
                 <input type="tel" id="txtTelefono" name="txtTelefono" class="form-control" value="{{ $cliente->telefono }}">
             </div>
+            @else
+            <div class="form-group col-lg-6">
+                <label>Nombre:</label>
+                <input type="text" id="txtNombre" class="form-control" value="{{ $cliente->nombre }}" readonly>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Apellido:</label>
+                <input type="text" id="txtApellido" class="form-control" value="{{ $cliente->apellido }}" readonly>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>DNI:</label>
+                <input type="text" id="txtDNI" class="form-control" value="{{ $cliente->dni }}" readonly>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Email:</label>
+                <input type="email" id="txtEmail" class="form-control" value="{{ $cliente->email }}" readonly>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Teléfono:</label>
+                <input type="tel" id="txtTelefono" class="form-control" value="{{ $cliente->telefono }}" readonly>
+            </div>
+            @endif
         </div>
     </form>
 </div>

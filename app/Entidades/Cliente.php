@@ -23,15 +23,50 @@ class Cliente extends Model
     {
         $this->idcliente = $request->input('id') != "0" ? $request->input('id') : $this->idcliente;
 
-        $this->nombre = trimIfString($request->input('txtNombre'));
-        $this->apellido = trimIfString($request->input('txtApellido'));
-        $this->dni = trimIfString($request->input('txtDNI'));
-        $this->email = trimIfString($request->input('txtEmail'));
+        // No nulleables
+        if ($request->filled('txtNombre'))
+            $this->nombre = trimIfString($request->input('txtNombre'));
 
-        if ($clave = $request->input('txtClave'))
-            $this->clave = password_hash(trimIfString($clave), PASSWORD_DEFAULT);
+        if ($request->filled('txtApellido'))
+            $this->apellido = trimIfString($request->input('txtApellido'));
 
-        $this->telefono = trimIfString($request->input('txtTelefono'));
+        if ($request->filled('txtDNI'))
+            $this->dni = trimIfString($request->input('txtDNI'));
+
+        if ($request->filled('txtEmail'))
+            $this->email = trimIfString($request->input('txtEmail'));
+
+        if (is_null($this->idcliente)) {
+            // Creando cliente, nueva clave
+            $this->clave = trimIfString($request->input('txtClave'));
+        } elseif ($request->filled('txtClave') && $request->filled('txtClaveAntigua')) {
+            // Editando cliente, cambiando clave
+            $claveNueva = trimIfString($request->input('txtClave'));
+            $claveAntigua = trimIfString($request->input('txtClaveAntigua'));
+
+            if (is_string($claveNueva) && is_string($claveAntigua) && !is_null($claveDB = $this->cargarClave()) && password_verify($claveAntigua, $claveDB)) {
+                $this->clave = password_hash($claveNueva, PASSWORD_DEFAULT);
+            }
+        }
+
+        // Nulleables
+        if ($request->has('txtTelefono'))
+            $this->telefono = trimIfString($request->input('txtTelefono'));
+    }
+
+    public function cargarClave()
+    {
+        if (!isset($this->idcliente))
+            return null;
+
+        $sql = "SELECT clave FROM clientes WHERE idcliente = ?";
+
+        if ($fila = DB::selectOne($sql, [$this->idcliente])) {
+            $this->clave = $fila->clave;
+            return $this->clave;
+        }
+
+        return null;
     }
 
     public function insertar() {
@@ -51,44 +86,48 @@ class Cliente extends Model
     }
 
     public function actualizar() {
-        // TODO: Mejorar, definir los campos a actualizar dinamicamente.
-        if ($this->clave) {
-            $sql = "UPDATE clientes SET
-                      nombre = ?,
-                      apellido = ?,
-                      dni = ?,
-                      email = ?,
-                      clave = ?,
-                      telefono = ?
-                    WHERE idcliente = ?";
+        $aCampos = [];
+        $aValores = [];
 
-            DB::update($sql, [
-                $this->nombre,
-                $this->apellido,
-                $this->dni,
-                $this->email,
-                $this->clave,
-                $this->telefono,
-                $this->idcliente
-            ]);
-        } else {
-            $sql = "UPDATE clientes SET
-                      nombre = ?,
-                      apellido = ?,
-                      dni = ?,
-                      email = ?,
-                      telefono = ?
-                    WHERE idcliente = ?";
-    
-            DB::update($sql, [
-                $this->nombre,
-                $this->apellido,
-                $this->dni,
-                $this->email,
-                $this->telefono,
-                $this->idcliente
-            ]);
+        if (isset($this->nombre)) {
+            $aCampos[] = "nombre = ?";
+            $aValores[] = $this->nombre;
         }
+
+        if (isset($this->apellido)) {
+            $aCampos[] = "apellido = ?";
+            $aValores[] = $this->apellido;
+        }
+
+        if (isset($this->dni)) {
+            $aCampos[] = "dni = ?";
+            $aValores[] = $this->dni;
+        }
+
+        if (isset($this->email)) {
+            $aCampos[] = "email = ?";
+            $aValores[] = $this->email;
+        }
+
+        if (isset($this->clave)) {
+            $aCampos[] = "clave = ?";
+            $aValores[] = $this->clave;
+        }
+
+        if (isset($this->telefono)) {
+            $aCampos[] = "telefono = ?";
+            $aValores[] = $this->telefono;
+        }
+
+        if (empty($aCampos)) {
+            return;
+        }
+
+        $aValores[] = $this->idcliente;
+
+        $sql = "UPDATE clientes SET " . implode(", ", $aCampos) . " WHERE idcliente = ?";
+
+        DB::update($sql, $aValores);
     }
 
     public function eliminar() {
