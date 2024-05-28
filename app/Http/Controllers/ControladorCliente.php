@@ -135,8 +135,10 @@ class ControladorCliente extends Controller
             $cliente->eliminar();
 
             $aResultado["err"] = EXIT_SUCCESS;
+            $aResultado["msg"] = "Cliente eliminado exitosamente.";
         } catch (Exception $e) {
-            $aResultado["err"] = "Error en la operación. No se pudo eliminar el cliente.";
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No se pudo eliminar el cliente.";
         }
 
         echo json_encode($aResultado);

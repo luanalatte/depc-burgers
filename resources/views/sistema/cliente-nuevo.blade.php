@@ -21,11 +21,6 @@
     @endif
     <li class="btn-item"><a title="Salir" href="#" class="fa fa-arrow-circle-left" aria-hidden="true" onclick="javascript: $('#modalSalir').modal('toggle');"><span>Salir</span></a></li>
 </ol>
-<script>
-function fsalir(){
-    location.href ="/admin/clientes";
-}
-</script>
 @endsection
 @section('contenido')
 <div id="msg"></div>
@@ -87,38 +82,5 @@ function fsalir(){
         </div>
     </form>
 </div>
-<script>
-
-$("#form1").validate();
-
-function guardar() {
-    if ($("#form1").valid()) {
-        modificado = false;
-        form1.submit();
-    } else {
-        $("#modalGuardar").modal('toggle');
-        msgShow("Corrija los errores e intente nuevamente.", "danger");
-        return false;
-    }
-}
-
-function eliminar() {
-    $.ajax({
-        type: "GET",
-        url: "{{ asset('admin/cliente/eliminar') }}",
-        data: { id:globalId },
-        async: true,
-        dataType: "json",
-        success: function (data) {
-            if (data.err == "0") {
-                msgShow("Registro eliminado exitosamente.", "success");
-            } else {
-                msgShow(data.err, "danger");
-            }
-            $('#mdlEliminar').modal('toggle');
-        }
-    });
-}
-
-</script>
+@include('sistema.funciones-form', ['formUrl'=> 'admin/cliente', 'indexUrl'=> '/admin/clientes'])
 @endsection

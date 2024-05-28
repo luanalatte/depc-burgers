@@ -135,8 +135,10 @@ class ControladorSucursal extends Controller
             $sucursal->eliminar();
 
             $aResultado["err"] = EXIT_SUCCESS;
+            $aResultado["msg"] = "Sucursal eliminada exitosamente.";
         } catch (Exception $e) {
-            $aResultado["err"] = "Error en la operación. No se pudo eliminar la sucursales.";
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No se pudo eliminar la sucursal.";
         }
 
         echo json_encode($aResultado);

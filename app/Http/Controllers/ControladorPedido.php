@@ -145,8 +145,10 @@ class ControladorPedido extends Controller
             $pedido->eliminar();
 
             $aResultado["err"] = EXIT_SUCCESS;
+            $aResultado["msg"] = "Pedido eliminado exitosamente.";
         } catch (Exception $e) {
-            $aResultado["err"] = "Error en la operación. No se pudo eliminar el pedido.";
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No se pudo eliminar el pedido.";
         }
 
         echo json_encode($aResultado);

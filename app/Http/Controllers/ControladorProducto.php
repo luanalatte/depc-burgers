@@ -136,13 +136,16 @@ class ControladorProducto extends Controller
         }
 
         try {
+            // TODO: No eliminar productos que tengan pedidos asociados.
             $producto = new Producto();
             $producto->idproducto = $request->id;
             $producto->eliminar();
 
             $aResultado["err"] = EXIT_SUCCESS;
+            $aResultadp["msg"] = "Producto eliminado exitosamente.";
         } catch (Exception $e) {
-            $aResultado["err"] = "Error en la operación. No se pudo eliminar el producto.";
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No se pudo eliminar el producto.";
         }
 
         echo json_encode($aResultado);
