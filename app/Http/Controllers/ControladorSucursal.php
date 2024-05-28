@@ -153,7 +153,7 @@ class ControladorSucursal extends Controller
         $data = [];
         foreach ($aSlice as $sucursal) {
             $row = [];
-            $row[] = '<a href="/admin/sucursal/nuevo/' . $sucursal->idsucursal . '">' . $sucursal->nombre . '</a>';
+            $row[] = '<a href="/admin/sucursal/' . $sucursal->idsucursal . '">' . $sucursal->nombre . '</a>';
             $row[] = $sucursal->direccion;
             $row[] = $sucursal->telefono;
 

@@ -159,7 +159,7 @@ class ControladorProducto extends Controller
         $data = [];
         foreach ($aSlice as $producto) {
             $row = [];
-            $row[] = '<a href="/admin/producto/nuevo/' . $producto->idproducto . '">' . $producto->nombre . '</a>';
+            $row[] = '<a href="/admin/producto/' . $producto->idproducto . '">' . $producto->nombre . '</a>';
             $row[] = $producto->categoria;
             $row[] = $producto->cantidad;
             $row[] = $producto->precio;

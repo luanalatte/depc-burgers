@@ -153,7 +153,7 @@ class ControladorCategoria extends Controller
         $data = [];
         foreach ($aSlice as $categoria) {
             $row = [
-                '<a href="/admin/categoria/nuevo/' . $categoria->idcategoria . '">' . $categoria->nombre . '</a>'
+                '<a href="/admin/categoria/' . $categoria->idcategoria . '">' . $categoria->nombre . '</a>'
             ];
             $data[] = $row;
         }

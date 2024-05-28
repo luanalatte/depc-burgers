@@ -153,7 +153,7 @@ class ControladorCliente extends Controller
         $data = [];
         foreach ($aSlice as $cliente) {
             $row = [];
-            $row[] = '<a href="/admin/cliente/nuevo/' . $cliente->idcliente . '">' . $cliente->nombre . '</a>';
+            $row[] = '<a href="/admin/cliente/' . $cliente->idcliente . '">' . $cliente->nombre . '</a>';
             $row[] = $cliente->apellido;
             $row[] = $cliente->dni;
             $row[] = $cliente->email;

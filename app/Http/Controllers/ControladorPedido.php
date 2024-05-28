@@ -163,7 +163,7 @@ class ControladorPedido extends Controller
         $data = [];
         foreach ($aSlice as $pedido) {
             $row = [];
-            $row[] = '<a href="/admin/pedido/nuevo/' . $pedido->idpedido . '" class="btn btn-secondary">' . '<i class="fas fa-eye">' . '</a>';
+            $row[] = '<a href="/admin/pedido/' . $pedido->idpedido . '" class="btn btn-secondary">' . '<i class="fas fa-eye">' . '</a>';
             $row[] = $pedido->idpedido;
             $row[] = $pedido->cliente;
             $row[] = $pedido->sucursal;

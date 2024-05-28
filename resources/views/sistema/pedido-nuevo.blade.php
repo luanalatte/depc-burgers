@@ -91,13 +91,13 @@ function fsalir(){
             @else
             <div class="form-group col-lg-6">
                 <label>Cliente:</label>
-                <a href="/admin/cliente/nuevo/{{ $pedido->fk_idcliente }}">
+                <a href="/admin/cliente/{{ $pedido->fk_idcliente }}">
                     <input type="text" id='txtCliente' class="form-control" value="{{ $pedido->cliente }}" readonly>
                 </a>
             </div>
             <div class="form-group col-lg-6">
                 <label>Sucursal:</label>
-                <a href="/admin/sucursal/nuevo/{{ $pedido->fk_idsucursal }}">
+                <a href="/admin/sucursal/{{ $pedido->fk_idsucursal }}">
                     <input type="text" id='txtSucursal' class="form-control" value="{{ $pedido->sucursal }}" readonly>
                 </a>
             </div>
