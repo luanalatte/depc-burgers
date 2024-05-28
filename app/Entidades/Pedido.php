@@ -27,13 +27,23 @@ class Pedido extends Model
     {
         $this->idpedido = $request->input('id') != "0" ? $request->input('id') : $this->idpedido;
 
-        $this->fk_idcliente = $request->input('lstCliente');
-        $this->fk_idsucursal = $request->input('lstSucursal');
-        $this->fk_idestado = $request->input('lstEstado');
+        if ($request->filled('lstCliente'))
+            $this->fk_idcliente = $request->input('lstCliente');
 
-        $this->fecha = trimIfString($request->input('txtFecha'));
-        $this->total = trimIfString($request->input('txtTotal'));
-        $this->comentarios = trimIfString($request->input('txtComentarios'));
+        if ($request->filled('lstSucursal'))
+            $this->fk_idsucursal = $request->input('lstSucursal');
+
+        if ($request->filled('lstEstado'))
+            $this->fk_idestado = $request->input('lstEstado');
+
+        if ($request->filled('txtFecha'))
+            $this->fecha = trimIfString($request->input('txtFecha'));
+
+        if ($request->filled('txtTotal'))
+            $this->total = trimIfString($request->input('txtTotal'));
+        
+        if ($request->has('txtComentarios'))
+            $this->comentarios = trimIfString($request->input('txtComentarios'));
     }
 
     public function insertar() {
@@ -53,24 +63,48 @@ class Pedido extends Model
     }
 
     public function actualizar() {
-        $sql = "UPDATE pedidos SET
-                  fk_idcliente = ?,
-                  fk_idsucursal = ?,
-                  fk_idestado = ?,
-                  fecha = ?,
-                  total = ?,
-                  comentarios = ?
-                WHERE idpedido = ?";
+        $aCampos = [];
+        $aValores = [];
 
-        DB::update($sql, [
-            $this->fk_idcliente,
-            $this->fk_idsucursal,
-            $this->fk_idestado,
-            $this->fecha,
-            $this->total,
-            $this->comentarios,
-            $this->idpedido
-        ]);
+        if (isset($this->fk_idcliente)) {
+            $aCampos[] = "fk_idcliente = ?";
+            $aValores[] = $this->fk_idcliente;
+        }
+
+        if (isset($this->fk_idsucursal)) {
+            $aCampos[] = "fk_idsucursal = ?";
+            $aValores[] = $this->fk_idsucursal;
+        }
+
+        if (isset($this->fk_idestado)) {
+            $aCampos[] = "fk_idestado = ?";
+            $aValores[] = $this->fk_idestado;
+        }
+
+        if (isset($this->fecha)) {
+            $aCampos[] = "fecha = ?";
+            $aValores[] = $this->fecha;
+        }
+
+        if (isset($this->total)) {
+            $aCampos[] = "total = ?";
+            $aValores[] = $this->total;
+        }
+
+        if (isset($this->comentarios)) {
+            $aCampos[] = "comentarios = ?";
+            $aValores[] = $this->comentarios;
+        }
+
+        if (empty($aCampos)) {
+            return;
+        }
+
+        $aValores[] = $this->idpedido;
+
+        $sql = "UPDATE pedidos SET " . implode(", ", $aCampos) . " WHERE idpedido = ?";
+
+        DB::update($sql, $aValores);
     }
 
     public function eliminar() {
@@ -101,14 +135,19 @@ class Pedido extends Model
     public static function obtenerPorId($idpedido)
     {
         $sql = "SELECT
-                  idpedido,
-                  fk_idcliente,
-                  fk_idsucursal,
-                  fk_idestado,
-                  fecha,
-                  total,
-                  comentarios
-                FROM pedidos WHERE idpedido = ?";
+                  A.idpedido,
+                  A.fk_idcliente,
+                  A.fk_idsucursal,
+                  A.fk_idestado,
+                  A.fecha,
+                  A.total,
+                  A.comentarios,
+                  CONCAT(B.nombre, ' ', B.apellido) AS cliente,
+                  C.nombre AS sucursal
+                FROM pedidos A
+                LEFT JOIN clientes B ON A.fk_idcliente = B.idcliente
+                LEFT JOIN sucursales C ON A.fk_idsucursal = C.idsucursal
+                WHERE idpedido = ?";
 
         return self::construirDesdeFila(DB::selectOne($sql, [$idpedido]));
     }

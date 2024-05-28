@@ -22,7 +22,8 @@
 <table id="grilla" class="display">
     <thead>
         <tr>
-            <th>Nº de Pedido</th>
+            <th></th>
+            <th>Nº</th>
             <th>Cliente</th>
             <th>Sucursal</th>
             <th>Estado</th>

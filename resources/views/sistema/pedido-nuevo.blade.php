@@ -37,6 +37,7 @@ function fsalir(){
         <div class="row">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
             <input type="hidden" id="id" name="id" class="form-control" value="{{$globalId}}" required>
+            @if(!$globalId)
             <div class="form-group col-lg-6">
                 <label>Cliente: *</label>
                 <select name="lstCliente" id="lstCliente" class="form-control" required>
@@ -87,6 +88,44 @@ function fsalir(){
                 <label>Comentarios:</label>
                 <textarea name="txtComentarios" id="txtComentarios" class="form-control" style="min-height: 6rem;">{{ $pedido->comentarios }}</textarea>
             </div>
+            @else
+            <div class="form-group col-lg-6">
+                <label>Cliente:</label>
+                <a href="/admin/cliente/nuevo/{{ $pedido->fk_idcliente }}">
+                    <input type="text" id='txtCliente' class="form-control" value="{{ $pedido->cliente }}" readonly>
+                </a>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Sucursal:</label>
+                <a href="/admin/sucursal/nuevo/{{ $pedido->fk_idsucursal }}">
+                    <input type="text" id='txtSucursal' class="form-control" value="{{ $pedido->sucursal }}" readonly>
+                </a>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Fecha:</label>
+                <input type="datetime-local" id="txtFecha" class="form-control" value="{{ $pedido->fecha }}" readonly>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Estado:</label>
+                <select name="lstEstado" id="lstEstado" class="form-control" required>
+                    @foreach ($aEstados as $estado)
+                        @if ($estado->idestado == $pedido->fk_idestado)
+                        <option value="{{$estado->idestado}}" selected>{{$estado->nombre}}</option>
+                        @else
+                        <option value="{{$estado->idestado}}">{{$estado->nombre}}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group col-lg-6">
+                <label>Total:</label>
+                <input type="number" id="txtTotal" class="form-control" value="{{ $pedido->total }}" readonly>
+            </div>
+            <div class="form-group col-12">
+                <label>Comentarios:</label>
+                <textarea id="txtComentarios" class="form-control" style="min-height: 6rem;" readonly>{{ $pedido->comentarios }}</textarea>
+            </div>
+            @endif
         </div>
     </form>
 </div>

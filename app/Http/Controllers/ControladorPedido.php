@@ -62,10 +62,8 @@ class ControladorPedido extends Controller
         }
 
         if ($pedido = Pedido::obtenerPorId($request->id)) {
-            $aClientes = Cliente::obtenerTodos();
-            $aSucursales = Sucursal::obtenerTodos();
             $aEstados = Estado::obtenerTodos();
-            return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aClientes", "aSucursales", "aEstados"));
+            return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aEstados"));
         }
 
         $titulo = "Lista de Pedidos";
@@ -85,35 +83,33 @@ class ControladorPedido extends Controller
         $entidad->cargarDesdeRequest($request);
 
         try {
-            $bEditando = $_POST["id"] > 0;
-
-            if (empty($entidad->fk_idcliente) || empty($entidad->fk_idsucursal) || empty($entidad->fk_idestado) || empty($entidad->fecha) || empty($entidad->total)) {
-                $msg["ESTADO"] = MSG_ERROR;
-                $msg["MSG"] = "Ingrese todos los datos requeridos.";
-            } else {
-                if ($bEditando) {
-                    if (!Patente::autorizarOperacion($codigo = "PEDIDOEDITAR")) {
-                        $mensaje = "No tiene pemisos para la operación.";
-                        return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
-                    }
-
-                    $entidad->actualizar();
-                } else {
-                    if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
-                        $mensaje = "No tiene pemisos para la operación.";
-                        return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
-                    }
-
-                    $entidad->insertar();
+            if ($_POST["id"] > 0) {
+                if (!Patente::autorizarOperacion($codigo = "PEDIDOEDITAR")) {
+                    $mensaje = "No tiene pemisos para la operación.";
+                    return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
                 }
 
-                $_POST["id"] = $entidad->idpedido;
+                $entidad->actualizar();
+            } else {
+                if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
+                    $mensaje = "No tiene pemisos para la operación.";
+                    return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+                }
 
-                $msg["ESTADO"] = MSG_SUCCESS;
-                $msg["MSG"] = OKINSERT;
-
-                return view("sistema.pedido-listar", compact("titulo", "msg"));
+                if (empty($entidad->fk_idcliente) || empty($entidad->fk_idsucursal) || empty($entidad->fk_idestado) || empty($entidad->fecha) || empty($entidad->total)) {
+                    $msg["ESTADO"] = MSG_ERROR;
+                    $msg["MSG"] = "Ingrese todos los datos requeridos.";
+                } else {
+                    $entidad->insertar();
+                }
             }
+
+            $_POST["id"] = $entidad->idpedido;
+
+            $msg["ESTADO"] = MSG_SUCCESS;
+            $msg["MSG"] = OKINSERT;
+
+            return view("sistema.pedido-listar", compact("titulo", "msg"));
         } catch (Exception $e) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = ERRORINSERT;
@@ -167,13 +163,13 @@ class ControladorPedido extends Controller
         $data = [];
         foreach ($aSlice as $pedido) {
             $row = [];
-            $row[] = '<a href="/admin/pedido/nuevo/' . $pedido->idpedido . '">' . $pedido->idpedido . '</a>';
+            $row[] = '<a href="/admin/pedido/nuevo/' . $pedido->idpedido . '" class="btn btn-secondary">' . '<i class="fas fa-eye">' . '</a>';
+            $row[] = $pedido->idpedido;
             $row[] = $pedido->cliente;
-            // $row[] = '<a href="/admin/cliente/nuevo/' . $pedido->fk_idcliente . '">' . $pedido->cliente . '</a>';
             $row[] = $pedido->sucursal;
             $row[] = $pedido->estado;
-            $row[] = $pedido->fecha;
-            $row[] = $pedido->total;
+            $row[] = date("d/m/Y H:i", strtotime($pedido->fecha));
+            $row[] = number_format($pedido->total, 2, ',', '.');
             $data[] = $row;
         }
 
