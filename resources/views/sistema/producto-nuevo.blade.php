@@ -62,7 +62,7 @@
                 <label>Imagen:</label>
                 <input type="file" name="fileImagen" id="fileImagen" accept=".jpg, .jpeg, .png, .webp, .gif">
                 <br>
-                <img src="{{ $producto->imagen }}" alt="imagen">
+                <img src="/files/{{ $producto->imagen }}" alt="imagen">
             </div>
         </div>
     </form>

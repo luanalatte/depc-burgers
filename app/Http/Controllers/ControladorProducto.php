@@ -82,11 +82,27 @@ class ControladorProducto extends Controller
         $entidad->cargarDesdeRequest($request);
 
         try {
+            $imagen = uploadFile($_FILES["fileImagen"], ["jpg", "jpeg", "png", "webp", "gif"]);
+            if (!is_null($imagen)) {
+                $entidad->imagen = $imagen;
+            }
+
             if ($_POST["id"] > 0) {
                 if (!Patente::autorizarOperacion($codigo = "PRODUCTOEDITAR")) {
                     $msg["ESTADO"] = MSG_ERROR;
                     $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
                     return view("sistema.error", compact("titulo", "msg"));
+                }
+
+                $productoAnt = Producto::obtenerPorId($entidad->idproducto);
+                if (!is_null($imagen)) {
+                    try {
+                        unlink(env('APP_PATH') . "/public/files/$productoAnt->imagen");
+                    } catch (Exception $e) {
+
+                    }
+                } else {
+                    $entidad->imagen = $productoAnt->imagen;
                 }
 
                 $entidad->actualizar();
@@ -178,7 +194,7 @@ class ControladorProducto extends Controller
             $row[] = $producto->descripcion;
 
             if ($producto->imagen) {
-                $row[] = '<img src="$producto->imagen" class="img-fluid">';
+                $row[] = '<img src="/files/'. $producto->imagen .'" class="img-fluid">';
             } else {
                 $row[] = '';
             }
