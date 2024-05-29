@@ -15,10 +15,7 @@
     </ol>
 @endsection
 @section('contenido')
-@if(isset($msg))
-    <div id="msg"></div>
-    <script>msgShow('{{ $msg["MSG"] }}', '{{ $msg["ESTADO"] }}')</script>
-@endif
+@include('sistema.msg')
 <table id="grilla" class="display">
     <thead>
         <tr>
