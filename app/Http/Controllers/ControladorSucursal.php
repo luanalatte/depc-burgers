@@ -18,8 +18,9 @@ class ControladorSucursal extends Controller
             return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "SUCURSALCONSULTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         return view("sistema.sucursal-listar", compact("titulo"));
@@ -33,8 +34,9 @@ class ControladorSucursal extends Controller
             return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "SUCURSALALTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         $sucursal = new Sucursal();
@@ -49,8 +51,9 @@ class ControladorSucursal extends Controller
             return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "SUCURSALCONSULTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         if ($sucursal = Sucursal::obtenerPorId($request->id)) {
@@ -82,15 +85,17 @@ class ControladorSucursal extends Controller
             } else {
                 if ($bEditando) {
                     if (!Patente::autorizarOperacion($codigo = "SUCURSALEDITAR")) {
-                        $mensaje = "No tiene pemisos para la operación.";
-                        return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+                        $msg["ESTADO"] = MSG_ERROR;
+                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+                        return view("sistema.error", compact("titulo", "msg"));
                     }
 
                     $entidad->actualizar();
                 } else {
                     if (!Patente::autorizarOperacion($codigo = "SUCURSALALTA")) {
-                        $mensaje = "No tiene pemisos para la operación.";
-                        return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+                        $msg["ESTADO"] = MSG_ERROR;
+                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+                        return view("sistema.error", compact("titulo", "msg"));
                     }
 
                     $entidad->insertar();
@@ -109,8 +114,9 @@ class ControladorSucursal extends Controller
         }
 
         if (!Patente::autorizarOperacion($codigo = "PRODUCTOSCONSULTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         $sucursal = Sucursal::obtenerPorId($entidad->idsucursal) ?? new Sucursal(["idsucursal"=>$entidad->idsucursal]);
@@ -119,14 +125,16 @@ class ControladorSucursal extends Controller
 
     public function eliminar(Request $request)
     {
-        $titulo = "Eliminar Sucursales";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
+        if (!Usuario::autenticado()) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "Usuario no autenticado.";
+            return json_encode($aResultado);
+        }
 
         if (!Patente::autorizarOperacion($codigo = "SUCURSALBAJA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
+            return json_encode($aResultado);
         }
 
         try {
@@ -141,7 +149,7 @@ class ControladorSucursal extends Controller
             $aResultado["msg"] = "No se pudo eliminar la sucursal.";
         }
 
-        echo json_encode($aResultado);
+        return json_encode($aResultado);
     }
 
     public function cargarGrilla(Request $request)

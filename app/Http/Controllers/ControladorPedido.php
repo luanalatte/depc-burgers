@@ -23,8 +23,9 @@ class ControladorPedido extends Controller
             return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         return view("sistema.pedido-listar", compact("titulo"));
@@ -38,8 +39,9 @@ class ControladorPedido extends Controller
             return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         $pedido = new Pedido();
@@ -57,8 +59,9 @@ class ControladorPedido extends Controller
             return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         if ($pedido = Pedido::obtenerPorId($request->id)) {
@@ -85,15 +88,17 @@ class ControladorPedido extends Controller
         try {
             if ($_POST["id"] > 0) {
                 if (!Patente::autorizarOperacion($codigo = "PEDIDOEDITAR")) {
-                    $mensaje = "No tiene pemisos para la operación.";
-                    return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+                    $msg["ESTADO"] = MSG_ERROR;
+                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+                    return view("sistema.error", compact("titulo", "msg"));
                 }
 
                 $entidad->actualizar();
             } else {
                 if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
-                    $mensaje = "No tiene pemisos para la operación.";
-                    return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+                    $msg["ESTADO"] = MSG_ERROR;
+                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+                    return view("sistema.error", compact("titulo", "msg"));
                 }
 
                 if (empty($entidad->fk_idcliente) || empty($entidad->fk_idsucursal) || empty($entidad->fk_idestado) || empty($entidad->fecha) || empty($entidad->total)) {
@@ -116,8 +121,9 @@ class ControladorPedido extends Controller
         }
 
         if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+            return view("sistema.error", compact("titulo", "msg"));
         }
 
         $pedido = Pedido::obtenerPorId($entidad->idpedido) ?? new Pedido(["idpedido"=>$entidad->idpedido]);
@@ -129,14 +135,16 @@ class ControladorPedido extends Controller
 
     public function eliminar(Request $request)
     {
-        $titulo = "Eliminar Pedido";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
+        if (!Usuario::autenticado()) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "Usuario no autenticado.";
+            return json_encode($aResultado);
+        }
 
         if (!Patente::autorizarOperacion($codigo = "PEDIDOBAJA")) {
-            $mensaje = "No tiene pemisos para la operación.";
-            return view("sistema.pagina-error", compact("titulo", "codigo", "mensaje"));
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
+            return json_encode($aResultado);
         }
 
         try {
@@ -151,7 +159,7 @@ class ControladorPedido extends Controller
             $aResultado["msg"] = "No se pudo eliminar el pedido.";
         }
 
-        echo json_encode($aResultado);
+        return json_encode($aResultado);
     }
 
     public function cargarGrilla(Request $request)
