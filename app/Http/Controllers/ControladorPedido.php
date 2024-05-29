@@ -94,6 +94,10 @@ class ControladorPedido extends Controller
                 }
 
                 $entidad->actualizar();
+
+                $_POST["id"] = $entidad->idproducto;
+                $msg["ESTADO"] = MSG_SUCCESS;
+                $msg["MSG"] = OKINSERT;
             } else {
                 if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
                     $msg["ESTADO"] = MSG_ERROR;
@@ -106,6 +110,10 @@ class ControladorPedido extends Controller
                     $msg["MSG"] = "Ingrese todos los datos requeridos.";
                 } else {
                     $entidad->insertar();
+
+                    $_POST["id"] = $entidad->idproducto;
+                    $msg["ESTADO"] = MSG_SUCCESS;
+                    $msg["MSG"] = OKINSERT;
                 }
             }
 

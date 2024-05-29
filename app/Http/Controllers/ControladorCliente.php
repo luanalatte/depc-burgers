@@ -87,6 +87,10 @@ class ControladorCliente extends Controller
                 }
 
                 $entidad->actualizar();
+
+                $_POST["id"] = $entidad->idproducto;
+                $msg["ESTADO"] = MSG_SUCCESS;
+                $msg["MSG"] = OKINSERT;
             } else {
                 if (!Patente::autorizarOperacion($codigo = "CLIENTEALTA")) {
                     $msg["ESTADO"] = MSG_ERROR;
@@ -99,13 +103,12 @@ class ControladorCliente extends Controller
                     $msg["MSG"] = "Ingrese todos los datos requeridos.";
                 } else {
                     $entidad->insertar();
+
+                    $_POST["id"] = $entidad->idproducto;
+                    $msg["ESTADO"] = MSG_SUCCESS;
+                    $msg["MSG"] = OKINSERT;
                 }
             }
-
-            $_POST["id"] = $entidad->idcliente;
-
-            $msg["ESTADO"] = MSG_SUCCESS;
-            $msg["MSG"] = OKINSERT;
 
             return view("sistema.cliente-listar", compact("titulo", "msg"));
         } catch (Exception $e) {

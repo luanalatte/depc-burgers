@@ -82,37 +82,38 @@ class ControladorProducto extends Controller
         $entidad->cargarDesdeRequest($request);
 
         try {
-            $bEditando = $_POST["id"] > 0;
-
-            if (empty($entidad->nombre) || empty($entidad->precio)) {
-                $msg["ESTADO"] = MSG_ERROR;
-                $msg["MSG"] = "Ingrese todos los datos requeridos.";
-            } else {
-                if ($bEditando) {
-                    if (!Patente::autorizarOperacion($codigo = "PRODUCTOEDITAR")) {
-                        $msg["ESTADO"] = MSG_ERROR;
-                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                        return view("sistema.error", compact("titulo", "msg"));
-                    }
-
-                    $entidad->actualizar();
-                } else {
-                    if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
-                        $msg["ESTADO"] = MSG_ERROR;
-                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                        return view("sistema.error", compact("titulo", "msg"));
-                    }
-
-                    $entidad->insertar();
+            if ($_POST["id"] > 0) {
+                if (!Patente::autorizarOperacion($codigo = "PRODUCTOEDITAR")) {
+                    $msg["ESTADO"] = MSG_ERROR;
+                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+                    return view("sistema.error", compact("titulo", "msg"));
                 }
 
-                $_POST["id"] = $entidad->idproducto;
+                $entidad->actualizar();
 
+                $_POST["id"] = $entidad->idproducto;
                 $msg["ESTADO"] = MSG_SUCCESS;
                 $msg["MSG"] = OKINSERT;
+            } else {
+                if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
+                    $msg["ESTADO"] = MSG_ERROR;
+                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
+                    return view("sistema.error", compact("titulo", "msg"));
+                }
 
-                return view("sistema.producto-listar", compact("titulo", "msg"));
+                if (empty($entidad->nombre) || empty($entidad->precio)) {
+                    $msg["ESTADO"] = MSG_ERROR;
+                    $msg["MSG"] = "Ingrese todos los datos requeridos.";
+                } else {
+                    $entidad->insertar();
+
+                    $_POST["id"] = $entidad->idproducto;
+                    $msg["ESTADO"] = MSG_SUCCESS;
+                    $msg["MSG"] = OKINSERT;
+                }
             }
+
+            return view("sistema.producto-listar", compact("titulo", "msg"));
         } catch (Exception $e) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = ERRORINSERT;

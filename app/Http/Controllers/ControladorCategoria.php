@@ -91,6 +91,10 @@ class ControladorCategoria extends Controller
                     }
 
                     $entidad->actualizar();
+
+                    $_POST["id"] = $entidad->idproducto;
+                    $msg["ESTADO"] = MSG_SUCCESS;
+                    $msg["MSG"] = OKINSERT;
                 } else {
                     if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
                         $msg["ESTADO"] = MSG_ERROR;
@@ -99,12 +103,11 @@ class ControladorCategoria extends Controller
                     }
 
                     $entidad->insertar();
+
+                    $_POST["id"] = $entidad->idproducto;
+                    $msg["ESTADO"] = MSG_SUCCESS;
+                    $msg["MSG"] = OKINSERT;
                 }
-
-                $_POST["id"] = $entidad->idcategoria;
-
-                $msg["ESTADO"] = MSG_SUCCESS;
-                $msg["MSG"] = OKINSERT;
 
                 return view("sistema.categoria-listar", compact("titulo", "msg"));
             }

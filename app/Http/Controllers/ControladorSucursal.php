@@ -91,6 +91,10 @@ class ControladorSucursal extends Controller
                     }
 
                     $entidad->actualizar();
+
+                    $_POST["id"] = $entidad->idproducto;
+                    $msg["ESTADO"] = MSG_SUCCESS;
+                    $msg["MSG"] = OKINSERT;
                 } else {
                     if (!Patente::autorizarOperacion($codigo = "SUCURSALALTA")) {
                         $msg["ESTADO"] = MSG_ERROR;
@@ -99,12 +103,11 @@ class ControladorSucursal extends Controller
                     }
 
                     $entidad->insertar();
+                    
+                    $_POST["id"] = $entidad->idproducto;
+                    $msg["ESTADO"] = MSG_SUCCESS;
+                    $msg["MSG"] = OKINSERT;
                 }
-
-                $_POST["id"] = $entidad->idsucursal;
-
-                $msg["ESTADO"] = MSG_SUCCESS;
-                $msg["MSG"] = OKINSERT;
 
                 return view("sistema.sucursal-listar", compact("titulo", "msg"));
             }
