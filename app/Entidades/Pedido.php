@@ -172,14 +172,24 @@ class Pedido extends Model
         return $lstRetorno;
     }
 
-    public static function contarRegistros($estado = null)
+    public static function contarRegistros($estado = 0, $sucursal = 0)
     {
         $sql = "SELECT COUNT(*) AS total FROM pedidos";
         $aValores = [];
+        $aFiltros = [];
 
-        if (!is_null($estado)) {
-            $sql .= " WHERE fk_idestado = ?";
+        if ($estado) {
+            $aFiltros[] = "fk_idestado = ?";
             $aValores[] = $estado;
+        }
+
+        if ($sucursal) {
+            $aFiltros[] = "fk_idsucursal = ?";
+            $aValores[] = $sucursal;
+        }
+
+        if ($aFiltros) {
+            $sql .= " WHERE " . implode(' AND ', $aFiltros);
         }
 
         if ($fila = DB::selectOne($sql, $aValores)) {
@@ -189,7 +199,7 @@ class Pedido extends Model
         return 0;
     }
 
-    public static function obtenerPaginado($estado = null, int $inicio = 0, int $cantidad = 25)
+    public static function obtenerFiltrado($estado = 0, $sucursal = 0, int $inicio = 0, int $cantidad = 25)
     {
         $sql = "SELECT
                   A.idpedido,
@@ -208,10 +218,20 @@ class Pedido extends Model
                 INNER JOIN estados D ON A.fk_idestado = D.idestado";
 
         $aValores = [];
+        $aFiltros = [];
 
-        if (!is_null($estado)) {
-            $sql .= " WHERE A.fk_idestado = ?";
+        if ($estado) {
+            $aFiltros[] = "fk_idestado = ?";
             $aValores[] = $estado;
+        }
+
+        if ($sucursal) {
+            $aFiltros[] = "fk_idsucursal = ?";
+            $aValores[] = $sucursal;
+        }
+
+        if ($aFiltros) {
+            $sql .= " WHERE " . implode(' AND ', $aFiltros);
         }
 
         $sql .= " ORDER BY A.fecha DESC LIMIT $inicio, $cantidad";

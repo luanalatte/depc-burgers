@@ -29,8 +29,9 @@ class ControladorPedido extends Controller
         }
 
         $aEstados = Estado::obtenerTodos();
-        $countPedidos = Pedido::contarRegistros();
-        return view("sistema.pedido-listar", compact("titulo", "countPedidos", "aEstados"));
+        $aSucursales = Sucursal::obtenerTodos();
+        $countPedidos = Pedido::contarRegistros(); // TODO: Contar solo pedidos de la sucursal y/o período seleccionado actualmente.
+        return view("sistema.pedido-listar", compact("titulo", "countPedidos", "aEstados", "aSucursales"));
     }
 
     public function nuevo()
@@ -75,8 +76,9 @@ class ControladorPedido extends Controller
         $msg["ESTADO"] = MSG_ERROR;
         $msg["MSG"] = "El pedido especificado no existe.";
         $aEstados = Estado::obtenerTodos();
+        $aSucursales = Sucursal::obtenerTodos();
         $countPedidos = Pedido::contarRegistros();
-        return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados"));
+        return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados", "aSucursales"));
     }
 
     public function guardar(Request $request)
@@ -127,8 +129,9 @@ class ControladorPedido extends Controller
             $msg["MSG"] = OKINSERT;
 
             $aEstados = Estado::obtenerTodos();
+            $aSucursales = Sucursal::obtenerTodos();
             $countPedidos = Pedido::contarRegistros();
-            return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados"));
+            return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados", "aSucursales"));
         } catch (Exception $e) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = ERRORINSERT;
@@ -182,9 +185,10 @@ class ControladorPedido extends Controller
             return null;
 
         $estado = $request->estado;
+        $sucursal = $request->sucursal;
 
-        $count = Pedido::contarRegistros($estado);
-        $aSlice = Pedido::obtenerPaginado($estado, $request->start ?? 0, $request->length ?? 25);
+        $count = Pedido::contarRegistros($estado, $sucursal);
+        $aSlice = Pedido::obtenerFiltrado($estado, $sucursal, $request->start ?? 0, $request->length ?? 25);
 
         $data = [];
         foreach ($aSlice as $pedido) {

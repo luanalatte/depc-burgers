@@ -16,12 +16,30 @@
 @endsection
 @section('contenido')
 @include('sistema.msg')
-<div class="mb-3">
-    <a href="#" onclick="javascript: reloadData(null);" class="btn btn-primary">Todos ({{ $countPedidos }})</a>
-    @foreach($aEstados as $estado)
-    <a href="#" onclick="javascript: reloadData({{ $estado->idestado }});" class="btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->count }})</a>
-    @endforeach
+<div class="mb-3 d-flex justify-content-between align-items-center">
+    <div>
+        <a href="#" onclick="javascript: filtrarEstado(null);" class="btn btn-primary">Todos ({{ $countPedidos }})</a>
+        @foreach($aEstados as $estado)
+        <a href="#" onclick="javascript: filtrarEstado({{ $estado->idestado }});" class="btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->count }})</a>
+        @endforeach
+    </div>
+    <div class="d-flex align-items-center">
+        <label for="" class="flex-shrink-0">Filtrar por período:</label>
+        <input class="form-control mx-2" type="datetime-local" id="txtDateFrom">
+        -
+        <input class="form-control mx-2" type="datetime-local" id="txtDateTo">
+    </div>
+    <div class="d-flex align-items-center">
+        <label for="lstSucursales" class="flex-shrink-0">Filtrar por sucursal:</label>
+        <select id="lstSucursales" class="form-control mx-2" onchange="javascript: filtrarSucursal();">
+            <option value="0">Todas</option>
+            @foreach($aSucursales as $sucursal)
+                <option value="{{ $sucursal->idsucursal }}">{{ $sucursal->nombre }}</option>
+            @endforeach
+        </select>
+    </div>
 </div>
+
 <table id="grilla" class="display">
     <thead>
         <tr>
@@ -37,6 +55,7 @@
 </table> 
 <script>
     var filtroEstado = null;
+    var filtroSucursal = null;
 	var dataTable = $('#grilla').DataTable({
 	    "processing": true,
         "serverSide": true,
@@ -47,13 +66,22 @@
         "order": [[ 0, "asc" ]],
         "ajax": {
             url: "{{ route('pedidos.cargarGrilla') }}",
-            data: function(d) { d.estado = filtroEstado }
+            data: function(d) {
+                d.estado = filtroEstado;
+                d.sucursal = filtroSucursal;
+            }
         }
 	});
 
-    function reloadData(estado)
+    function filtrarEstado(estado)
     {
         filtroEstado = estado;
+        dataTable.ajax.reload();
+    }
+
+    function filtrarSucursal()
+    {
+        filtroSucursal = $('#lstSucursales').val();
         dataTable.ajax.reload();
     }
 </script>
