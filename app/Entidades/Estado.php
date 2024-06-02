@@ -11,17 +11,20 @@ class Estado extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'idestado', 'nombre'
+        'idestado', 'nombre', 'color'
     ];
 
     // protected $hidden = [];
 
+    public $count;
+
     public function insertar() {
         $sql = "INSERT INTO estados (
-                  nombre
+                  nombre,
+                  color
                 ) VALUES (?)";
 
-        DB::insert($sql, [$this->nombre]);
+        DB::insert($sql, [$this->nombre, $this->color]);
         $this->idestado = DB::getPdo()->lastInsertId();
 
         return $this->idestado;
@@ -29,10 +32,11 @@ class Estado extends Model
 
     public function actualizar() {
         $sql = "UPDATE estados SET
-                  nombre = ?
+                  nombre = ?,
+                  color = ?
                 WHERE idestado = ?";
 
-        DB::update($sql, [$this->nombre, $this->idestado]);
+        DB::update($sql, [$this->nombre, $this->color, $this->idestado]);
     }
 
     public function eliminar() {
@@ -47,6 +51,9 @@ class Estado extends Model
         $estado = new Estado();
         $estado->idestado = $fila->idestado;
         $estado->nombre = $fila->nombre;
+        $estado->color = $fila->color;
+
+        $estado->count = $fila->count ?? null;
 
         return $estado;
     }
@@ -55,7 +62,8 @@ class Estado extends Model
     {
         $sql = "SELECT
                   idestado,
-                  nombre
+                  nombre,
+                  color
                 FROM estados WHERE idestado = ?";
 
         return self::construirDesdeFila(DB::selectOne($sql, [$idestado]));
@@ -65,7 +73,9 @@ class Estado extends Model
     {
         $sql = "SELECT
                   idestado,
-                  nombre
+                  nombre,
+                  color,
+                  (SELECT COUNT(*) FROM pedidos WHERE fk_idestado = idestado) AS count
                 FROM estados ORDER BY idestado";
 
         $lstRetorno = [];

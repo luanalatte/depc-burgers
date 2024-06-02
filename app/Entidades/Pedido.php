@@ -172,18 +172,24 @@ class Pedido extends Model
         return $lstRetorno;
     }
 
-    public static function contarRegistros()
+    public static function contarRegistros($estado = null)
     {
         $sql = "SELECT COUNT(*) AS total FROM pedidos";
+        $aValores = [];
 
-        if ($fila = DB::selectOne($sql)) {
+        if (!is_null($estado)) {
+            $sql .= " WHERE fk_idestado = ?";
+            $aValores[] = $estado;
+        }
+
+        if ($fila = DB::selectOne($sql, $aValores)) {
             return $fila->total;
         }
 
         return 0;
     }
 
-    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
+    public static function obtenerPaginado($estado = null, int $inicio = 0, int $cantidad = 25)
     {
         $sql = "SELECT
                   A.idpedido,
@@ -199,11 +205,19 @@ class Pedido extends Model
                 FROM pedidos A
                 INNER JOIN clientes B ON A.fk_idcliente = B.idcliente
                 INNER JOIN sucursales C ON A.fk_idsucursal = C.idsucursal
-                INNER JOIN estados D ON A.fk_idestado = D.idestado
-                ORDER BY A.fecha DESC LIMIT $inicio, $cantidad";
+                INNER JOIN estados D ON A.fk_idestado = D.idestado";
+
+        $aValores = [];
+
+        if (!is_null($estado)) {
+            $sql .= " WHERE A.fk_idestado = ?";
+            $aValores[] = $estado;
+        }
+
+        $sql .= " ORDER BY A.fecha DESC LIMIT $inicio, $cantidad";
 
         $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
+        foreach (DB::select($sql, $aValores) as $fila) {
             $lstRetorno[] = self::construirDesdeFila($fila);
         }
 

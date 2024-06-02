@@ -28,7 +28,9 @@ class ControladorPedido extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        return view("sistema.pedido-listar", compact("titulo"));
+        $aEstados = Estado::obtenerTodos();
+        $countPedidos = Pedido::contarRegistros();
+        return view("sistema.pedido-listar", compact("titulo", "countPedidos", "aEstados"));
     }
 
     public function nuevo()
@@ -72,7 +74,9 @@ class ControladorPedido extends Controller
         $titulo = "Lista de Pedidos";
         $msg["ESTADO"] = MSG_ERROR;
         $msg["MSG"] = "El pedido especificado no existe.";
-        return view("sistema.pedido-listar", compact("titulo", "msg"));
+        $aEstados = Estado::obtenerTodos();
+        $countPedidos = Pedido::contarRegistros();
+        return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados"));
     }
 
     public function guardar(Request $request)
@@ -122,7 +126,9 @@ class ControladorPedido extends Controller
             $msg["ESTADO"] = MSG_SUCCESS;
             $msg["MSG"] = OKINSERT;
 
-            return view("sistema.pedido-listar", compact("titulo", "msg"));
+            $aEstados = Estado::obtenerTodos();
+            $countPedidos = Pedido::contarRegistros();
+            return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados"));
         } catch (Exception $e) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = ERRORINSERT;
@@ -175,8 +181,10 @@ class ControladorPedido extends Controller
         if (!Usuario::autenticado() || !Patente::autorizarOperacion("PEDIDOCONSULTA"))
             return null;
 
-        $count = Pedido::contarRegistros();
-        $aSlice = Pedido::obtenerPaginado($request->start ?? 0, $request->length ?? 25);
+        $estado = $request->estado;
+
+        $count = Pedido::contarRegistros($estado);
+        $aSlice = Pedido::obtenerPaginado($estado, $request->start ?? 0, $request->length ?? 25);
 
         $data = [];
         foreach ($aSlice as $pedido) {

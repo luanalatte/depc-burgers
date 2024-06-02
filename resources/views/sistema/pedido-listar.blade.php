@@ -16,6 +16,12 @@
 @endsection
 @section('contenido')
 @include('sistema.msg')
+<div class="mb-3">
+    <a href="#" onclick="javascript: reloadData(null);" class="btn btn-primary">Todos ({{ $countPedidos }})</a>
+    @foreach($aEstados as $estado)
+    <a href="#" onclick="javascript: reloadData({{ $estado->idestado }});" class="btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->count }})</a>
+    @endforeach
+</div>
 <table id="grilla" class="display">
     <thead>
         <tr>
@@ -30,6 +36,7 @@
     </thead>
 </table> 
 <script>
+    var filtroEstado = null;
 	var dataTable = $('#grilla').DataTable({
 	    "processing": true,
         "serverSide": true,
@@ -38,7 +45,16 @@
 	    "bSearchable": true,
         "pageLength": 25,
         "order": [[ 0, "asc" ]],
-	    "ajax": "{{ route('pedidos.cargarGrilla') }}"
+        "ajax": {
+            url: "{{ route('pedidos.cargarGrilla') }}",
+            data: function(d) { d.estado = filtroEstado }
+        }
 	});
+
+    function reloadData(estado)
+    {
+        filtroEstado = estado;
+        dataTable.ajax.reload();
+    }
 </script>
 @endsection
