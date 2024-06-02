@@ -16,27 +16,30 @@
 @endsection
 @section('contenido')
 @include('sistema.msg')
-<div class="mb-3 d-flex justify-content-between align-items-center">
-    <div>
-        <a href="#" onclick="javascript: filtrarEstado(0);" class="btn btn-primary">Todos ({{ $countPedidos }})</a>
+<div class="toolbar mb-3 d-flex justify-content-between align-items-center">
+    <div class="d-flex flex-wrap justify-content-center">
+        <a href="#" onclick="javascript: filtrarEstado(0);" class="m-1 btn btn-primary">Todos ({{ $countPedidos }})</a>
         @foreach($aEstados as $estado)
-        <a href="#" onclick="javascript: filtrarEstado({{ $estado->idestado }});" class="btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->count }})</a>
+        <a href="#" onclick="javascript: filtrarEstado({{ $estado->idestado }});" class="m-1 btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->count }})</a>
         @endforeach
     </div>
-    <div class="d-flex align-items-center">
-        <label for="" class="flex-shrink-0">Filtrar por período:</label>
-        <input class="form-control mx-2" type="datetime-local" id="txtDateFrom">
-        -
-        <input class="form-control mx-2" type="datetime-local" id="txtDateTo">
-    </div>
-    <div class="d-flex align-items-center">
-        <label for="lstSucursales" class="flex-shrink-0">Filtrar por sucursal:</label>
-        <select id="lstSucursales" class="form-control mx-2" onchange="javascript: filtrarSucursal();">
-            <option value="0">Todas</option>
-            @foreach($aSucursales as $sucursal)
-                <option value="{{ $sucursal->idsucursal }}">{{ $sucursal->nombre }}</option>
-            @endforeach
-        </select>
+    <div class="d-flex flex-wrap justify-content-between">
+        <div class="mx-3">
+            <label class="flex-shrink-0">Filtrar por período:</label>
+            <div class="d-flex">
+                <input class="form-control mr-2" type="datetime-local" id="txtDateFrom">
+                <input class="form-control" type="datetime-local" id="txtDateTo">
+            </div>
+        </div>
+        <div class="">
+            <label for="lstSucursales">Filtrar por sucursal:</label>
+            <select id="lstSucursales" class="form-control" onchange="javascript: filtrarSucursal();">
+                <option value="0">Todas</option>
+                @foreach($aSucursales as $sucursal)
+                    <option value="{{ $sucursal->idsucursal }}">{{ $sucursal->nombre }}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
 </div>
 
