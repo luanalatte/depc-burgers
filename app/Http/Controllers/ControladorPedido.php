@@ -179,6 +179,56 @@ class ControladorPedido extends Controller
         return json_encode($aResultado);
     }
 
+    public function setEstado(Request $request)
+    {
+        if (!Usuario::autenticado()) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "Usuario no autenticado.";
+            return json_encode($aResultado);
+        }
+
+        if (!Patente::autorizarOperacion($codigo = "PEDIDOEDITAR")) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
+            return json_encode($aResultado);
+        }
+
+        try {
+            $pedido = Pedido::obtenerPorId($request->id);
+        } catch (Exception $e) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No se pudo encontrar el pedido.";
+            return json_encode($aResultado);
+        }
+
+        try {
+            $pedido->fk_idestado = $request->estado;
+            $pedido->actualizar();
+            $aResultado["err"] = EXIT_SUCCESS;
+            $aResultado["msg"] = "Pedido editado exitosamente.";
+        } catch (Exception $e) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "Fallo al editar el estado del pedido.";
+        }
+
+        return json_encode($aResultado);
+    }
+
+    private function selectEstado($aEstados, Pedido $pedido)
+    {
+        $select = '<select id="lstEstado-id' . $pedido->idpedido . '" class="form-control" onchange="javascript: setEstado(' . $pedido->idpedido . ');">';
+        foreach ($aEstados as $estado) {
+            if ($estado->idestado == $pedido->fk_idestado) {
+                $select .= '<option selected value="' . $estado->idestado .'">'. $estado->nombre . '</option>';
+            } else {
+                $select .= '<option value="' . $estado->idestado .'">'. $estado->nombre . '</option>';
+            }
+        }
+        $select .= '</select>';
+
+        return $select;
+    }
+
     public function cargarGrilla(Request $request)
     {
         if (!Usuario::autenticado() || !Patente::autorizarOperacion("PEDIDOCONSULTA"))
@@ -194,6 +244,8 @@ class ControladorPedido extends Controller
         $count = Pedido::contarRegistros($estado, $sucursal, $fechaDesde, $fechaHasta);
         $aSlice = Pedido::obtenerFiltrado($estado, $sucursal, $fechaDesde, $fechaHasta, $start, $length);
 
+        $aEstados = Estado::obtenerTodos();
+
         $data = [];
         foreach ($aSlice as $pedido) {
             $row = [];
@@ -201,7 +253,7 @@ class ControladorPedido extends Controller
             $row[] = $pedido->idpedido;
             $row[] = $pedido->cliente;
             $row[] = $pedido->sucursal;
-            $row[] = $pedido->estado;
+            $row[] = $this->selectEstado($aEstados, $pedido);
             $row[] = date("d/m/Y H:i", strtotime($pedido->fecha));
             $row[] = number_format($pedido->total, 2, ',', '.');
             $data[] = $row;

@@ -57,6 +57,25 @@
     </thead>
 </table> 
 <script>
+    function setEstado(idpedido)
+    {
+        let val = $('#lstEstado-id' + idpedido).val();
+
+        $.ajax({
+            type: "GET",
+            url: "{{ route('pedidos.setEstado') }}",
+            data: { id:idpedido, estado:val },
+            async: true,
+            dataType: "json",
+            success: function (data) {
+                msgShow(data.msg, data.err == 0 ? "success" : "danger");
+            },
+            error: function (data) {
+                msgShow("No se pudo cambiar el estado del pedido.", "danger");
+            }
+        });
+    }
+
     var filtroEstado = 0;
     var filtroSucursal = 0;
     var filtroFechaDesde = null;

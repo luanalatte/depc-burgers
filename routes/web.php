@@ -127,6 +127,7 @@ Route::get('/admin/pedidos', 'ControladorPedido@index');
 Route::get('/admin/pedido/nuevo', 'ControladorPedido@nuevo');
 Route::post('/admin/pedido/nuevo', 'ControladorPedido@guardar');
 Route::get('/admin/pedidos/cargarGrilla', 'ControladorPedido@cargarGrilla')->name('pedidos.cargarGrilla');
+Route::get('/admin/pedido/setEstado', 'ControladorPedido@setEstado')->name('pedidos.setEstado');
 Route::get('/admin/pedido/eliminar', 'ControladorPedido@eliminar');
 Route::get('/admin/pedido/{id}', 'ControladorPedido@editar');
 Route::post('/admin/pedido/{id}', 'ControladorPedido@guardar');
