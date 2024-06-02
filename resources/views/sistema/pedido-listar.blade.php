@@ -18,7 +18,7 @@
 @include('sistema.msg')
 <div class="mb-3 d-flex justify-content-between align-items-center">
     <div>
-        <a href="#" onclick="javascript: filtrarEstado(null);" class="btn btn-primary">Todos ({{ $countPedidos }})</a>
+        <a href="#" onclick="javascript: filtrarEstado(0);" class="btn btn-primary">Todos ({{ $countPedidos }})</a>
         @foreach($aEstados as $estado)
         <a href="#" onclick="javascript: filtrarEstado({{ $estado->idestado }});" class="btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->count }})</a>
         @endforeach
@@ -54,8 +54,8 @@
     </thead>
 </table> 
 <script>
-    var filtroEstado = null;
-    var filtroSucursal = null;
+    var filtroEstado = 0;
+    var filtroSucursal = 0;
 	var dataTable = $('#grilla').DataTable({
 	    "processing": true,
         "serverSide": true,
