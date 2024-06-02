@@ -172,7 +172,7 @@ class Pedido extends Model
         return $lstRetorno;
     }
 
-    public static function contarRegistros($estado = 0, $sucursal = 0)
+    public static function contarRegistros(int $estado = 0, int $sucursal = 0, string $fechaDesde = null, string $fechaHasta = null)
     {
         $sql = "SELECT COUNT(*) AS total FROM pedidos";
         $aValores = [];
@@ -188,6 +188,16 @@ class Pedido extends Model
             $aValores[] = $sucursal;
         }
 
+        if ($fechaDesde) {
+            $aFiltros[] = "fecha >= ?";
+            $aValores[] = $fechaDesde;
+        }
+
+        if ($fechaHasta) {
+            $aFiltros[] = "fecha <= ?";
+            $aValores[] = $fechaHasta;
+        }
+
         if ($aFiltros) {
             $sql .= " WHERE " . implode(' AND ', $aFiltros);
         }
@@ -199,7 +209,7 @@ class Pedido extends Model
         return 0;
     }
 
-    public static function obtenerFiltrado($estado = 0, $sucursal = 0, int $inicio = 0, int $cantidad = 25)
+    public static function obtenerFiltrado(int $estado = 0, int $sucursal = 0, string $fechaDesde = null, string $fechaHasta = null, int $inicio = 0, int $cantidad = 25)
     {
         $sql = "SELECT
                   A.idpedido,
@@ -228,6 +238,16 @@ class Pedido extends Model
         if ($sucursal) {
             $aFiltros[] = "fk_idsucursal = ?";
             $aValores[] = $sucursal;
+        }
+
+        if ($fechaDesde) {
+            $aFiltros[] = "fecha >= ?";
+            $aValores[] = $fechaDesde;
+        }
+
+        if ($fechaHasta) {
+            $aFiltros[] = "fecha <= ?";
+            $aValores[] = $fechaHasta;
         }
 
         if ($aFiltros) {

@@ -27,8 +27,8 @@
         <div class="mx-3">
             <label class="flex-shrink-0">Filtrar por período:</label>
             <div class="d-flex">
-                <input class="form-control mr-2" type="datetime-local" id="txtDateFrom">
-                <input class="form-control" type="datetime-local" id="txtDateTo">
+                <input class="form-control mr-2" type="date" id="txtFechaDesde" onchange="javascript: filtrarFecha();">
+                <input class="form-control" type="date" id="txtFechaHasta" onchange="javascript: filtrarFecha();">
             </div>
         </div>
         <div class="">
@@ -59,6 +59,8 @@
 <script>
     var filtroEstado = 0;
     var filtroSucursal = 0;
+    var filtroFechaDesde = null;
+    var filtroFechaHasta = null;
 	var dataTable = $('#grilla').DataTable({
 	    "processing": true,
         "serverSide": true,
@@ -72,6 +74,8 @@
             data: function(d) {
                 d.estado = filtroEstado;
                 d.sucursal = filtroSucursal;
+                d.fechaDesde = filtroFechaDesde;
+                d.fechaHasta = filtroFechaHasta;
             }
         }
 	});
@@ -85,6 +89,13 @@
     function filtrarSucursal()
     {
         filtroSucursal = $('#lstSucursales').val();
+        dataTable.ajax.reload();
+    }
+
+    function filtrarFecha()
+    {
+        filtroFechaDesde = $('#txtFechaDesde').val();
+        filtroFechaHasta = $('#txtFechaHasta').val();
         dataTable.ajax.reload();
     }
 </script>

@@ -186,9 +186,13 @@ class ControladorPedido extends Controller
 
         $estado = $request->estado;
         $sucursal = $request->sucursal;
+        $fechaDesde = $request->fechaDesde;
+        $fechaHasta = $request->fechaHasta;
+        $start = $request->start ?? 0;
+        $length = $request->length ?? 25;
 
-        $count = Pedido::contarRegistros($estado, $sucursal);
-        $aSlice = Pedido::obtenerFiltrado($estado, $sucursal, $request->start ?? 0, $request->length ?? 25);
+        $count = Pedido::contarRegistros($estado, $sucursal, $fechaDesde, $fechaHasta);
+        $aSlice = Pedido::obtenerFiltrado($estado, $sucursal, $fechaDesde, $fechaHasta, $start, $length);
 
         $data = [];
         foreach ($aSlice as $pedido) {
