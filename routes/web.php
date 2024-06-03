@@ -22,6 +22,9 @@ Route::group(array('domain' => '127.0.0.1'), function () {
 /* --------------------------------------------- */
 
 Route::get('/', 'ControladorWebHome@index');
+Route::get('/takeaway', 'ControladorWebHome@takeaway');
+Route::get('/nosotros', 'ControladorWebHome@nosotros');
+Route::get('/contacto', 'ControladorWebHome@contacto');
 
 /* --------------------------------------------- */
 /* CONTROLADOR LOGIN                             */
