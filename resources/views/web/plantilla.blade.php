@@ -15,8 +15,7 @@
 
     <title>Burgers SRL</title>
 
-    <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="web/css/bootstrap.css" />
+    <link href="web/css/style.min.css" rel="stylesheet" />
 
     <!--owl slider stylesheet -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
@@ -25,8 +24,6 @@
     <!-- font awesome style -->
     <link href="web/css/font-awesome.min.css" rel="stylesheet" />
 
-    <!-- Custom styles for this template -->
-    <link href="web/css/style.min.css" rel="stylesheet" />
     <!-- responsive style -->
     <link href="web/css/responsive.css" rel="stylesheet" />
 </head>

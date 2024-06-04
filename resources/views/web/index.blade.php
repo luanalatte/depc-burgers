@@ -11,7 +11,7 @@
                 <h1>LAS MEJORES HAMBURGUESAS</h1>
                 <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
                 <div class="btn-box">
-                  <a href="" class="btn1">PEDIR AHORA</a>
+                  <a href="/takeaway" class="btn btn-primary mt-2 rounded-pill">PEDIR AHORA</a>
                 </div>
               </div>
             </div>
@@ -26,7 +26,7 @@
                 <h1>LAS PAPAS MÁS RICAS</h1>
                 <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
                 <div class="btn-box">
-                  <a href="" class="btn1">PEDIR AHORA</a>
+                  <a href="/takeaway" class="btn btn-primary mt-2 rounded-pill">PEDIR AHORA</a>
                 </div>
               </div>
             </div>
@@ -41,7 +41,7 @@
                 <h1>EL PAN MÁS CROCANTE</h1>
                 <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
                 <div class="btn-box">
-                  <a href="" class="btn1">PEDIR AHORA</a>
+                  <a href="/takeaway" class="btn btn-primary mt-2 rounded-pill">PEDIR AHORA</a>
                 </div>
               </div>
             </div>

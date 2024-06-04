@@ -1,2 +1,30 @@
-// @use 'bootstrap/bootstrap.scss';
-@use 'feane';
+$primary: #ffbe33;
+$secondary: #222831;
+
+@use 'feane' as feane;
+@import 'bootstrap-4.1.3/bootstrap';
+
+@mixin button_color($bg, $fg) {
+    background-color: $bg;
+    color: $fg;
+    transition: color 0.3s, background-color 0.3s;
+
+    &:hover {
+        background-color: darken($color: $bg, $amount: 15);
+        color: $fg;
+    }
+}
+
+// from Bootstrap 5.
+.rounded-pill {
+    border-radius: 50rem;
+}
+
+// feane's styles, reworked.
+.btn-primary {
+    @include button_color($primary, white);
+}
+
+.slider .btn {
+    padding: 10px 45px;
+}
