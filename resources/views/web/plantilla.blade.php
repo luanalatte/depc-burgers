@@ -26,7 +26,7 @@
     <link href="web/css/font-awesome.min.css" rel="stylesheet" />
 
     <!-- Custom styles for this template -->
-    <link href="web/css/style.css" rel="stylesheet" />
+    <link href="web/css/style.min.css" rel="stylesheet" />
     <!-- responsive style -->
     <link href="web/css/responsive.css" rel="stylesheet" />
 </head>
