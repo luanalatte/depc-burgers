@@ -55,6 +55,19 @@ input[type=text] {
     }
 }
 
+hgroup {
+    h2 {
+      margin-bottom: 0;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    p {
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+}
+
 /* Overrides */
 .btn {
     @extend .rounded-pill;

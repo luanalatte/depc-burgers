@@ -85,9 +85,9 @@
 <!-- food section -->
 <section class="food_section layout_padding-bottom">
   <div class="container">
-    <div class="heading_container heading_center">
+    <hgroup class="text-center">
       <h2>Our Menu</h2>
-    </div>
+    </hgroup>
 
     <ul class="filters_menu">
       <li class="active" data-filter="*">All</li>
@@ -343,9 +343,9 @@
       </div>
       <div class="col-md-6">
         <div class="detail-box">
-          <div class="heading_container">
+          <hgroup>
             <h2>Take Away</h2>
-          </div>
+          </hgroup>
           <p>Hacé tu pedido online para retirar en cualquiera de nuestras sucursales.</p>
           <a href="/takeaway">Pedir Ahora</a>
         </div>
@@ -357,9 +357,9 @@
 
 <section id="sucursales" class="layout_padding">
   <div class="container">
-    <div class="heading_container heading_center psudo_white_primary mb_45">
-      <h2>SUCURSALES</h2>
-    </div>
+    <hgroup class="text-center">
+      <h2>Sucursales</h2>
+    </hgroup>
   </div>
 </section>
 

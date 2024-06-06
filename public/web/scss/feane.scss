@@ -526,7 +526,7 @@ body > header {
 .book_section {
   position: relative;
 
-  .heading_container {
+  hgroup {
     margin-bottom: 25px;
   }
 
@@ -586,7 +586,7 @@ body > header {
 /* client section start */
 
 .client_section {
-  .heading_container {
+  hgroup {
     margin-bottom: 30px;
   }
 
@@ -669,7 +669,7 @@ body > header {
 
 // contact section
 .contact_section {
-  .heading_container {
+  hgroup {
     margin-bottom: 45px;
   }
 

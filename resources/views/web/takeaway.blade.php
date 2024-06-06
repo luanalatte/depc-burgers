@@ -4,9 +4,9 @@
 
 <section class="food_section layout_padding">
     <div class="container">
-      <div class="heading_container heading_center">
+      <hgroup class="text-center">
         <h2>Take Away</h2>
-      </div>
+      </hgroup>
 
       <ul class="filters_menu">
         <li class="active" data-filter="*">Todos</li>

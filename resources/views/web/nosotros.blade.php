@@ -3,19 +3,18 @@
   <!-- about section -->
 
   <section class="about_section layout_padding">
-    <div class="container  ">
-
+    <div class="container">
       <div class="row">
-        <div class="col-md-6 ">
+        <div class="col-md-6">
           <div class="img-box">
             <img src="web/images/about-img.png" alt="">
           </div>
         </div>
         <div class="col-md-6">
           <div class="detail-box">
-            <div class="heading_container mb-2">
+            <hgroup class="mb-2">
               <h2>Nosotros</h2>
-            </div>
+            </hgroup>
             <p>
               There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
               in some form, by injected humour, or randomised words which don't look even slightly believable. If you

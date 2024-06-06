@@ -3,11 +3,9 @@
   <!-- book section -->
   <section class="book_section layout_padding">
     <div class="container">
-      <div class="heading_container">
-        <h2>
-          Book A Table
-        </h2>
-      </div>
+      <hgroup>
+        <h2>Book A Table</h2>
+      </hgroup>
       <div class="row">
         <div class="col-md-6">
           <div class="form_container">
