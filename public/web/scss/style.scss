@@ -21,10 +21,49 @@ $secondary: #222831;
 }
 
 // feane's styles, reworked.
+.btn {
+    border: none;
+    padding: 10px 30px;
+
+    i {
+        font-size: 1.3em;
+    }
+}
+
 .btn-primary {
     @include button_color($primary, white);
 }
 
+.btn-secondary {
+    @include button_color($secondary, white);
+}
+
+input {
+    color: inherit !important;
+}
+
+input[type=email],
+input[type=password],
+input[type=text] {
+    &.form-control {
+        height: 50px;
+        padding-left: 25px;
+        background-color: transparent;
+        border: 1px solid #ccc;
+        outline: none;
+        border-radius: 5px;
+    }
+}
+
+/* Overrides */
+.btn {
+    @extend .rounded-pill;
+}
+
 .slider .btn {
     padding: 10px 45px;
+}
+
+.user_option .btn {
+    padding-block: 8px;
 }

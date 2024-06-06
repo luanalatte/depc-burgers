@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-6">
           <div class="detail-box">
-            <div class="heading_container">
+            <div class="heading_container mb-2">
               <h2>Nosotros</h2>
             </div>
             <p>
@@ -22,7 +22,6 @@
               are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in
               the middle of text. All
             </p>
-            <a href="">Read More</a>
           </div>
         </div>
       </div>

@@ -252,9 +252,6 @@ body > header {
   //   }
   // }
 
-  .order_online {
-    @include hero_btn($primary1, $white, 8px, 30px, 45px);
-  }
 }
 
 .custom_nav-container .navbar-toggler {
@@ -345,11 +342,6 @@ section.slider {
       font-size: 14px;
     }
 
-    // a {
-    //   @include hero_btn($primary1, $white, 10px, 45px, 45px);
-    //   margin-top: 10px;
-    // }
-
   }
 
   .img-box {
@@ -434,22 +426,6 @@ section.slider {
         }
       }
 
-      // p {}
-
-      a {
-        @include hero_btn($primary1, $white, 10px, 30px, 45px);
-
-        i {
-          font-size: 1.3rem;
-        }
-
-        svg, i {
-          width: 20px;
-          height: auto;
-          margin-left: 5px;
-          fill: $white;
-        }
-      }
     }
 
     &:hover {
@@ -607,16 +583,6 @@ section.slider {
 
   }
 
-  .detail-box {
-    p {
-      margin-top: 15px;
-    }
-
-    a {
-      @include hero_btn($primary1, $white, 10px, 45px, 45px);
-      margin-top: 15px;
-    }
-  }
 }
 
 // end about section
@@ -776,27 +742,6 @@ section.slider {
   .form_container {
     .form-group {
       margin-bottom: 25px;
-    }
-
-    input {
-      width: 100%;
-      border: none;
-      height: 50px;
-      padding-left: 25px;
-      background-color: transparent;
-      border: 1px solid #ccc;
-      outline: none;
-      color: $black;
-      border-radius: 5px;
-
-      &::placeholder {
-        color: #222222;
-      }
-
-      &.message-box {
-        height: 120px;
-        border-radius: 5px;
-      }
     }
 
     .btn-box {

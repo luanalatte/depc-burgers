@@ -91,7 +91,7 @@
                                 <i class="fa fa-search" aria-hidden="true"></i>
                                 </button>
                             </form> -->
-                            <a href="" class="order_online">Pedir Ahora</a>
+                            <a href="" class="btn btn-primary">Pedir Ahora</a>
                         </div>
                     </div>
                 </nav>

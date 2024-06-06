@@ -11,7 +11,7 @@
                 <h1>LAS MEJORES HAMBURGUESAS</h1>
                 <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
                 <div class="btn-box">
-                  <a href="/takeaway" class="btn btn-primary mt-2 rounded-pill">PEDIR AHORA</a>
+                  <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
                 </div>
               </div>
             </div>
@@ -26,7 +26,7 @@
                 <h1>LAS PAPAS MÁS RICAS</h1>
                 <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
                 <div class="btn-box">
-                  <a href="/takeaway" class="btn btn-primary mt-2 rounded-pill">PEDIR AHORA</a>
+                  <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
                 </div>
               </div>
             </div>
@@ -41,7 +41,7 @@
                 <h1>EL PAN MÁS CROCANTE</h1>
                 <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
                 <div class="btn-box">
-                  <a href="/takeaway" class="btn btn-primary mt-2 rounded-pill">PEDIR AHORA</a>
+                  <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
                 </div>
               </div>
             </div>
@@ -72,8 +72,8 @@
             <div class="detail-box">
               <h5>Tasty Thursdays</h5>
               <h6><span>20%</span> Off</h6>
-              <a href="">
-                Order Now <i class="fa fa-shopping-cart"></i>
+              <a href="" class="btn btn-primary">
+                Pedir Ahora <i class="fa fa-shopping-cart ml-1"></i>
               </a>
             </div>
           </div>
@@ -86,8 +86,8 @@
             <div class="detail-box">
               <h5>Pizza Days</h5>
               <h6><span>15%</span> Off</h6>
-              <a href="">
-                Order Now <i class="fa fa-shopping-cart"></i>
+              <a href="" class="btn btn-primary">
+                Pedir Ahora <i class="fa fa-shopping-cart ml-1"></i>
               </a>
             </div>
           </div>
