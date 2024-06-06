@@ -2,18 +2,13 @@
 @section('slider')
 <section class="slider">
   <div id="customCarousel1" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
+    <div class="carousel-inner text-center text-md-left">
       <div class="carousel-item active">
-        <div class="container ">
+        <div class="container">
           <div class="row">
-            <div class="col-md-7 col-lg-6 ">
-              <div class="detail-box">
-                <h1>LAS MEJORES HAMBURGUESAS</h1>
-                <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
-                <div class="btn-box">
-                  <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
-                </div>
-              </div>
+            <div class="col-md-7 col-lg-6">
+              <h1>LAS MEJORES HAMBURGUESAS</h1>
+              <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
             </div>
           </div>
         </div>
@@ -21,29 +16,19 @@
       <div class="carousel-item">
         <div class="container">
           <div class="row">
-            <div class="col-md-7 col-lg-6 ">
-              <div class="detail-box">
-                <h1>LAS PAPAS MÁS RICAS</h1>
-                <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
-                <div class="btn-box">
-                  <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
-                </div>
-              </div>
+            <div class="col-md-7 col-lg-6">
+              <h1>LAS PAPAS MÁS RICAS</h1>
+              <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
             </div>
           </div>
         </div>
       </div>
       <div class="carousel-item">
-        <div class="container ">
+        <div class="container">
           <div class="row">
-            <div class="col-md-7 col-lg-6 ">
-              <div class="detail-box">
-                <h1>EL PAN MÁS CROCANTE</h1>
-                <!-- <p>Doloremque, itaque aperiam facilis rerum, commodi, temporibus sapiente ad mollitia laborum quam quisquam esse error unde. Tempora ex doloremque, labore, sunt repellat dolore, iste magni quos nihil ducimus libero ipsam.</p> -->
-                <div class="btn-box">
-                  <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
-                </div>
-              </div>
+            <div class="col-md-7 col-lg-6">
+              <h1>EL PAN MÁS CROCANTE</h1>
+              <a href="/takeaway" class="btn btn-primary mt-2">PEDIR AHORA</a>
             </div>
           </div>
         </div>
