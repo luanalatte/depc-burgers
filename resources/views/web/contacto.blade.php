@@ -1,53 +1,27 @@
 @extends('web.plantilla', ['page'=>'contacto'])
 @section('contenido')
-  <!-- book section -->
-  <section class="book_section layout_padding">
-    <div class="container">
-      <hgroup>
-        <h2>Book A Table</h2>
-      </hgroup>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form_container">
-            <form action="">
-              <div>
-                <input type="text" class="form-control" placeholder="Your Name" />
-              </div>
-              <div>
-                <input type="text" class="form-control" placeholder="Phone Number" />
-              </div>
-              <div>
-                <input type="email" class="form-control" placeholder="Your Email" />
-              </div>
-              <div>
-                <select class="form-control nice-select wide">
-                  <option value="" disabled selected>
-                    How many persons?
-                  </option>
-                  <option value="">2</option>
-                  <option value="">3</option>
-                  <option value="">4</option>
-                  <option value="">5</option>
-                </select>
-              </div>
-              <div>
-                <input type="date" class="form-control">
-              </div>
-              <div class="btn_box">
-                <button>
-                  Book Now
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="map_container ">
-            <div id="googleMap"></div>
-          </div>
-        </div>
+<section class="layout_padding" id="contact">
+  <div class="container">
+    <hgroup class="mb-5">
+      <h2>Contacto</h2>
+    </hgroup>
+    <div class="row">
+      <div class="col-md-6">
+        <form action="" method="post">
+          <input class="form-control" type="text" name="txtNombre" id="txtNombre" placeholder="Nombre">
+          <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Correo">
+          <input class="form-control" type="tel" name="txtCelular" id="txtCelular" placeholder="Celular">
+          <!-- TODO: Fix textarea height -->
+          <textarea class="form-control" name="txtMensaje" id="txtMensaje" placeholder="Escribe tu mensaje aquí" rows="5"></textarea>
+          <button type="submit" class="btn btn-primary">ENVIAR</button>
+        </form>
       </div>
+      <!-- <div class="col-md-6">
+        <div class="map_container">
+          <div id="googleMap"></div>
+        </div>
+      </div> -->
     </div>
-  </section>
-  <!-- end book section -->
+  </div>
+</section>
 @endsection

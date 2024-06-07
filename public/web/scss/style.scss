@@ -15,6 +15,20 @@ $secondary: #222831;
     }
 }
 
+@mixin form_control() {
+    color: inherit !important;
+    border: 1px solid #999;
+    min-height: 50px;
+    padding-left: 25px;
+    background-color: transparent;
+    outline: none;
+    border-radius: 5px;
+
+    &::placeholder {
+        color: #222222;
+    }
+}
+
 // from Bootstrap 5.
 .rounded-pill {
     border-radius: 50rem;
@@ -38,20 +52,23 @@ $secondary: #222831;
     @include button_color($secondary, white);
 }
 
-input {
-    color: inherit !important;
+.form-control {
+    margin-bottom: 25px;
+}
+
+textarea {
+    &.form-control {
+        resize: none;
+        @include form_control();
+    }
 }
 
 input[type=email],
 input[type=password],
+input[type=tel],
 input[type=text] {
     &.form-control {
-        height: 50px;
-        padding-left: 25px;
-        background-color: transparent;
-        border: 1px solid #ccc;
-        outline: none;
-        border-radius: 5px;
+        @include form_control();
     }
 }
 
@@ -125,4 +142,11 @@ hgroup {
 
 .user_option .btn {
     padding-block: 8px;
+}
+
+#contact {
+    button[type=submit].btn {
+        margin-top: 1rem;
+        padding-inline: 55px;
+    }
 }
