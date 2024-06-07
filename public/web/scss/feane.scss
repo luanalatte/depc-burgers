@@ -420,11 +420,8 @@ body > header {
       height: 215px;
       border-radius: 0 0 0 45px;
       margin: -1px;
-      padding: 25px;
 
       img {
-        max-width: 100%;
-        max-height: 145px;
         transition: all .2s;
       }
     }
@@ -442,34 +439,6 @@ body > header {
 
       h6 {
         margin-top: 10px;
-      }
-    }
-
-    .options {
-      display: flex;
-      justify-content: space-between;
-
-      a {
-        width: 40px;
-        height: 40px;
-        border-radius: 100%;
-        background: $primary1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-
-        i {
-          font-size: 1.3rem;
-          position: relative;
-          left: -0.1rem;
-        }
-
-        svg, i {
-          width: 18px;
-          height: auto;
-          fill: $white;
-        }
       }
     }
 

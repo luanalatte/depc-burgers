@@ -38,9 +38,17 @@ $secondary: #222831;
 .btn {
     border: none;
     padding: 10px 30px;
+}
 
-    i {
-        font-size: 1.3em;
+a, button {
+    &:has(>i) {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+    }
+
+    &>i {
+        font-size: 1.3em !important;
     }
 }
 
@@ -142,6 +150,51 @@ hgroup {
 
 .user_option .btn {
     padding-block: 8px;
+}
+
+.product {
+    .img-box {
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .detail-box {
+        display: flex;
+        flex-direction: column;
+        height: 200px;
+    }
+}
+
+.add-to-cart {
+    @extend .rounded-pill;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    background-color: $primary;
+    padding: 0.25rem 0.75rem;
+
+    input {
+        width: 3rem;
+        border: 0;
+        background-color: white;
+        border-radius: 5px;
+    }
+
+    a {
+        color: white;
+    }
+}
+
+
+.fa-shopping-cart {
+    position: relative;
+    left: -0.1em;
 }
 
 #contact {
