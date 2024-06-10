@@ -5,6 +5,7 @@ namespace App\Entidades;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 require_once app_path() . "/start/funciones_generales.php";
 
@@ -237,5 +238,10 @@ class Cliente extends Model
         }
 
         return $lstRetorno;
+    }
+
+    static function autenticado()
+    {
+        return Session::get('cliente_id') != null;
     }
 }

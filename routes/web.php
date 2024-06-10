@@ -28,6 +28,8 @@ Route::get('/contacto', 'ControladorWebHome@contacto');
 Route::get('/login', 'ControladorWebLogin@index');
 Route::post('/login', 'ControladorWebLogin@login');
 Route::get('/logout', 'ControladorWebLogin@logout');
+Route::get('/micuenta', 'ControladorWebMiCuenta@index');
+Route::post('/micuenta', 'ControladorWebMiCuenta@editar');
 
 /* --------------------------------------------- */
 /* CONTROLADOR LOGIN                             */
