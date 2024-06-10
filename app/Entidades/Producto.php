@@ -31,9 +31,6 @@ class Producto extends Model
         $this->cantidad = trimIfString($request->input('txtCantidad'));
         $this->precio = trimIfString($request->input('txtPrecio'));
         $this->descripcion = trimIfString($request->input('txtDescripcion'));
-
-        // TODO: Imagen
-        // $this->imagen = trimIfString($request->input('txtImagen'));
     }
 
     public function insertar() {
@@ -133,6 +130,7 @@ class Producto extends Model
 
     public static function contarRegistros()
     {
+        // TODO: Incluir filtrado de obtenerPaginado
         $sql = "SELECT COUNT(*) AS total FROM productos";
 
         if ($fila = DB::selectOne($sql)) {

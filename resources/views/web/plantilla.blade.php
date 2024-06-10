@@ -83,6 +83,7 @@
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
                             @endif
+                            <!-- FIXME: Remove underline -->
                             <a href="/carrito" class="cart_link" title="Carrito">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                             </a>
