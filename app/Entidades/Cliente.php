@@ -44,7 +44,7 @@ class Cliente extends Model
             $claveNueva = trimIfString($request->input('txtClave'));
             $claveAntigua = trimIfString($request->input('txtClaveAntigua'));
 
-            if (is_string($claveNueva) && is_string($claveAntigua) && !is_null($claveDB = $this->cargarClave()) && password_verify($claveAntigua, $claveDB)) {
+            if (is_string($claveNueva) && is_string($claveAntigua) && $this->verificarClave($claveAntigua)) {
                 $this->clave = password_hash($claveNueva, PASSWORD_DEFAULT);
             }
         }
@@ -52,6 +52,13 @@ class Cliente extends Model
         // Nulleables
         if ($request->has('txtTelefono'))
             $this->telefono = trimIfString($request->input('txtTelefono'));
+    }
+
+    public function verificarClave($clave)
+    {
+        $claveDB = $this->cargarClave();
+
+        return !is_null($claveDB) && password_verify($clave, $claveDB);
     }
 
     public function cargarClave()
@@ -164,6 +171,21 @@ class Cliente extends Model
                 FROM clientes WHERE idcliente = ?";
 
         return self::construirDesdeFila(DB::selectOne($sql, [$idCliente]));
+    }
+
+    public static function obtenerPorEmail($email)
+    {
+        $sql = "SELECT
+                  idcliente,
+                  nombre,
+                  apellido,
+                  dni,
+                  email,
+                  clave,
+                  telefono
+                FROM clientes WHERE email = ?";
+
+        return self::construirDesdeFila(DB::selectOne($sql, [$email]));
     }
 
     public static function obtenerTodos()

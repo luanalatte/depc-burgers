@@ -74,7 +74,7 @@
                             </li>
                         </ul>
                         <div class="user_option">
-                            @if(isset($_SESSION, $_SESSION['nombre']))
+                            @if(Session::get('cliente_id'))
                             <a href="/micuenta" class="user_link" title="Mi Cuenta">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>

@@ -25,6 +25,9 @@ Route::get('/', 'ControladorWebHome@index');
 Route::get('/takeaway', 'ControladorWebHome@takeaway');
 Route::get('/nosotros', 'ControladorWebHome@nosotros');
 Route::get('/contacto', 'ControladorWebHome@contacto');
+Route::get('/login', 'ControladorWebLogin@index');
+Route::post('/login', 'ControladorWebLogin@login');
+Route::get('/logout', 'ControladorWebLogin@logout');
 
 /* --------------------------------------------- */
 /* CONTROLADOR LOGIN                             */
