@@ -18,7 +18,7 @@
       <div class="filters-content">
         <div class="row grid">
           @foreach($aProductos as $producto)
-            <div class="col-sm-6 col-lg-4 all categoria-{{$producto->fk_idcategoria}}">
+            <div class="col-md-6 col-lg-4 all categoria-{{$producto->fk_idcategoria}}">
               <article class="box product">
                 <div>
                   <div class="img-box">
@@ -29,15 +29,21 @@
                     @if($producto->descripcion)
                     <p>{{$producto->descripcion}}</p>
                     @endif
-                    <div class="d-flex justify-content-between mt-auto">
-                      <h6>${{ number_format($producto->precio, 2, ",", ".") }}</h6>
+                    @if($producto->cantidad)
+                    <p>{{$producto->cantidad}}</p>
+                    @endif
+                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                      <h6 class="price my-0 mr-2 font-weight-bold">${{ number_format($producto->precio, 2, ",", ".") }}</h6>
                       @if(Session::get('cliente_id'))
-                      <form action="/carrito/agregar" method="POST" class="add-to-cart">
+                      <form action="/carrito/agregar" method="POST">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
                         <input type="hidden" name="idproducto" value="{{$producto->idproducto}}">
-                        <!-- TODO: Usar form-group para estilizar mejor este botón -->
-                        <input type="number" name="txtCantidad" id="txtCantidad" value="1">
-                        <button type="submit">Añadir al carrito <i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                        <div class="input-group justify-content-end flex-nowrap">
+                          <input type="number" class="form-control" name="txtCantidad" id="txtCantidad" value="1">
+                          <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary py-0"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                          </div>
+                        </div>
                       </form>
                       @else
                       <a href="/login" class="btn btn-primary">Pedir Ahora</a>

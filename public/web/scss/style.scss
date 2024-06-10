@@ -168,29 +168,19 @@ hgroup {
         flex-direction: column;
         height: 200px;
     }
-}
 
-.add-to-cart {
-    @extend .rounded-pill;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    background-color: $primary;
-    padding: 0.25rem 0.75rem;
-
-    input {
-        width: 3rem;
-        border: 0;
-        background-color: white;
-        border-radius: 5px;
+    .price {
+        font-size: 1.2rem;
     }
 
-    a {
-        color: white;
+    input[type=number] {
+        border-top-left-radius: 50rem;
+        border-bottom-left-radius: 50rem;
+        flex-grow: 0;
+        flex-basis: 100px;
+        padding-left: 1.2rem;
     }
 }
-
 
 .fa-shopping-cart {
     position: relative;
