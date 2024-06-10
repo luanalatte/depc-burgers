@@ -14,6 +14,8 @@ class Carrito extends Model
         'idcarrito', 'fk_idcliente'
     ];
 
+    public $aProductos = [];
+
     // protected $hidden = [];
 
     public function insertar() {
@@ -41,6 +43,63 @@ class Carrito extends Model
     public function eliminar() {
         $sql = "DELETE FROM carritos WHERE idcarrito = ?";
         DB::delete($sql, [$this->idcarrito]);
+    }
+
+    public function cargarProductos()
+    {
+        $sql = "SELECT fk_idproducto, cantidad FROM carrito_productos WHERE fk_idcarrito = ?";
+
+        $filas = DB::select($sql, [$this->idcarrito]);
+        foreach ($filas as $fila) {
+            $this->aProductos[] = [Producto::obtenerPorId($fila->fk_idproducto), $fila->cantidad];
+        }
+    }
+
+    public function obtenerCantidad($idproducto)
+    {
+        $sql = "SELECT cantidad FROM carrito_productos WHERE fk_idcarrito = ? AND fk_idproducto = ?";
+
+        return DB::selectOne($sql, [$this->idcarrito, $idproducto])->cantidad ?? 0;
+    }
+
+    public function agregarProducto($idproducto, int $cantidad = 1)
+    {
+        if ($cantidad <= 0) {
+            return;
+        }
+
+        $cantidadActual = $this->obtenerCantidad($idproducto);
+        if ($cantidadActual == 0) {
+            $sql = "INSERT INTO carrito_productos (
+                      fk_idcarrito,
+                      fk_idproducto,
+                      cantidad
+                    ) VALUES (?, ?, ?)";
+    
+            DB::insert($sql, [$this->idcarrito, $idproducto, $cantidad]);
+        } else {
+            $this->editarProducto($idproducto, $cantidadActual + $cantidad);
+        }
+    }
+
+    public function editarProducto($idproducto, int $cantidad)
+    {
+        if ($cantidad <= 0) {
+            return $this->eliminarProducto($idproducto);
+        }
+
+        $sql = "UPDATE carrito_productos SET
+                  cantidad = ?
+                WHERE fk_idcarrito = ? AND fk_idproducto = ?";
+
+        DB::update($sql, [$cantidad, $this->idcarrito, $idproducto]);
+    }
+
+    public function eliminarProducto($idproducto)
+    {
+        $sql = "DELETE FROM carrito_productos WHERE fk_idcarrito = ? AND fk_idproducto = ?";
+
+        DB::delete($sql, [$this->idcarrito, $idproducto]);
     }
 
     private static function construirDesdeFila($fila) {
@@ -77,5 +136,15 @@ class Carrito extends Model
         }
 
         return $lstRetorno;
+    }
+
+    public static function obtenerPorCliente(Cliente $cliente)
+    {
+        $sql = "SELECT
+                  idcarrito,
+                  fk_idcliente
+                FROM carritos WHERE fk_idcliente = ?";
+
+        return self::construirDesdeFila(DB::selectOne($sql, [$cliente->idcliente]));
     }
 }

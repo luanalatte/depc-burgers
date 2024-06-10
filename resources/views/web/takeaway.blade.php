@@ -31,13 +31,17 @@
                     @endif
                     <div class="d-flex justify-content-between mt-auto">
                       <h6>${{ number_format($producto->precio, 2, ",", ".") }}</h6>
-                      <!-- TODO: Solo mostrar el botón si se ha iniciado sesión -->
-                      <form action="" method="POST" class="add-to-cart">
+                      @if(Session::get('cliente_id'))
+                      <form action="/carrito/agregar" method="POST" class="add-to-cart">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
+                        <input type="hidden" name="idproducto" value="{{$producto->idproducto}}">
+                        <!-- TODO: Usar form-group para estilizar mejor este botón -->
                         <input type="number" name="txtCantidad" id="txtCantidad" value="1">
-                        <a href="">
-                          Añadir al carrito <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                        </a>
+                        <button type="submit">Añadir al carrito <i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
                       </form>
+                      @else
+                      <a href="/login" class="btn btn-primary">Pedir Ahora</a>
+                      @endif
                     </div>
                   </div>
                 </div>

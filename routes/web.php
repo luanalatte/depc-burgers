@@ -30,6 +30,9 @@ Route::post('/login', 'ControladorWebLogin@login');
 Route::get('/logout', 'ControladorWebLogin@logout');
 Route::get('/micuenta', 'ControladorWebMiCuenta@index');
 Route::post('/micuenta', 'ControladorWebMiCuenta@editar');
+Route::get('/carrito', 'ControladorWebCarrito@index');
+Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
+Route::post('/carrito/editar', 'ControladorWebCarrito@editar');
 
 /* --------------------------------------------- */
 /* CONTROLADOR LOGIN                             */
