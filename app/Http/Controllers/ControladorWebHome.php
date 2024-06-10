@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Entidades\Categoria;
 use App\Entidades\Producto;
-use App\Entidades\Sistema\Patente;
-use App\Entidades\Sistema\Usuario;
-use Session;
+use App\Entidades\Sucursal;
 
 class ControladorWebHome extends Controller
 {
     public function index()
     {
-        return view('web.index');
+        $aSucursales = Sucursal::obtenerTodos();
+        return view('web.index', compact('aSucursales'));
     }
 
     public function takeaway()

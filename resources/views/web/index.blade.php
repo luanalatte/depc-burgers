@@ -85,8 +85,24 @@
 <section id="sucursales" class="layout_padding-bottom">
   <div class="container">
     <hgroup class="text-center">
-      <h2>Sucursales</h2>
+      <h2 class="mb-5">Sucursales</h2>
       <!-- TODO: Mostrar Sucursales -->
+      <div class="row">
+        @foreach($aSucursales as $sucursal)
+        <div class="col-md-6 col-lg-4 pb-3">
+          <article class="sucursal text-white">
+            <h3>{{ $sucursal->nombre }}</h3>
+            <p>{{ $sucursal->direccion }}</p>
+            <a class="mt-2" href="tel:{{ $sucursal->telefono }}"><i class="fa fa-phone"></i> {{ $sucursal->telefono }}</a>
+            @if($sucursal->maps_url)
+              <div class="mt-2">
+                <a href="{{ $sucursal->maps_url }}" target="_blank" class="btn btn-primary">Ver en Maps</a>
+              </div>
+            @endif
+          </article>
+        </div>
+        @endforeach
+      </div>
     </hgroup>
   </div>
 </section>
