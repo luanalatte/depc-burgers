@@ -24,9 +24,9 @@ $secondary: #222831;
     outline: none;
     border-radius: 5px;
 
-    &::placeholder {
-        color: #222222;
-    }
+    // &::placeholder {
+    //     color: #222222;
+    // }
 }
 
 // from Bootstrap 5.
@@ -60,7 +60,7 @@ a, button {
     @include button_color($secondary, white);
 }
 
-.form-control {
+.form-control, input[type=checkbox] {
     margin-bottom: 25px;
 }
 

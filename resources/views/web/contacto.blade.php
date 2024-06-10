@@ -9,8 +9,8 @@
       <div class="col-md-6">
         <form action="" method="post">
           <input class="form-control" type="text" name="txtNombre" id="txtNombre" placeholder="Nombre">
-          <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Correo">
-          <input class="form-control" type="tel" name="txtCelular" id="txtCelular" placeholder="Celular">
+          <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Correo Electrónico">
+          <input class="form-control" type="tel" name="txtTelefono" id="txtTelefono" placeholder="Celular / Whatsapp">
           <!-- TODO: Fix textarea height -->
           <textarea class="form-control" name="txtMensaje" id="txtMensaje" placeholder="Escribe tu mensaje aquí" rows="5"></textarea>
           <button type="submit" class="btn btn-primary">ENVIAR</button>
