@@ -9,15 +9,15 @@
       <div class="col-md-6 offset-md-3">
         <form action="" method="POST">
           <label for="txtNombre">Nombre:</label>
-          <span class="form-control">{{ $cliente->nombre }}</span>
+          <input type="text" readonly class="form-control" value="{{ $cliente->nombre }}"></input>
           <label for="txtApellido">Apellido:</label>
-          <span class="form-control">{{ $cliente->apellido }}</span>
+          <input type="text" readonly class="form-control" value="{{ $cliente->apellido }}"></input>
           <label for="txtDocumento">Documento:</label>
-          <span class="form-control">{{ $cliente->dni }}</span>
+          <input type="text" readonly class="form-control" value="{{ $cliente->dni }}"></input>
           <label for="txtEmail">Correo Electrónico:</label>
-          <span class="form-control">{{ $cliente->email }}</span>
+          <input type="text" readonly class="form-control" value="{{ $cliente->email }}"></input>
           <label for="txtTelefono">Celular / Whatsapp:</label>
-          <span class="form-control">{{ $cliente->telefono }}</span>
+          <input type="text" readonly class="form-control" value="{{ $cliente->telefono }}"></input>
         </form>
         <a href="/logout" class="btn btn-secondary">Cerrar Sesión</a>
       </div>

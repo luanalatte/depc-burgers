@@ -50,7 +50,7 @@
                 <strong>TOTAL $ {{ number_format($carrito->total, 2, ',', '.') }}</strong>
               </div>
               <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center">
-                <select name="lstOpcionPago" id="lstOpcionPago" required>
+                <select class="form-control" name="lstOpcionPago" id="lstOpcionPago" required>
                   <option value="" selected disabled>Seleccionar Medio De Pago</option>
                   <option value="0">Mercadopago</option>
                   <option value="1">Abonar en sucursal</option>

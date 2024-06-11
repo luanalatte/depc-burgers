@@ -60,7 +60,7 @@ a, button {
     @include button_color($secondary, white);
 }
 
-.form-control, input[type=checkbox] {
+input.form-control, textarea.form-control, input[type=checkbox] {
     margin-bottom: 25px;
 }
 
@@ -209,4 +209,8 @@ hgroup {
     background-color: #222831;
     padding: 20px 15px;
     border-radius: 5px;
+}
+
+.nice-select {
+    padding: unset;
 }
