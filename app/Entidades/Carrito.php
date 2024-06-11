@@ -14,6 +14,7 @@ class Carrito extends Model
         'idcarrito', 'fk_idcliente'
     ];
 
+    public $total = 0;
     public $aProductos = [];
 
     // protected $hidden = [];
@@ -43,16 +44,6 @@ class Carrito extends Model
     public function eliminar() {
         $sql = "DELETE FROM carritos WHERE idcarrito = ?";
         DB::delete($sql, [$this->idcarrito]);
-    }
-
-    public function cargarProductos()
-    {
-        $sql = "SELECT fk_idproducto, cantidad FROM carrito_productos WHERE fk_idcarrito = ?";
-
-        $filas = DB::select($sql, [$this->idcarrito]);
-        foreach ($filas as $fila) {
-            $this->aProductos[] = [Producto::obtenerPorId($fila->fk_idproducto), $fila->cantidad];
-        }
     }
 
     public function obtenerCantidad($idproducto)
@@ -110,6 +101,8 @@ class Carrito extends Model
         $carrito->idcarrito = $fila->idcarrito;
         $carrito->fk_idcliente = $fila->fk_idcliente;
 
+        $carrito->total = $fila->total ?? 0;
+
         return $carrito;
     }
 
@@ -138,13 +131,64 @@ class Carrito extends Model
         return $lstRetorno;
     }
 
-    public static function obtenerPorCliente(Cliente $cliente)
+    public static function obtenerPorCliente($idcliente)
     {
         $sql = "SELECT
                   idcarrito,
                   fk_idcliente
                 FROM carritos WHERE fk_idcliente = ?";
 
-        return self::construirDesdeFila(DB::selectOne($sql, [$cliente->idcliente]));
+        return self::construirDesdeFila(DB::selectOne($sql, [$idcliente]));
+    }
+
+    public static function cargarCompleto($idcliente)
+    {
+        $carrito = self::obtenerPorCliente($idcliente);
+        if ($carrito == null) {
+            return null;
+        }
+
+        $idcarrito = $carrito->idcarrito;
+
+        $sql = "SELECT
+                  A.idcarrito,
+                  A.fk_idcliente,
+                  C.idproducto,
+                  C.nombre AS prod_nombre,
+                  C.cantidad AS prod_cantidad,
+                  C.precio AS prod_precio,
+                  C.descripcion AS prod_descripcion,
+                  C.imagen AS prod_imagen,
+                  B.cantidad,
+                  @Subtotal := C.precio * B.cantidad AS subtotal,
+                  SUM(@Subtotal) OVER () AS total
+                FROM carritos A
+                LEFT JOIN carrito_productos B ON A.idcarrito = B.fk_idcarrito
+                LEFT JOIN productos C ON B.fk_idproducto = C.idproducto
+                WHERE A.idcarrito = ?";
+
+        $aFilas = DB::select($sql, [$idcarrito]);
+        if (!$aFilas) {
+            return null;
+        }
+
+        $carrito = self::construirDesdeFila($aFilas[0]);
+
+        foreach ($aFilas as $fila) {
+            $carrito->aProductos[] = [
+                'producto' => new Producto([
+                    'idproducto' => $fila->idproducto,
+                    'nombre' => $fila->prod_nombre,
+                    'cantidad' => $fila->prod_cantidad,
+                    'precio' => $fila->prod_precio,
+                    'descripcion' => $fila->prod_descripcion,
+                    'imagen' => $fila->prod_imagen
+                ]),
+                'cantidad' => $fila->cantidad,
+                'subtotal' => $fila->subtotal
+            ];
+        }
+
+        return $carrito;
     }
 }

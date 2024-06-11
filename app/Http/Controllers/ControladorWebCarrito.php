@@ -19,14 +19,12 @@ class ControladorWebCarrito extends Controller
         }
 
         $cliente = Cliente::obtenerPorId(Session::get('cliente_id'));
-        $carrito = Carrito::obtenerPorCliente($cliente);
+        $carrito = Carrito::cargarCompleto($cliente->idcliente);
 
         if (is_null($carrito)) {
             $carrito = new Carrito();
             $carrito->fk_idcliente = $cliente->idcliente;
             $carrito->insertar();
-        } else {
-            $carrito->cargarProductos();
         }
 
         return view('web.carrito', compact('carrito'));
@@ -49,6 +47,7 @@ class ControladorWebCarrito extends Controller
         $idproducto = $request->get('idproducto');
         $cantidad = $request->input('txtCantidad', 1);
         $carrito->agregarProducto($idproducto, $cantidad);
+
 
         // TODO: No redireccionar, solo notificar. Popup Toast?
         return redirect('/carrito');
