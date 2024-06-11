@@ -32,7 +32,8 @@
                       </div>
                       <input class="form-control" type="number" name="txtCantidad" id="txtCantidad" value="{{ $fila['cantidad'] }}">
                     </div>
-                    <div class="my-2">
+                    <div class="my-2 d-flex justify-content-between">
+                      <span class="d-block text-right">$ {{ number_format($fila['producto']->precio, 2, ',', '.') }}</span>
                       <span class="d-block text-right">SUBTOTAL $ {{ number_format($fila['subtotal'], 2, ',', '.') }}</span>
                     </div>
                     <div class="text-right">

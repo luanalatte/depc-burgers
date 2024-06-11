@@ -136,7 +136,8 @@ class Carrito extends Model
         $sql = "SELECT
                   idcarrito,
                   fk_idcliente
-                FROM carritos WHERE fk_idcliente = ?";
+                FROM carritos WHERE fk_idcliente = ?
+                ORDER BY idcarrito DESC LIMIT 1";
 
         return self::construirDesdeFila(DB::selectOne($sql, [$idcliente]));
     }
@@ -160,8 +161,7 @@ class Carrito extends Model
                   C.descripcion AS prod_descripcion,
                   C.imagen AS prod_imagen,
                   B.cantidad,
-                  @Subtotal := C.precio * B.cantidad AS subtotal,
-                  SUM(@Subtotal) OVER () AS total
+                  @Subtotal := C.precio * B.cantidad AS subtotal
                 FROM carritos A
                 LEFT JOIN carrito_productos B ON A.idcarrito = B.fk_idcarrito
                 LEFT JOIN productos C ON B.fk_idproducto = C.idproducto
@@ -187,6 +187,8 @@ class Carrito extends Model
                 'cantidad' => $fila->cantidad,
                 'subtotal' => $fila->subtotal
             ];
+
+            $carrito->total += $fila->subtotal;
         }
 
         return $carrito;
