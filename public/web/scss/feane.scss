@@ -223,35 +223,6 @@ body > header {
   a {
     margin: 0 10px;
   }
-
-  .user_link, .cart_link {
-    color: $white;
-
-    &:hover {
-      color: $primary1;
-    }
-  }
-
-  // .cart_link {
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-
-  //   svg {
-  //     width: 17px;
-  //     height: auto;
-  //     fill: $white;
-  //     margin-bottom: 2px;
-  //   }
-
-  //   &:hover {
-
-  //     svg {
-  //       fill: $primary1;
-  //     }
-  //   }
-  // }
-
 }
 
 .custom_nav-container .navbar-toggler {

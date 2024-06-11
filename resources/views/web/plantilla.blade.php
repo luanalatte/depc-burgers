@@ -75,23 +75,17 @@
                         </ul>
                         <div class="user_option">
                             @if(Session::get('cliente_id'))
-                            <a href="/micuenta" class="user_link" title="Mi Cuenta">
+                            <a href="/micuenta" class="link" title="Mi Cuenta">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
+                            <a href="/carrito" class="link" title="Carrito">
+                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                            </a>
                             @else
-                            <a href="/login" class="user_link" title="Iniciar Sesión">
+                            <a href="/login" class="link" title="Iniciar Sesión">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </a>
                             @endif
-                            <!-- FIXME: Remove underline -->
-                            <a href="/carrito" class="cart_link" title="Carrito">
-                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                            </a>
-                            <!-- <form class="form-inline">
-                                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                                </button>
-                            </form> -->
                             <a href="" class="btn btn-primary">Pedir Ahora</a>
                         </div>
                     </div>

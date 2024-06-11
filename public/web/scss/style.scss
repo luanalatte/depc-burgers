@@ -148,8 +148,19 @@ hgroup {
     }
 }
 
-.user_option .btn {
-    padding-block: 8px;
+.user_option {
+    .btn {
+        padding-block: 8px;
+    }
+
+    .link {
+        color: white;
+    
+        &:hover {
+            text-decoration: none;
+            color: $primary;
+        }
+    }
 }
 
 .product {
