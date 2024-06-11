@@ -86,7 +86,6 @@
   <div class="container">
     <hgroup class="text-center">
       <h2 class="mb-5">Sucursales</h2>
-      <!-- TODO: Mostrar Sucursales -->
       <div class="row">
         @foreach($aSucursales as $sucursal)
         <div class="col-md-6 col-lg-4 pb-3">

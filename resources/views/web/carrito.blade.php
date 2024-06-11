@@ -19,7 +19,7 @@
                   @endif
                 </div>
                 <div class="col-9">
-                  <h4>{{ $fila['producto']->nombre }}</h4>
+                  <h4>{{ $fila['producto']->nombre }} <small class="font-weight-light">{{ $fila['producto']->cantidad }}</small></h4>
                   @if($fila['producto']->descripcion)
                   <p>{{ $fila['producto']->descripcion }}</p>
                   @endif

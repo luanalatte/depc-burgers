@@ -18,7 +18,7 @@ class ControladorWebLogin extends Controller
 
     public function logout()
     {
-        Session::flush();
+        Session::flush(); // TODO: no usar flush?
         return redirect('');
     }
 
@@ -27,6 +27,8 @@ class ControladorWebLogin extends Controller
         // TODO: usar algo mejor que fescape_string?
         $emailIngresado = fescape_string($request->input('txtEmail'));
         $claveIngresada = fescape_string($request->input('txtClave'));
+
+        // TODO: Implementar 'recordar contraseña' con cookies.
 
         $cliente = Cliente::obtenerPorEmail($emailIngresado);
 
