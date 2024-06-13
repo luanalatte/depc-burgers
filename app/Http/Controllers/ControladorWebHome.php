@@ -16,7 +16,7 @@ class ControladorWebHome extends Controller
 
     public function takeaway()
     {
-        $aProductos = Producto::orderBy('fk_idcategoria')->get(); // TODO: Usar orden de la categoría
+        $aProductos = Producto::orderByCategoria()->get();
         $aCategorias = Categoria::all();
         return view('web.takeaway', compact('aProductos', 'aCategorias'));
     }

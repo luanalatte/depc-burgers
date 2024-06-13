@@ -73,57 +73,45 @@ class ControladorCategoria extends Controller
         if (!Usuario::autenticado())
             return redirect("admin/login");
 
-        $entidad = new Categoria();
-        $entidad->cargarDesdeRequest($request);
+        $categoria = Categoria::findOrNew($request->input('id'));
 
-        try {
-            $bEditando = $_POST["id"] > 0;
-
-            if (empty($entidad->nombre)) {
-                $msg["ESTADO"] = MSG_ERROR;
-                $msg["MSG"] = "Ingrese todos los datos requeridos.";
-            } else {
-                if ($bEditando) {
-                    if (!Patente::autorizarOperacion($codigo = "PRODUCTOEDITAR")) {
-                        $msg["ESTADO"] = MSG_ERROR;
-                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                        return view("sistema.error", compact("titulo", "msg"));
-                    }
-
-                    $entidad->actualizar();
-
-                    $_POST["id"] = $entidad->idproducto;
-                    $msg["ESTADO"] = MSG_SUCCESS;
-                    $msg["MSG"] = OKINSERT;
-                } else {
-                    if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
-                        $msg["ESTADO"] = MSG_ERROR;
-                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                        return view("sistema.error", compact("titulo", "msg"));
-                    }
-
-                    $entidad->insertar();
-
-                    $_POST["id"] = $entidad->idproducto;
-                    $msg["ESTADO"] = MSG_SUCCESS;
-                    $msg["MSG"] = OKINSERT;
-                }
-
-                return view("sistema.categoria-listar", compact("titulo", "msg"));
-            }
-        } catch (Exception $e) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = ERRORINSERT;
-        }
-
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOSCONSULTA")) {
+        if (!Patente::autorizarOperacion($codigo = $categoria->exists ? "PRODUCTOEDITAR" : "PRODUCTOSALTA")) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        $categoria = Categoria::find($entidad->idcategoria) ?? new Categoria();
-        return view("sistema.categoria-nuevo", compact("titulo", "msg", "categoria"));
+        $categoria->cargarDesdeRequest($request);
+
+        if (empty($categoria->nombre)) {
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = "Ingrese todos los datos requeridos.";
+
+            if ($categoria->exists) {
+                $categoria->refresh();
+            }
+            return view("sistema.categoria-nuevo", compact("titulo", "msg", "categoria"));
+        }
+
+        try {
+            $categoria->save();
+
+            $_POST["id"] = $categoria->idproducto;
+            $msg["ESTADO"] = MSG_SUCCESS;
+            $msg["MSG"] = OKINSERT;
+
+            // TODO: Requerir permiso PRODUCTOLISTAR
+            return view("sistema.categoria-listar", compact("titulo", "msg"));
+        } catch (Exception $e) {
+            $msg["ESTADO"] = MSG_ERROR;
+            $msg["MSG"] = ERRORINSERT;
+
+            if ($categoria->exists) {
+                $categoria->refresh();
+            }
+
+            return view("sistema.categoria-nuevo", compact("titulo", "msg", "categoria"));
+        }
     }
 
     public function eliminar(Request $request)
@@ -141,9 +129,7 @@ class ControladorCategoria extends Controller
         }
 
         try {
-            $categoria = new Categoria();
-            $categoria->idcategoria = $request->id;
-            $categoria->eliminar();
+            Categoria::destroy($request->id);
 
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultado["msg"] = "Categoría de productos eliminada exitosamente.";
@@ -172,7 +158,8 @@ class ControladorCategoria extends Controller
         $data = [];
         foreach ($aSlice as $categoria) {
             $row = [
-                '<a href="/admin/categoria/' . $categoria->idcategoria . '">' . $categoria->nombre . '</a>'
+                '<a href="/admin/categoria/' . $categoria->idcategoria . '">' . $categoria->nombre . '</a>',
+                $categoria->posicion
             ];
             $data[] = $row;
         }

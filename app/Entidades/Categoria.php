@@ -3,7 +3,6 @@
 namespace App\Entidades;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -17,56 +16,34 @@ class Categoria extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'idcategoria', 'nombre'
+        'idcategoria', 'nombre', 'posicion'
     ];
 
     protected static function booted() {
         static::addGlobalScope('order', function (Builder $builder) {
-            // TODO: Añadir columna 'orden' para personalizar el orden de las columnas en la tienda.
-            $builder->orderBy('nombre');
+            $builder->orderBy('posicion', 'desc')->orderBy('nombre', 'asc');
         });
     }
 
-    public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
+    public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "desc")
     {
-        $columnas = ['nombre'];
+        $columnas = ['nombre', 'posicion'];
 
-        $orderColumn = $columnas[$orderColumnIdx] ?? 'nombre';
-        $orderDirection = $orderDirection == 'desc' ? 'desc' : 'asc';
+        $orderColumn = $columnas[$orderColumnIdx] ?? 'posicion';
+        $orderDirection = $orderDirection == 'asc' ? 'asc' : 'desc';
 
         return $query->withoutGlobalScope('order')
             ->orderBy($orderColumn, $orderDirection)
-            ->select('idcategoria', 'nombre');
+            ->select('idcategoria', 'nombre', 'posicion');
     }
 
     public function cargarDesdeRequest(Request $request)
     {
-        $this->idcategoria = $request->input('id') != "0" ? $request->input('id') : $this->idcategoria;
+        if (is_null($this->idcategoria) && $request->input('id') != "0") {
+            $this->idcategoria = $request->input('id');
+        }
 
         $this->nombre = trimIfString($request->input('txtNombre'));
-    }
-
-    public function insertar() {
-        $sql = "INSERT INTO categorias (
-                  nombre
-                ) VALUES (?)";
-
-        DB::insert($sql, [$this->nombre]);
-        $this->idcategoria = DB::getPdo()->lastInsertId();
-
-        return $this->idcategoria;
-    }
-
-    public function actualizar() {
-        $sql = "UPDATE categorias SET
-                  nombre = ?
-                WHERE idcategoria = ?";
-
-        DB::update($sql, [$this->nombre, $this->idcategoria]);
-    }
-
-    public function eliminar() {
-        $sql = "DELETE FROM categorias WHERE idcategoria = ?";
-        DB::delete($sql, [$this->idcategoria]);
+        $this->posicion = trimIfString($request->input('txtPosicion')) ?? 0;
     }
 }

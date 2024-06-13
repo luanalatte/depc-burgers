@@ -20,6 +20,13 @@ class Producto extends Model
         'idproducto', 'fk_idcategoria', 'nombre', 'cantidad', 'precio', 'descripcion', 'imagen'
     ];
 
+    public function scopeOrderByCategoria(Builder $query)
+    {
+        return $query->withoutGlobalScope('order')
+            ->join('categorias', 'productos.fk_idcategoria', '=', 'categorias.idcategoria')
+            ->orderBy('categorias.posicion', 'desc');
+    }
+
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
     {
         $columnas = ['nombre', 'categoria', 'cantidad', 'precio', 'descripcion'];

@@ -20,6 +20,7 @@
     <thead>
         <tr>
             <th>Nombre</th>
+            <th>Posición</th>
         </tr>
     </thead>
 </table> 
@@ -31,7 +32,7 @@
 	    "bInfo": true,
 	    "bSearchable": true,
         "pageLength": 25,
-        "order": [[ 0, "asc" ]],
+        "order": [[ 1, "desc" ]],
 	    "ajax": "{{ route('categorias.cargarGrilla') }}"
 	});
 </script>

@@ -33,6 +33,10 @@
                 <label>Nombre: *</label>
                 <input type="text" id="txtNombre" name="txtNombre" class="form-control" value="{{ $categoria->nombre }}" required>
             </div>
+            <div class="form-group col-lg-6">
+                <label>Posición: *</label>
+                <input type="number" id="txtPosicion" name="txtPosicion" class="form-control" value="{{ $categoria->posicion }}">
+            </div>
         </div>
     </form>
 </div>
