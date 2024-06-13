@@ -30,7 +30,7 @@ class ControladorWebLogin extends Controller
 
         // TODO: Implementar 'recordar contraseña' con cookies.
 
-        $cliente = Cliente::obtenerPorEmail($emailIngresado);
+        $cliente = Cliente::where('email', $emailIngresado)->first();
 
         if (is_null($cliente) || !$cliente->verificarClave($claveIngresada)) {
             $msg["ESTADO"] = MSG_ERROR;

@@ -2,6 +2,7 @@
 
 namespace App\Entidades;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -11,15 +12,34 @@ require_once app_path() . "/start/funciones_generales.php";
 class Producto extends Model
 {
     protected $table = 'productos';
+    protected $primaryKey = 'idproducto';
+
     public $timestamps = false;
 
     protected $fillable = [
         'idproducto', 'fk_idcategoria', 'nombre', 'cantidad', 'precio', 'descripcion', 'imagen'
     ];
 
-    public $categoria;
+    public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
+    {
+        $columnas = ['nombre', 'categoria', 'cantidad', 'precio', 'descripcion'];
 
-    // protected $hidden = [];
+        $orderColumn = $columnas[$orderColumnIdx] ?? 'nombre';
+        $orderDirection = $orderDirection == 'desc' ? 'desc' : 'asc';
+
+        return $query->withoutGlobalScope('order')
+            ->join('categorias', 'productos.fk_idcategoria', '=', 'categorias.idcategoria')
+            ->orderBy($orderColumn, $orderDirection)
+            ->select(
+                'productos.idproducto',
+                'productos.nombre',
+                'productos.cantidad',
+                'productos.precio',
+                'productos.descripcion',
+                'productos.imagen',
+                'categorias.nombre AS categoria'
+            );
+    }
 
     public function cargarDesdeRequest(Request $request)
     {
@@ -73,93 +93,5 @@ class Producto extends Model
     public function eliminar() {
         $sql = "DELETE FROM productos WHERE idproducto = ?";
         DB::delete($sql, [$this->idproducto]);
-    }
-
-    private static function construirDesdeFila($fila) {
-        if (!$fila)
-            return null;
-
-        $producto = new Producto();
-        $producto->idproducto = $fila->idproducto;
-        $producto->fk_idcategoria = $fila->fk_idcategoria;
-        $producto->nombre = $fila->nombre;
-        $producto->cantidad = $fila->cantidad;
-        $producto->precio = $fila->precio;
-        $producto->descripcion = $fila->descripcion;
-        $producto->imagen = $fila->imagen;
-
-        $producto->categoria = $fila->categoria ?? null;
-
-        return $producto;
-    }
-
-    public static function obtenerPorId($idproducto)
-    {
-        $sql = "SELECT
-                  idproducto,
-                  fk_idcategoria,
-                  nombre,
-                  cantidad,
-                  precio,
-                  descripcion,
-                  imagen
-                FROM productos WHERE idproducto = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idproducto]));
-    }
-
-    public static function obtenerTodos()
-    {
-        $sql = "SELECT
-                  idproducto,
-                  fk_idcategoria,
-                  nombre,
-                  cantidad,
-                  precio,
-                  descripcion,
-                  imagen
-                FROM productos ORDER BY nombre";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
-    }
-
-    public static function contarRegistros()
-    {
-        // TODO: Incluir filtrado de obtenerPaginado
-        $sql = "SELECT COUNT(*) AS total FROM productos";
-
-        if ($fila = DB::selectOne($sql)) {
-            return $fila->total;
-        }
-
-        return 0;
-    }
-
-    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
-    {
-        $sql = "SELECT
-                  A.idproducto,
-                  A.fk_idcategoria,
-                  A.nombre,
-                  A.cantidad,
-                  A.precio,
-                  A.descripcion,
-                  A.imagen,
-                  B.nombre AS categoria
-                FROM productos A
-                INNER JOIN categorias B ON A.fk_idcategoria = B.idcategoria
-                ORDER BY A.idproducto LIMIT $inicio, $cantidad";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
     }
 }

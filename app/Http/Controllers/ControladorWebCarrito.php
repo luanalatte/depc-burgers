@@ -14,11 +14,10 @@ class ControladorWebCarrito extends Controller
 {
     public function index()
     {
-        if (!Cliente::autenticado()) {
+        if (!$cliente = Cliente::autenticado()) {
             return redirect('/login');
         }
 
-        $cliente = Cliente::obtenerPorId(Session::get('cliente_id'));
         $carrito = Carrito::cargarCompleto($cliente->idcliente);
 
         if (is_null($carrito)) {
@@ -32,17 +31,11 @@ class ControladorWebCarrito extends Controller
 
     public function agregar(Request $request)
     {
-        if (!Cliente::autenticado()) {
+        if (!$cliente = Cliente::autenticado()) {
             return redirect('/login');
         }
 
-        $cliente = Cliente::obtenerPorId(Session::get('cliente_id'));
-        $carrito = Carrito::obtenerPorCliente($cliente->idcliente);
-        if (is_null($carrito)) {
-            $carrito = new Carrito();
-            $carrito->fk_idcliente = $cliente->idcliente;
-            $carrito->insertar();
-        }
+        $carrito = Carrito::firstOrCreate(['fk_idcliente' => $cliente->idcliente]);
 
         $idproducto = $request->get('idproducto');
         $cantidad = $request->input('txtCantidad', 1);
@@ -55,16 +48,15 @@ class ControladorWebCarrito extends Controller
 
     public function editar(Request $request)
     {
-        if (!Cliente::autenticado()) {
+        if (!$cliente = Cliente::autenticado()) {
             return redirect('/login');
         }
 
-        $cliente = Cliente::obtenerPorId(Session::get('cliente_id'));
-        $carrito = Carrito::obtenerPorCliente($cliente->idcliente);
+        $carrito = Carrito::where('fk_idcliente', $cliente->idcliente)->first();
         if (is_null($carrito)) {
             return view('web.carrito');
         }
-        
+
         $idproducto = $request->get('idproducto');
 
         if (isset($_POST["btnEliminar"])) {

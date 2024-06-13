@@ -43,7 +43,7 @@ class ControladorProducto extends Controller
         }
 
         $producto = new Producto();
-        $aCategorias = Categoria::obtenerTodos();
+        $aCategorias = Categoria::all();
         return view("sistema.producto-nuevo", compact("titulo", "producto", "aCategorias"));
     }
 
@@ -60,8 +60,8 @@ class ControladorProducto extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        if ($producto = Producto::obtenerPorId($request->id)) {
-            $aCategorias = Categoria::obtenerTodos();
+        if ($producto = Producto::find($request->id)) {
+            $aCategorias = Categoria::all();
             return view("sistema.producto-nuevo", compact("titulo", "producto", "aCategorias"));
         }
 
@@ -94,7 +94,7 @@ class ControladorProducto extends Controller
                     return view("sistema.error", compact("titulo", "msg"));
                 }
 
-                $productoAnt = Producto::obtenerPorId($entidad->idproducto);
+                $productoAnt = Producto::find($entidad->idproducto);
                 if (!is_null($imagen)) {
                     try {
                         unlink(env('APP_PATH') . "/public/files/$productoAnt->imagen");
@@ -141,8 +141,8 @@ class ControladorProducto extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        $producto = Producto::obtenerPorId($entidad->idproducto) ?? new Producto(["idproducto"=>$entidad->idproducto]);
-        $aCategorias = Categoria::obtenerTodos();
+        $producto = Producto::find($entidad->idproducto) ?? new Producto();
+        $aCategorias = Categoria::all();
         return view("sistema.producto-nuevo", compact("titulo", "msg", "producto", "aCategorias"));
     }
 
@@ -181,8 +181,14 @@ class ControladorProducto extends Controller
         if (!Usuario::autenticado() || !Patente::autorizarOperacion("PRODUCTOCONSULTA"))
             return null;
 
-        $count = Producto::contarRegistros();
-        $aSlice = Producto::obtenerPaginado($request->start ?? 0, $request->length ?? 25);
+        // NOTE: Posible injection en los valores de DataTables?
+        $orderColumn = $request->order[0]['column'];
+        $orderDirection = $request->order[0]['dir'];
+        $offset = $request->start ?? 0;
+        $limit = $request->length ?? 25;
+
+        $count = Producto::count();
+        $aSlice = Producto::grilla($orderColumn, $orderDirection)->offset($offset)->limit($limit)->get();
 
         $data = [];
         foreach ($aSlice as $producto) {

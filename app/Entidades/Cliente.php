@@ -2,6 +2,7 @@
 
 namespace App\Entidades;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -12,13 +13,32 @@ require_once app_path() . "/start/funciones_generales.php";
 class Cliente extends Model
 {
     protected $table = 'clientes';
+    protected $primaryKey = 'idcliente';
+
     public $timestamps = false;
 
     protected $fillable = [
         'idcliente', 'nombre', 'apellido', 'dni', 'email', 'clave', 'telefono'
     ];
 
-    // protected $hidden = [];
+    public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
+    {
+        $columnas = ['nombre', 'apellido', 'dni', 'email', 'telefono'];
+
+        $orderColumn = $columnas[$orderColumnIdx] ?? 'nombre';
+        $orderDirection = $orderDirection == 'desc' ? 'desc' : 'asc';
+
+        return $query->withoutGlobalScope('order')
+            ->orderBy($orderColumn, $orderDirection)
+            ->select(
+                'idcliente',
+                'nombre',
+                'apellido',
+                'dni',
+                'email',
+                'telefono'
+            );
+    }
 
     public function cargarDesdeRequest(Request $request)
     {
@@ -143,105 +163,12 @@ class Cliente extends Model
         DB::delete($sql, [$this->idcliente]);
     }
 
-    private static function construirDesdeFila($fila) {
-        if (!$fila)
-            return null;
-
-        $cliente = new Cliente();
-        $cliente->idcliente = $fila->idcliente;
-        $cliente->nombre = $fila->nombre;
-        $cliente->apellido = $fila->apellido;
-        $cliente->dni = $fila->dni;
-        $cliente->email = $fila->email;
-        $cliente->clave = $fila->clave;
-        $cliente->telefono = $fila->telefono;
-
-        return $cliente;
-    }
-
-    public static function obtenerPorId($idCliente)
+    public static function autenticado()
     {
-        $sql = "SELECT
-                  idcliente,
-                  nombre,
-                  apellido,
-                  dni,
-                  email,
-                  clave,
-                  telefono
-                FROM clientes WHERE idcliente = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idCliente]));
-    }
-
-    public static function obtenerPorEmail($email)
-    {
-        $sql = "SELECT
-                  idcliente,
-                  nombre,
-                  apellido,
-                  dni,
-                  email,
-                  clave,
-                  telefono
-                FROM clientes WHERE email = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$email]));
-    }
-
-    public static function obtenerTodos()
-    {
-        $sql = "SELECT
-                  idcliente,
-                  nombre,
-                  apellido,
-                  dni,
-                  email,
-                  clave,
-                  telefono
-                FROM clientes ORDER BY nombre";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
+        if ($id = Session::get('cliente_id')) {
+            return self::find($id);
         }
 
-        return $lstRetorno;
-    }
-
-    public static function contarRegistros()
-    {
-        $sql = "SELECT COUNT(*) AS total FROM clientes";
-
-        if ($fila = DB::selectOne($sql)) {
-            return $fila->total;
-        }
-
-        return 0;
-    }
-
-    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
-    {
-        $sql = "SELECT
-                  idcliente,
-                  nombre,
-                  apellido,
-                  dni,
-                  email,
-                  clave,
-                  telefono
-                FROM clientes ORDER BY nombre LIMIT $inicio, $cantidad";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
-    }
-
-    static function autenticado()
-    {
-        return Session::get('cliente_id') != null;
+        return null;
     }
 }

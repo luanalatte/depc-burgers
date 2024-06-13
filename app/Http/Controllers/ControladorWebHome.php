@@ -10,15 +10,15 @@ class ControladorWebHome extends Controller
 {
     public function index()
     {
-        $aSucursales = Sucursal::obtenerTodos();
+        $aSucursales = Sucursal::all();
         return view('web.index', compact('aSucursales'));
     }
 
     public function takeaway()
     {
-        $aProductos = Producto::obtenerTodos();
-        $aCategorias = Categoria::obtenerTodos();
-        return view('web.takeaway', compact("aProductos", "aCategorias"));
+        $aProductos = Producto::orderBy('fk_idcategoria')->get(); // TODO: Usar orden de la categoría
+        $aCategorias = Categoria::all();
+        return view('web.takeaway', compact('aProductos', 'aCategorias'));
     }
 
     public function nosotros()

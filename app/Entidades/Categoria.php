@@ -2,6 +2,7 @@
 
 namespace App\Entidades;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -11,13 +12,32 @@ require_once app_path() . "/start/funciones_generales.php";
 class Categoria extends Model
 {
     protected $table = 'categorias';
+    protected $primaryKey = 'idcategoria';
+
     public $timestamps = false;
 
     protected $fillable = [
         'idcategoria', 'nombre'
     ];
 
-    // protected $hidden = [];
+    protected static function booted() {
+        static::addGlobalScope('order', function (Builder $builder) {
+            // TODO: Añadir columna 'orden' para personalizar el orden de las columnas en la tienda.
+            $builder->orderBy('nombre');
+        });
+    }
+
+    public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
+    {
+        $columnas = ['nombre'];
+
+        $orderColumn = $columnas[$orderColumnIdx] ?? 'nombre';
+        $orderDirection = $orderDirection == 'desc' ? 'desc' : 'asc';
+
+        return $query->withoutGlobalScope('order')
+            ->orderBy($orderColumn, $orderDirection)
+            ->select('idcategoria', 'nombre');
+    }
 
     public function cargarDesdeRequest(Request $request)
     {
@@ -48,67 +68,5 @@ class Categoria extends Model
     public function eliminar() {
         $sql = "DELETE FROM categorias WHERE idcategoria = ?";
         DB::delete($sql, [$this->idcategoria]);
-    }
-
-    private static function construirDesdeFila($fila) {
-        if (!$fila)
-            return null;
-
-        $categoria = new Categoria();
-        $categoria->idcategoria = $fila->idcategoria;
-        $categoria->nombre = $fila->nombre;
-
-        return $categoria;
-    }
-
-    public static function obtenerPorId($idcategoria)
-    {
-        $sql = "SELECT
-                  idcategoria,
-                  nombre
-                FROM categorias WHERE idcategoria = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idcategoria]));
-    }
-
-    public static function obtenerTodos()
-    {
-        $sql = "SELECT
-                  idcategoria,
-                  nombre
-                FROM categorias ORDER BY nombre";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
-    }
-
-    public static function contarRegistros()
-    {
-        $sql = "SELECT COUNT(*) AS total FROM categorias";
-
-        if ($fila = DB::selectOne($sql)) {
-            return $fila->total;
-        }
-
-        return 0;
-    }
-
-    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
-    {
-        $sql = "SELECT
-                  idcategoria,
-                  nombre
-                FROM categorias ORDER BY nombre LIMIT $inicio, $cantidad";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
     }
 }

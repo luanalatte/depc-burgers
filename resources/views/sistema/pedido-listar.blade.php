@@ -87,7 +87,16 @@
 	    "bInfo": true,
 	    "bSearchable": true,
         "pageLength": 25,
-        "order": [[ 0, "asc" ]],
+        columns: [
+            { searchable: false, orderable: false, width: "0" },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "order": [[ 5, "desc" ]],
         "ajax": {
             url: "{{ route('pedidos.cargarGrilla') }}",
             data: function(d) {

@@ -28,9 +28,10 @@ class ControladorPedido extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        $aEstados = Estado::obtenerTodos();
-        $aSucursales = Sucursal::obtenerTodos();
-        $countPedidos = Pedido::contarRegistros(); // TODO: Contar solo pedidos de la sucursal y/o período seleccionado actualmente.
+        // TODO: Cambiar a Estado::withCount('pedidos')
+        $aEstados = Estado::countPedidos()->get();
+        $aSucursales = Sucursal::all();
+        $countPedidos = Pedido::count(); // TODO: Contar solo pedidos de la sucursal y/o período seleccionado actualmente.
         return view("sistema.pedido-listar", compact("titulo", "countPedidos", "aEstados", "aSucursales"));
     }
 
@@ -48,9 +49,9 @@ class ControladorPedido extends Controller
         }
 
         $pedido = new Pedido();
-        $aClientes = Cliente::obtenerTodos();
-        $aSucursales = Sucursal::obtenerTodos();
-        $aEstados = Estado::obtenerTodos();
+        $aClientes = Cliente::all();
+        $aSucursales = Sucursal::all();
+        $aEstados = Estado::all();
         return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aClientes", "aSucursales", "aEstados"));
     }
 
@@ -67,17 +68,18 @@ class ControladorPedido extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        if ($pedido = Pedido::obtenerPorId($request->id)) {
-            $aEstados = Estado::obtenerTodos();
+        if ($pedido = Pedido::incluirCliente()->incluirSucursal()->find($request->id)) {
+            $aEstados = Estado::all();
             return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aEstados"));
         }
 
         $titulo = "Lista de Pedidos";
         $msg["ESTADO"] = MSG_ERROR;
         $msg["MSG"] = "El pedido especificado no existe.";
-        $aEstados = Estado::obtenerTodos();
-        $aSucursales = Sucursal::obtenerTodos();
-        $countPedidos = Pedido::contarRegistros();
+
+        $aEstados = Estado::countPedidos()->get();
+        $aSucursales = Sucursal::all();
+        $countPedidos = Pedido::count();
         return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados", "aSucursales"));
     }
 
@@ -128,9 +130,9 @@ class ControladorPedido extends Controller
             $msg["ESTADO"] = MSG_SUCCESS;
             $msg["MSG"] = OKINSERT;
 
-            $aEstados = Estado::obtenerTodos();
-            $aSucursales = Sucursal::obtenerTodos();
-            $countPedidos = Pedido::contarRegistros();
+            $aEstados = Estado::countPedidos()->get();
+            $aSucursales = Sucursal::all();
+            $countPedidos = Pedido::count();
             return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados", "aSucursales"));
         } catch (Exception $e) {
             $msg["ESTADO"] = MSG_ERROR;
@@ -143,10 +145,10 @@ class ControladorPedido extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        $pedido = Pedido::obtenerPorId($entidad->idpedido) ?? new Pedido(["idpedido"=>$entidad->idpedido]);
-        $aClientes = Cliente::obtenerTodos();
-        $aSucursales = Sucursal::obtenerTodos();
-        $aEstados = Estado::obtenerTodos();
+        $pedido = Pedido::find($entidad->idpedido) ?? new Pedido();
+        $aClientes = Cliente::all();
+        $aSucursales = Sucursal::all();
+        $aEstados = Estado::all();
         return view("sistema.pedido-nuevo", compact("titulo", "msg", "pedido", "aClientes", "aSucursales", "aEstados"));
     }
 
@@ -193,9 +195,8 @@ class ControladorPedido extends Controller
             return json_encode($aResultado);
         }
 
-        try {
-            $pedido = Pedido::obtenerPorId($request->id);
-        } catch (Exception $e) {
+        $pedido = Pedido::find($request->id);
+        if ($pedido == null) {
             $aResultado["err"] = EXIT_FAILURE;
             $aResultado["msg"] = "No se pudo encontrar el pedido.";
             return json_encode($aResultado);
@@ -234,17 +235,27 @@ class ControladorPedido extends Controller
         if (!Usuario::autenticado() || !Patente::autorizarOperacion("PEDIDOCONSULTA"))
             return null;
 
-        $estado = $request->estado;
-        $sucursal = $request->sucursal;
-        $fechaDesde = $request->fechaDesde;
-        $fechaHasta = $request->fechaHasta;
-        $start = $request->start ?? 0;
-        $length = $request->length ?? 25;
+        // NOTE: Posible injection en los valores de DataTables?
+        try {
+            $orderColumn = $request->order[0]['column'] - 1;
+        } catch (Exception $e) {}
 
-        $count = Pedido::contarRegistros($estado, $sucursal, $fechaDesde, $fechaHasta);
-        $aSlice = Pedido::obtenerFiltrado($estado, $sucursal, $fechaDesde, $fechaHasta, $start, $length);
+        try {
+            $orderDirection = $request->order[0]['dir'];
+        } catch (Exception $e) {}
 
-        $aEstados = Estado::obtenerTodos();
+        $offset = $request->start ?? 0;
+        $limit = $request->length ?? 25;
+
+        $aSlice = Pedido::grilla($orderColumn ?? null, $orderDirection ?? null)
+            ->filtrarPeriodo($request->fechaDesde, $request->fechaHasta)
+            ->filtrarEstado($request->estado)
+            ->filtrarSucursal($request->sucursal);
+
+        $count = $aSlice->count();
+        $aSlice = $aSlice->offset($offset)->limit($limit)->get();
+
+        $aEstados = Estado::all();
 
         $data = [];
         foreach ($aSlice as $pedido) {

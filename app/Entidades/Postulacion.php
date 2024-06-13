@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Postulacion extends Model
 {
     protected $table = 'postulaciones';
+    protected $primaryKey = 'idpostulacion';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -51,53 +53,5 @@ class Postulacion extends Model
     public function eliminar() {
         $sql = "DELETE FROM postulaciones WHERE idpostulacion = ?";
         DB::delete($sql, [$this->idpostulacion]);
-    }
-
-    private static function construirDesdeFila($fila) {
-        if (!$fila)
-            return null;
-
-        $postulacion = new Postulacion();
-        $postulacion->idpostulacion = $fila->idpostulacion;
-        $postulacion->nombre = $fila->nombre;
-        $postulacion->apellido = $fila->apellido;
-        $postulacion->telefono = $fila->dni;
-        $postulacion->email = $fila->email;
-        $postulacion->archivo = $fila->archivo;
-
-        return $postulacion;
-    }
-
-    public static function obtenerPorId($idPostulacion)
-    {
-        $sql = "SELECT
-                  idpostulacion,
-                  nombre,
-                  apellido,
-                  telefono,
-                  email,
-                  archivo
-                FROM postulaciones WHERE idpostulacion = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idPostulacion]));
-    }
-
-    public static function obtenerTodos()
-    {
-        $sql = "SELECT
-                  idpostulacion,
-                  nombre,
-                  apellido,
-                  telefono,
-                  email,
-                  archivo
-                FROM postulaciones ORDER BY nombre";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
     }
 }

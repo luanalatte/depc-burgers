@@ -2,12 +2,15 @@
 
 namespace App\Entidades;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Carrito extends Model
 {
     protected $table = 'carritos';
+    protected $primaryKey = 'idcarrito';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,7 +20,11 @@ class Carrito extends Model
     public $total = 0;
     public $aProductos = [];
 
-    // protected $hidden = [];
+    protected static function booted() {
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('idcarrito', 'desc');
+        });
+    }
 
     public function insertar() {
         $sql = "INSERT INTO carritos (
@@ -106,50 +113,12 @@ class Carrito extends Model
         return $carrito;
     }
 
-    public static function obtenerPorId($idcarrito)
-    {
-        $sql = "SELECT
-                  idcarrito,
-                  fk_idcliente
-                FROM carritos WHERE idcarrito = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idcarrito]));
-    }
-
-    public static function obtenerTodos()
-    {
-        $sql = "SELECT
-                  idcarrito,
-                  fk_idcliente
-                FROM carritos ORDER BY fk_idcliente";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
-    }
-
-    public static function obtenerPorCliente($idcliente)
-    {
-        $sql = "SELECT
-                  idcarrito,
-                  fk_idcliente
-                FROM carritos WHERE fk_idcliente = ?
-                ORDER BY idcarrito DESC LIMIT 1";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idcliente]));
-    }
-
     public static function cargarCompleto($idcliente)
     {
-        $carrito = self::obtenerPorCliente($idcliente);
+        $carrito = self::where('fk_idcliente', $idcliente)->first();
         if ($carrito == null) {
             return null;
         }
-
-        $idcarrito = $carrito->idcarrito;
 
         $sql = "SELECT
                   A.idcarrito,
@@ -167,7 +136,7 @@ class Carrito extends Model
                 LEFT JOIN productos C ON B.fk_idproducto = C.idproducto
                 WHERE A.idcarrito = ?";
 
-        $aFilas = DB::select($sql, [$idcarrito]);
+        $aFilas = DB::select($sql, [$carrito->idcarrito]);
         if (!$aFilas) {
             return null;
         }

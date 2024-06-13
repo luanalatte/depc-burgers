@@ -56,7 +56,7 @@ class ControladorCategoria extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        if ($categoria = Categoria::obtenerPorId($request->id)) {
+        if ($categoria = Categoria::find($request->id)) {
             return view("sistema.categoria-nuevo", compact("titulo", "categoria"));
         }
 
@@ -122,7 +122,7 @@ class ControladorCategoria extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        $categoria = Categoria::obtenerPorId($entidad->idcategoria) ?? new Categoria(["idcategoria"=>$entidad->idcategoria]);
+        $categoria = Categoria::find($entidad->idcategoria) ?? new Categoria();
         return view("sistema.categoria-nuevo", compact("titulo", "msg", "categoria"));
     }
 
@@ -160,8 +160,14 @@ class ControladorCategoria extends Controller
         if (!Usuario::autenticado() || !Patente::autorizarOperacion("PRODUCTOCONSULTA"))
             return null;
 
-        $count = Categoria::contarRegistros();
-        $aSlice = Categoria::obtenerPaginado($request->start ?? 0, $request->length ?? 25);
+        // NOTE: Posible injection en los valores de DataTables?
+        $orderColumn = $request->order[0]['column'];
+        $orderDirection = $request->order[0]['dir'];
+        $offset = $request->start ?? 0;
+        $limit = $request->length ?? 25;
+
+        $count = Categoria::count();
+        $aSlice = Categoria::grilla($orderColumn, $orderDirection)->offset($offset)->limit($limit)->get();
 
         $data = [];
         foreach ($aSlice as $categoria) {

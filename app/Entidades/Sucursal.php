@@ -2,6 +2,7 @@
 
 namespace App\Entidades;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -11,11 +12,37 @@ require_once app_path() . "/start/funciones_generales.php";
 class Sucursal extends Model
 {
     protected $table = 'sucursales';
+    protected $primaryKey = 'idsucursal';
+
     public $timestamps = false;
 
     protected $fillable = [
         'idsucursal', 'nombre', 'direccion', 'telefono', 'maps_url'
     ];
+
+    protected static function booted() {
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('nombre');
+        });
+    }
+
+    public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
+    {
+        $columnas = ['nombre', 'direccion', 'telefono', 'maps_url'];
+
+        $orderColumn = $columnas[$orderColumnIdx] ?? 'nombre';
+        $orderDirection = $orderDirection == 'desc' ? 'desc' : 'asc';
+
+        return $query->withoutGlobalScope('order')
+            ->orderBy($orderColumn, $orderDirection)
+            ->select(
+                'idsucursal',
+                'nombre',
+                'direccion',
+                'telefono',
+                'maps_url'
+            );
+    }
 
     public function cargarDesdeRequest(Request $request)
     {
@@ -61,79 +88,5 @@ class Sucursal extends Model
     public function eliminar() {
         $sql = "DELETE FROM sucursales WHERE idsucursal = ?";
         DB::delete($sql, [$this->idsucursal]);
-    }
-
-    private static function construirDesdeFila($fila) {
-        if (!$fila)
-            return null;
-
-        $sucursal = new Sucursal();
-        $sucursal->idsucursal = $fila->idsucursal;
-        $sucursal->nombre = $fila->nombre;
-        $sucursal->direccion = $fila->direccion;
-        $sucursal->telefono = $fila->telefono;
-        $sucursal->maps_url = $fila->maps_url;
-
-        return $sucursal;
-    }
-
-    public static function obtenerPorId($idSucursal)
-    {
-        $sql = "SELECT
-                  idsucursal,
-                  nombre,
-                  direccion,
-                  telefono,
-                  maps_url
-                FROM sucursales WHERE idsucursal = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idSucursal]));
-    }
-
-    public static function obtenerTodos()
-    {
-        $sql = "SELECT
-                  idsucursal,
-                  nombre,
-                  direccion,
-                  telefono,
-                  maps_url
-                FROM sucursales ORDER BY nombre";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
-    }
-
-    public static function contarRegistros()
-    {
-        $sql = "SELECT COUNT(*) AS total FROM sucursales";
-
-        if ($fila = DB::selectOne($sql)) {
-            return $fila->total;
-        }
-
-        return 0;
-    }
-
-    public static function obtenerPaginado(int $inicio = 0, int $cantidad = 25)
-    {
-        $sql = "SELECT
-                  idsucursal,
-                  nombre,
-                  direccion,
-                  telefono,
-                  maps_url
-                FROM sucursales ORDER BY nombre LIMIT $inicio, $cantidad";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
     }
 }

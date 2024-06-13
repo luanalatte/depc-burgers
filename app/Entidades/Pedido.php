@@ -2,6 +2,7 @@
 
 namespace App\Entidades;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -11,17 +12,92 @@ require_once app_path() . "/start/funciones_generales.php";
 class Pedido extends Model
 {
     protected $table = 'pedidos';
+    protected $primaryKey = 'idpedido';
+
     public $timestamps = false;
 
     protected $fillable = [
         'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'comentarios'
     ];
 
-    public $cliente;
-    public $sucursal;
-    public $nombre;
+    public function scopeIncluirCliente(Builder $query)
+    {
+        if(is_null($query->getQuery()->columns)){
+            $query->addSelect('*');
+        }
 
-    // protected $hidden = [];
+        return $query
+            ->join('clientes', 'pedidos.fk_idcliente', '=', 'clientes.idcliente')
+            ->addSelect(DB::raw('CONCAT(clientes.nombre, " ", clientes.apellido) AS cliente'));
+    }
+
+    public function scopeIncluirSucursal(Builder $query)
+    {
+        if(is_null($query->getQuery()->columns)){
+            $query->addSelect('*');
+        }
+
+        return $query
+            ->join('sucursales', 'pedidos.fk_idsucursal', '=', 'sucursales.idsucursal')
+            ->addSelect('sucursales.nombre AS sucursal');
+    }
+
+    public function scopeIncluirEstado(Builder $query)
+    {
+        if(is_null($query->getQuery()->columns)){
+            $query->addSelect('*');
+        }
+
+        return $query
+            ->join('estados', 'pedidos.fk_idestado', '=', 'estados.idestado')
+            ->addSelect('estados.nombre AS estado');
+    }
+
+    public function scopeFiltrarEstado(Builder $query, int $idestado = null)
+    {
+        if ($idestado != null) {
+            $query->where('fk_idestado', $idestado);
+        }
+
+        return $query;
+    }
+
+    public function scopeFiltrarSucursal(Builder $query, int $idsucursal = null)
+    {
+        if ($idsucursal != null) {
+            $query->where('fk_idsucursal', $idsucursal);
+        }
+
+        return $query;
+    }
+
+    public function scopeFiltrarPeriodo(Builder $query, string $fechaDesde = null, string $fechaHasta = null)
+    {
+        if ($fechaDesde) {
+            $query->where('fecha', '>=', $fechaDesde);
+        }
+
+        if ($fechaHasta) {
+            $query->where('fecha', '<=', $fechaHasta);
+        }
+
+        return $query;
+    }
+
+    public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "desc")
+    {
+        $columnas = ['idpedido', 'cliente', 'sucursal', 'estado', 'fecha', 'total'];
+
+        $orderColumn = $columnas[$orderColumnIdx] ?? 'fecha';
+        $orderDirection = $orderDirection == 'asc' ? 'asc' : 'desc';
+
+        return $query->withoutGlobalScope('order')
+            ->orderBy($orderColumn, $orderDirection)
+            ->select('idpedido', 'fk_idestado', 'fecha', 'total')
+            ->incluirCliente()
+            ->incluirSucursal()
+            ->incluirEstado();
+    }
 
     public function cargarDesdeRequest(Request $request)
     {
@@ -110,157 +186,5 @@ class Pedido extends Model
     public function eliminar() {
         $sql = "DELETE FROM pedidos WHERE idpedido = ?";
         DB::delete($sql, [$this->idpedido]);
-    }
-
-    private static function construirDesdeFila($fila) {
-        if (!$fila)
-            return null;
-
-        $pedido = new Pedido();
-        $pedido->idpedido = $fila->idpedido;
-        $pedido->fk_idcliente = $fila->fk_idcliente;
-        $pedido->fk_idsucursal = $fila->fk_idsucursal;
-        $pedido->fk_idestado = $fila->fk_idestado;
-        $pedido->fecha = $fila->fecha;
-        $pedido->total = $fila->total;
-        $pedido->comentarios = $fila->comentarios;
-
-        $pedido->cliente = $fila->cliente ?? null;
-        $pedido->sucursal = $fila->sucursal ?? null;
-        $pedido->estado = $fila->estado ?? null;
-
-        return $pedido;
-    }
-
-    public static function obtenerPorId($idpedido)
-    {
-        $sql = "SELECT
-                  A.idpedido,
-                  A.fk_idcliente,
-                  A.fk_idsucursal,
-                  A.fk_idestado,
-                  A.fecha,
-                  A.total,
-                  A.comentarios,
-                  CONCAT(B.nombre, ' ', B.apellido) AS cliente,
-                  C.nombre AS sucursal
-                FROM pedidos A
-                LEFT JOIN clientes B ON A.fk_idcliente = B.idcliente
-                LEFT JOIN sucursales C ON A.fk_idsucursal = C.idsucursal
-                WHERE idpedido = ?";
-
-        return self::construirDesdeFila(DB::selectOne($sql, [$idpedido]));
-    }
-
-    public static function obtenerTodos()
-    {
-        $sql = "SELECT
-                  idpedido,
-                  fk_idcliente,
-                  fk_idsucursal,
-                  fk_idestado,
-                  fecha,
-                  total,
-                  comentarios
-                FROM pedidos ORDER BY fk_idcliente";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
-    }
-
-    public static function contarRegistros(int $estado = 0, int $sucursal = 0, string $fechaDesde = null, string $fechaHasta = null)
-    {
-        $sql = "SELECT COUNT(*) AS total FROM pedidos";
-        $aValores = [];
-        $aFiltros = [];
-
-        if ($estado) {
-            $aFiltros[] = "fk_idestado = ?";
-            $aValores[] = $estado;
-        }
-
-        if ($sucursal) {
-            $aFiltros[] = "fk_idsucursal = ?";
-            $aValores[] = $sucursal;
-        }
-
-        if ($fechaDesde) {
-            $aFiltros[] = "fecha >= ?";
-            $aValores[] = $fechaDesde;
-        }
-
-        if ($fechaHasta) {
-            $aFiltros[] = "fecha <= ?";
-            $aValores[] = $fechaHasta;
-        }
-
-        if ($aFiltros) {
-            $sql .= " WHERE " . implode(' AND ', $aFiltros);
-        }
-
-        if ($fila = DB::selectOne($sql, $aValores)) {
-            return $fila->total;
-        }
-
-        return 0;
-    }
-
-    public static function obtenerFiltrado(int $estado = 0, int $sucursal = 0, string $fechaDesde = null, string $fechaHasta = null, int $inicio = 0, int $cantidad = 25)
-    {
-        $sql = "SELECT
-                  A.idpedido,
-                  A.fk_idcliente,
-                  A.fk_idsucursal,
-                  A.fk_idestado,
-                  A.fecha,
-                  A.total,
-                  A.comentarios,
-                  CONCAT(B.nombre, ' ', B.apellido) AS cliente,
-                  C.nombre AS sucursal,
-                  D.nombre AS estado
-                FROM pedidos A
-                INNER JOIN clientes B ON A.fk_idcliente = B.idcliente
-                INNER JOIN sucursales C ON A.fk_idsucursal = C.idsucursal
-                INNER JOIN estados D ON A.fk_idestado = D.idestado";
-
-        $aValores = [];
-        $aFiltros = [];
-
-        if ($estado) {
-            $aFiltros[] = "fk_idestado = ?";
-            $aValores[] = $estado;
-        }
-
-        if ($sucursal) {
-            $aFiltros[] = "fk_idsucursal = ?";
-            $aValores[] = $sucursal;
-        }
-
-        if ($fechaDesde) {
-            $aFiltros[] = "fecha >= ?";
-            $aValores[] = $fechaDesde;
-        }
-
-        if ($fechaHasta) {
-            $aFiltros[] = "fecha <= ?";
-            $aValores[] = $fechaHasta;
-        }
-
-        if ($aFiltros) {
-            $sql .= " WHERE " . implode(' AND ', $aFiltros);
-        }
-
-        $sql .= " ORDER BY A.fecha DESC LIMIT $inicio, $cantidad";
-
-        $lstRetorno = [];
-        foreach (DB::select($sql, $aValores) as $fila) {
-            $lstRetorno[] = self::construirDesdeFila($fila);
-        }
-
-        return $lstRetorno;
     }
 }

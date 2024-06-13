@@ -36,6 +36,14 @@
 	    "bInfo": true,
 	    "bSearchable": true,
         "pageLength": 25,
+        columns: [
+            null,
+            null,
+            null,
+            null,
+            null,
+            { searchable: false, orderable: false }
+        ],
         "order": [[ 0, "asc" ]],
 	    "ajax": "{{ route('productos.cargarGrilla') }}"
 	});

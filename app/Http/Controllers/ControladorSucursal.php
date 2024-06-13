@@ -56,7 +56,7 @@ class ControladorSucursal extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        if ($sucursal = Sucursal::obtenerPorId($request->id)) {
+        if ($sucursal = Sucursal::find($request->id)) {
             return view("sistema.sucursal-nuevo", compact("titulo", "sucursal"));
         }
 
@@ -122,7 +122,7 @@ class ControladorSucursal extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        $sucursal = Sucursal::obtenerPorId($entidad->idsucursal) ?? new Sucursal(["idsucursal"=>$entidad->idsucursal]);
+        $sucursal = Sucursal::find($entidad->idsucursal) ?? new Sucursal();
         return view("sistema.sucursal-nuevo", compact("titulo", "msg", "sucursal"));
     }
 
@@ -160,8 +160,14 @@ class ControladorSucursal extends Controller
         if (!Usuario::autenticado() || !Patente::autorizarOperacion("SUCURSALCONSULTA"))
             return null;
 
-        $count = Sucursal::contarRegistros();
-        $aSlice = Sucursal::obtenerPaginado($request->start ?? 0, $request->length ?? 25);
+        // NOTE: Posible injection en los valores de DataTables?
+        $orderColumn = $request->order[0]['column'];
+        $orderDirection = $request->order[0]['dir'];
+        $offset = $request->start ?? 0;
+        $limit = $request->length ?? 25;
+
+        $count = Sucursal::count();
+        $aSlice = Sucursal::grilla($orderColumn, $orderDirection)->offset($offset)->limit($limit)->get();
 
         $data = [];
         foreach ($aSlice as $sucursal) {

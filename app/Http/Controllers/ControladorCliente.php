@@ -58,7 +58,7 @@ class ControladorCliente extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        if ($cliente = Cliente::obtenerPorId($request->id)) {
+        if ($cliente = Cliente::find($request->id)) {
             return view("sistema.cliente-nuevo", compact("titulo", "cliente"));
         }
 
@@ -122,7 +122,7 @@ class ControladorCliente extends Controller
             return view("sistema.error", compact("titulo", "msg"));
         }
 
-        $cliente = Cliente::obtenerPorId($entidad->idcliente) ?? new Cliente(["idcliente"=>$entidad->idcliente]);
+        $cliente = Cliente::find($entidad->idcliente) ?? new Cliente();
         return view("sistema.cliente-nuevo", compact("titulo", "msg", "cliente"));
     }
 
@@ -160,8 +160,14 @@ class ControladorCliente extends Controller
         if (!Usuario::autenticado() || !Patente::autorizarOperacion("CLIENTECONSULTA"))
             return null;
 
-        $count = Cliente::contarRegistros();
-        $aSlice = Cliente::obtenerPaginado($request->start ?? 0, $request->length ?? 25);
+        // NOTE: Posible injection en los valores de DataTables?
+        $orderColumn = $request->order[0]['column'];
+        $orderDirection = $request->order[0]['dir'];
+        $offset = $request->start ?? 0;
+        $limit = $request->length ?? 25;
+
+        $count = Cliente::count();
+        $aSlice = Cliente::grilla($orderColumn, $orderDirection)->offset($offset)->limit($limit)->get();
 
         $data = [];
         foreach ($aSlice as $cliente) {
