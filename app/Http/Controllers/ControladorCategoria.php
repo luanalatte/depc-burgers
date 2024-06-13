@@ -57,7 +57,9 @@ class ControladorCategoria extends Controller
         }
 
         if ($categoria = Categoria::find($request->id)) {
-            return view("sistema.categoria-nuevo", compact("titulo", "categoria"));
+            $permisoEditar = Patente::autorizarOperacion("PRODUCTOEDITAR");
+            $permisoBaja = Patente::autorizarOperacion("PRODUCTOELIMINAR");
+            return view("sistema.categoria-nuevo", compact("titulo", "categoria", "permisoEditar", "permisoBaja"));
         }
 
         $titulo = "Lista de Categorías de Producto";
