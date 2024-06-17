@@ -22,6 +22,10 @@ class Producto extends Model
 
     public function scopeOrderByCategoria(Builder $query)
     {
+        if(is_null($query->getQuery()->columns)){
+            $query->addSelect('productos.*');
+        }
+
         return $query->withoutGlobalScope('order')
             ->join('categorias', 'productos.fk_idcategoria', '=', 'categorias.idcategoria')
             ->orderBy('categorias.posicion', 'desc');

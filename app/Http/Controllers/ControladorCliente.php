@@ -88,7 +88,7 @@ class ControladorCliente extends Controller
 
                 $entidad->actualizar();
 
-                $_POST["id"] = $entidad->idproducto;
+                $_POST["id"] = $entidad->idcliente;
                 $msg["ESTADO"] = MSG_SUCCESS;
                 $msg["MSG"] = OKINSERT;
             } else {
@@ -104,7 +104,7 @@ class ControladorCliente extends Controller
                 } else {
                     $entidad->insertar();
 
-                    $_POST["id"] = $entidad->idproducto;
+                    $_POST["id"] = $entidad->idcliente;
                     $msg["ESTADO"] = MSG_SUCCESS;
                     $msg["MSG"] = OKINSERT;
                 }

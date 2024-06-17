@@ -98,7 +98,7 @@ class ControladorCategoria extends Controller
         try {
             $categoria->save();
 
-            $_POST["id"] = $categoria->idproducto;
+            $_POST["id"] = $categoria->idcategoria;
             $msg["ESTADO"] = MSG_SUCCESS;
             $msg["MSG"] = OKINSERT;
 
