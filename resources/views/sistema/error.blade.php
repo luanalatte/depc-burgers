@@ -1,5 +1,5 @@
 @extends('plantilla')
-@section('titulo', "$titulo")
+@section('titulo', "Permisos insuficientes")
 @section('contenido')
 @include('sistema.msg')
 @endsection

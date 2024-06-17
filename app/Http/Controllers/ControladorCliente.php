@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Entidades\Cliente;
-use App\Entidades\Sistema\Usuario;
-use App\Entidades\Sistema\Patente;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -16,24 +14,12 @@ class ControladorCliente extends Controller
     {
         $titulo = "Lista de Clientes";
 
-        if (!Patente::autorizarOperacion($codigo = "CLIENTECONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         return view("sistema.cliente-listar", compact("titulo"));
     }
 
     public function nuevo()
     {
         $titulo = "Nuevo Cliente";
-
-        if (!Patente::autorizarOperacion($codigo = "CLIENTEALTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         $cliente = new Cliente();
         return view("sistema.cliente-nuevo", compact("titulo", "cliente"));
@@ -42,12 +28,6 @@ class ControladorCliente extends Controller
     public function editar(Request $request)
     {
         $titulo = "Modificar Cliente";
-
-        if (!Patente::autorizarOperacion($codigo = "CLIENTECONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         if ($cliente = Cliente::find($request->id)) {
             return view("sistema.cliente-nuevo", compact("titulo", "cliente"));
@@ -68,24 +48,12 @@ class ControladorCliente extends Controller
 
         try {
             if ($_POST["id"] > 0) {
-                if (!Patente::autorizarOperacion($codigo = "CLIENTEEDITAR")) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                    return view("sistema.error", compact("titulo", "msg"));
-                }
-
                 $entidad->actualizar();
 
                 $_POST["id"] = $entidad->idcliente;
                 $msg["ESTADO"] = MSG_SUCCESS;
                 $msg["MSG"] = OKINSERT;
             } else {
-                if (!Patente::autorizarOperacion($codigo = "CLIENTEALTA")) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                    return view("sistema.error", compact("titulo", "msg"));
-                }
-
                 if (empty($entidad->nombre) || empty($entidad->apellido) || empty($entidad->dni) || empty($entidad->email) || empty($entidad->clave)) {
                     $msg["ESTADO"] = MSG_ERROR;
                     $msg["MSG"] = "Ingrese todos los datos requeridos.";
@@ -104,24 +72,12 @@ class ControladorCliente extends Controller
             $msg["MSG"] = ERRORINSERT;
         }
 
-        if (!Patente::autorizarOperacion($codigo = "CLIENTECONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         $cliente = Cliente::find($entidad->idcliente) ?? new Cliente();
         return view("sistema.cliente-nuevo", compact("titulo", "msg", "cliente"));
     }
 
     public function eliminar(Request $request)
     {
-        if (!Patente::autorizarOperacion($codigo = "CLIENTEELIMINAR")) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
-            return json_encode($aResultado);
-        }
-
         try {
             Cliente::destroy($request->id);
 
@@ -137,9 +93,6 @@ class ControladorCliente extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Patente::autorizarOperacion("CLIENTECONSULTA"))
-            return null;
-
         // NOTE: Posible injection en los valores de DataTables?
         $orderColumn = $request->order[0]['column'];
         $orderDirection = $request->order[0]['dir'];

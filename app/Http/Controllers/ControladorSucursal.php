@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Entidades\Sucursal;
-use App\Entidades\Sistema\Patente;
-use App\Entidades\Sistema\Usuario;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -14,24 +12,12 @@ class ControladorSucursal extends Controller
     {
         $titulo = "Lista de Sucursales";
 
-        if (!Patente::autorizarOperacion($codigo = "SUCURSALCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         return view("sistema.sucursal-listar", compact("titulo"));
     }
 
     public function nuevo()
     {
         $titulo = "Nueva Sucursal";
-
-        if (!Patente::autorizarOperacion($codigo = "SUCURSALALTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         $sucursal = new Sucursal();
         return view("sistema.sucursal-nuevo", compact("titulo", "sucursal"));
@@ -40,12 +26,6 @@ class ControladorSucursal extends Controller
     public function editar(Request $request)
     {
         $titulo = "Modificar Sucursales";
-
-        if (!Patente::autorizarOperacion($codigo = "SUCURSALCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         if ($sucursal = Sucursal::find($request->id)) {
             return view("sistema.sucursal-nuevo", compact("titulo", "sucursal"));
@@ -72,24 +52,12 @@ class ControladorSucursal extends Controller
                 $msg["MSG"] = "Ingrese todos los datos requeridos.";
             } else {
                 if ($bEditando) {
-                    if (!Patente::autorizarOperacion($codigo = "SUCURSALEDITAR")) {
-                        $msg["ESTADO"] = MSG_ERROR;
-                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                        return view("sistema.error", compact("titulo", "msg"));
-                    }
-
                     $entidad->actualizar();
 
                     $_POST["id"] = $entidad->idsucursal;
                     $msg["ESTADO"] = MSG_SUCCESS;
                     $msg["MSG"] = OKINSERT;
                 } else {
-                    if (!Patente::autorizarOperacion($codigo = "SUCURSALALTA")) {
-                        $msg["ESTADO"] = MSG_ERROR;
-                        $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                        return view("sistema.error", compact("titulo", "msg"));
-                    }
-
                     $entidad->insertar();
                     
                     $_POST["id"] = $entidad->idsucursal;
@@ -104,24 +72,12 @@ class ControladorSucursal extends Controller
             $msg["MSG"] = ERRORINSERT;
         }
 
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOSCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         $sucursal = Sucursal::find($entidad->idsucursal) ?? new Sucursal();
         return view("sistema.sucursal-nuevo", compact("titulo", "msg", "sucursal"));
     }
 
     public function eliminar(Request $request)
     {
-        if (!Patente::autorizarOperacion($codigo = "SUCURSALBAJA")) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
-            return json_encode($aResultado);
-        }
-
         try {
             Sucursal::destroy($request->id);
 
@@ -137,9 +93,6 @@ class ControladorSucursal extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Patente::autorizarOperacion("SUCURSALCONSULTA"))
-            return null;
-
         // NOTE: Posible injection en los valores de DataTables?
         $orderColumn = $request->order[0]['column'];
         $orderDirection = $request->order[0]['dir'];

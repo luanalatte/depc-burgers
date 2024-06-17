@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Entidades\Cliente;
 use App\Entidades\Estado;
 use App\Entidades\Pedido;
-use App\Entidades\Sistema\Usuario;
-use App\Entidades\Sistema\Patente;
 use App\Entidades\Sucursal;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,28 +17,18 @@ class ControladorPedido extends Controller
     {
         $titulo = "Lista de Pedidos";
 
-        if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         // TODO: Cambiar a Estado::withCount('pedidos')
         $aEstados = Estado::countPedidos()->get();
         $aSucursales = Sucursal::all();
-        $countPedidos = Pedido::count(); // TODO: Contar solo pedidos de la sucursal y/o período seleccionado actualmente.
+        // TODO: Contar solo pedidos de la sucursal y/o período seleccionado actualmente.
+        $countPedidos = Pedido::count();
+
         return view("sistema.pedido-listar", compact("titulo", "countPedidos", "aEstados", "aSucursales"));
     }
 
     public function nuevo()
     {
         $titulo = "Nuevo Pedido";
-
-        if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         $pedido = new Pedido();
         $aClientes = Cliente::all();
@@ -53,13 +41,8 @@ class ControladorPedido extends Controller
     {
         $titulo = "Modificar Pedido";
 
-        if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
-        if ($pedido = Pedido::incluirCliente()->incluirSucursal()->find($request->id)) {
+        $pedido = Pedido::incluirCliente()->incluirSucursal()->find($request->id);
+        if ($pedido) {
             $aEstados = Estado::all();
             return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aEstados"));
         }
@@ -83,31 +66,19 @@ class ControladorPedido extends Controller
 
         try {
             if ($_POST["id"] > 0) {
-                if (!Patente::autorizarOperacion($codigo = "PEDIDOEDITAR")) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                    return view("sistema.error", compact("titulo", "msg"));
-                }
-
                 $entidad->actualizar();
 
-                $_POST["id"] = $entidad->idproducto;
+                $_POST["id"] = $entidad->idpedido;
                 $msg["ESTADO"] = MSG_SUCCESS;
                 $msg["MSG"] = OKINSERT;
             } else {
-                if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                    return view("sistema.error", compact("titulo", "msg"));
-                }
-
                 if (empty($entidad->fk_idcliente) || empty($entidad->fk_idsucursal) || empty($entidad->fk_idestado) || empty($entidad->fecha) || empty($entidad->total)) {
                     $msg["ESTADO"] = MSG_ERROR;
                     $msg["MSG"] = "Ingrese todos los datos requeridos.";
                 } else {
                     $entidad->insertar();
 
-                    $_POST["id"] = $entidad->idproducto;
+                    $_POST["id"] = $entidad->idpedido;
                     $msg["ESTADO"] = MSG_SUCCESS;
                     $msg["MSG"] = OKINSERT;
                 }
@@ -127,12 +98,6 @@ class ControladorPedido extends Controller
             $msg["MSG"] = ERRORINSERT;
         }
 
-        if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         $pedido = Pedido::find($entidad->idpedido) ?? new Pedido();
         $aClientes = Cliente::all();
         $aSucursales = Sucursal::all();
@@ -142,12 +107,6 @@ class ControladorPedido extends Controller
 
     public function eliminar(Request $request)
     {
-        if (!Patente::autorizarOperacion($codigo = "PEDIDOBAJA")) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
-            return json_encode($aResultado);
-        }
-
         try {
             Pedido::destroy($request->id);
 
@@ -163,12 +122,6 @@ class ControladorPedido extends Controller
 
     public function setEstado(Request $request)
     {
-        if (!Patente::autorizarOperacion($codigo = "PEDIDOEDITAR")) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
-            return json_encode($aResultado);
-        }
-
         $pedido = Pedido::find($request->id);
         if ($pedido == null) {
             $aResultado["err"] = EXIT_FAILURE;
@@ -206,9 +159,6 @@ class ControladorPedido extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Patente::autorizarOperacion("PEDIDOCONSULTA"))
-            return null;
-
         // NOTE: Posible injection en los valores de DataTables?
         try {
             $orderColumn = $request->order[0]['column'] - 1;

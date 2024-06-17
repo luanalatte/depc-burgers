@@ -116,67 +116,81 @@ Route::middleware(['auth.sistema'])->group(function() {
 /* --------------------------------------------- */
 /* CONTROLADOR CLIENTE                           */
 /* --------------------------------------------- */
-    Route::get('/admin/clientes', 'ControladorCliente@index');
-    Route::get('/admin/cliente/nuevo', 'ControladorCliente@nuevo');
-    Route::post('/admin/cliente/nuevo', 'ControladorCliente@guardar');
-    Route::get('/admin/clientes/cargarGrilla', 'ControladorCliente@cargarGrilla')->name('clientes.cargarGrilla');
-    Route::get('/admin/cliente/eliminar', 'ControladorCliente@eliminar');
-    Route::get('/admin/cliente/{id}', 'ControladorCliente@editar');
-    Route::post('/admin/cliente/{id}', 'ControladorCliente@guardar');
+    Route::get('/admin/clientes', 'ControladorCliente@index')->middleware(['autorizar:CLIENTECONSULTA']);
+    Route::get('/admin/cliente/nuevo', 'ControladorCliente@nuevo')->middleware(['autorizar:CLIENTEALTA']);
+    Route::post('/admin/cliente/nuevo', 'ControladorCliente@guardar')->middleware(['autorizar:CLIENTEALTA']);
+    Route::get('/admin/clientes/cargarGrilla', 'ControladorCliente@cargarGrilla')
+        ->middleware(['autorizar.json:CLIENTECONSULTA'])
+        ->name('clientes.cargarGrilla');
+    Route::get('/admin/cliente/eliminar', 'ControladorCliente@eliminar')->middleware(['autorizar:CLIENTEELIMINAR']);
+    Route::get('/admin/cliente/{id}', 'ControladorCliente@editar')->middleware(['autorizar:CLIENTECONSULTA']);
+    Route::post('/admin/cliente/{id}', 'ControladorCliente@guardar')->middleware(['autorizar:CLIENTEEDITAR']);
 
 /* --------------------------------------------- */
 /* CONTROLADOR PRODUCTO                          */
 /* --------------------------------------------- */
-    Route::get('/admin/productos', 'ControladorProducto@index');
-    Route::get('/admin/producto/nuevo', 'ControladorProducto@nuevo');
-    Route::post('/admin/producto/nuevo', 'ControladorProducto@guardar');
-    Route::get('/admin/productos/cargarGrilla', 'ControladorProducto@cargarGrilla')->name('productos.cargarGrilla');
-    Route::get('/admin/producto/eliminar', 'ControladorProducto@eliminar');
-    Route::get('/admin/producto/{id}', 'ControladorProducto@editar');
-    Route::post('/admin/producto/{id}', 'ControladorProducto@guardar');
+    Route::get('/admin/productos', 'ControladorProducto@index')->middleware(['autorizar:PRODUCTOCONSULTA']);
+    Route::get('/admin/producto/nuevo', 'ControladorProducto@nuevo')->middleware(['autorizar:PRODUCTOSALTA']);
+    Route::post('/admin/producto/nuevo', 'ControladorProducto@guardar')->middleware(['autorizar:PRODUCTOSALTA']);
+    Route::get('/admin/productos/cargarGrilla', 'ControladorProducto@cargarGrilla')
+        ->middleware(['autorizar.json:PRODUCTOCONSULTA'])
+        ->name('productos.cargarGrilla');
+    Route::get('/admin/producto/eliminar', 'ControladorProducto@eliminar')->middleware(['autorizar:PRODUCTOELIMINAR']);
+    Route::get('/admin/producto/{id}', 'ControladorProducto@editar')->middleware(['autorizar:PRODUCTOCONSULTA']);
+    Route::post('/admin/producto/{id}', 'ControladorProducto@guardar')->middleware(['autorizar:PRODUCTOEDITAR']);
 
 /* --------------------------------------------- */
 /* CONTROLADOR PEDIDO                            */
 /* --------------------------------------------- */
-    Route::get('/admin/pedidos', 'ControladorPedido@index');
-    Route::get('/admin/pedido/nuevo', 'ControladorPedido@nuevo');
-    Route::post('/admin/pedido/nuevo', 'ControladorPedido@guardar');
-    Route::get('/admin/pedidos/cargarGrilla', 'ControladorPedido@cargarGrilla')->name('pedidos.cargarGrilla');
-    Route::get('/admin/pedido/setEstado', 'ControladorPedido@setEstado')->name('pedidos.setEstado');
-    Route::get('/admin/pedido/eliminar', 'ControladorPedido@eliminar');
-    Route::get('/admin/pedido/{id}', 'ControladorPedido@editar');
-    Route::post('/admin/pedido/{id}', 'ControladorPedido@guardar');
+    Route::get('/admin/pedidos', 'ControladorPedido@index')->middleware(['autorizar:PEDIDOCONSULTA']);
+    Route::get('/admin/pedido/nuevo', 'ControladorPedido@nuevo')->middleware(['autorizar:PEDIDOALTA']);
+    Route::post('/admin/pedido/nuevo', 'ControladorPedido@guardar')->middleware(['autorizar:PEDIDOALTA']);
+    Route::get('/admin/pedidos/cargarGrilla', 'ControladorPedido@cargarGrilla')
+        ->middleware(['autorizar.json:PEDIDOCONSULTA'])
+        ->name('pedidos.cargarGrilla');
+    Route::get('/admin/pedido/setEstado', 'ControladorPedido@setEstado')
+        ->middleware(['autorizar.json:PEDIDOEDITAR'])
+        ->name('pedidos.setEstado');
+    Route::get('/admin/pedido/eliminar', 'ControladorPedido@eliminar')->middleware(['autorizar:PEDIDOBAJA']);
+    Route::get('/admin/pedido/{id}', 'ControladorPedido@editar')->middleware(['autorizar:PEDIDOCONSULTA']);
+    Route::post('/admin/pedido/{id}', 'ControladorPedido@guardar')->middleware(['autorizar:PEDIDOEDITAR']);
 
 /* --------------------------------------------- */
 /* CONTROLADOR POSTULACION                       */
 /* --------------------------------------------- */
-    Route::get('/admin/postulaciones', 'ControladorPostulacion@index');
-    Route::get('/admin/postulacion/nuevo', 'ControladorPostulacion@nuevo');
-    Route::post('/admin/postulacion/nuevo', 'ControladorPostulacion@guardar');
-    Route::get('/admin/postulaciones/cargarGrilla', 'ControladorPostulacion@cargarGrilla')->name('postulaciones.cargarGrilla');
-    Route::get('/admin/postulacion/eliminar', 'ControladorPostulacion@eliminar');
-    Route::get('/admin/postulacion/{id}', 'ControladorPostulacion@editar');
-    Route::post('/admin/postulacion/{id}', 'ControladorPostulacion@guardar');
+    Route::get('/admin/postulaciones', 'ControladorPostulacion@index')->middleware(['autorizar:POSTULANTECONSULTA']);
+    Route::get('/admin/postulacion/nuevo', 'ControladorPostulacion@nuevo')->middleware(['autorizar:POSTULANTEALTA']);
+    Route::post('/admin/postulacion/nuevo', 'ControladorPostulacion@guardar')->middleware(['autorizar:POSTULANTEALTA']);
+    Route::get('/admin/postulaciones/cargarGrilla', 'ControladorPostulacion@cargarGrilla')
+        ->middleware(['autorizar.json:POSTULANTECONSULTA'])
+        ->name('postulaciones.cargarGrilla');
+    Route::get('/admin/postulacion/eliminar', 'ControladorPostulacion@eliminar')->middleware(['autorizar:POSTULANTEBAJA']);
+    Route::get('/admin/postulacion/{id}', 'ControladorPostulacion@editar')->middleware(['autorizar:POSTULANTECONSULTA']);
+    Route::post('/admin/postulacion/{id}', 'ControladorPostulacion@guardar')->middleware(['autorizar:POSTULANTEEDITAR']);
 
 /* --------------------------------------------- */
 /* CONTROLADOR SUCURSAL                          */
 /* --------------------------------------------- */
-    Route::get('/admin/sucursales', 'ControladorSucursal@index');
-    Route::get('/admin/sucursal/nuevo', 'ControladorSucursal@nuevo');
-    Route::post('/admin/sucursal/nuevo', 'ControladorSucursal@guardar');
-    Route::get('/admin/sucursales/cargarGrilla', 'ControladorSucursal@cargarGrilla')->name('sucursales.cargarGrilla');
-    Route::get('/admin/sucursal/eliminar', 'ControladorSucursal@eliminar');
-    Route::get('/admin/sucursal/{id}', 'ControladorSucursal@editar');
-    Route::post('/admin/sucursal/{id}', 'ControladorSucursal@guardar');
+    Route::get('/admin/sucursales', 'ControladorSucursal@index')->middleware(['autorizar:SUCURSALCONSULTA']);
+    Route::get('/admin/sucursal/nuevo', 'ControladorSucursal@nuevo')->middleware(['autorizar:SUCURSALALTA']);
+    Route::post('/admin/sucursal/nuevo', 'ControladorSucursal@guardar')->middleware(['autorizar:SUCURSALALTA']);
+    Route::get('/admin/sucursales/cargarGrilla', 'ControladorSucursal@cargarGrilla')
+        ->middleware(['autorizar.json:SUCURSALCONSULTA'])
+        ->name('sucursales.cargarGrilla');
+    Route::get('/admin/sucursal/eliminar', 'ControladorSucursal@eliminar')->middleware(['autorizar:SUCURSALBAJA']);
+    Route::get('/admin/sucursal/{id}', 'ControladorSucursal@editar')->middleware(['autorizar:SUCURSALCONSULTA']);
+    Route::post('/admin/sucursal/{id}', 'ControladorSucursal@guardar')->middleware(['autorizar:SUCURSALEDITAR']);
 
 /* --------------------------------------------- */
 /* CONTROLADOR CATEGORIA                         */
 /* --------------------------------------------- */
-    Route::get('/admin/categorias', 'ControladorCategoria@index');
-    Route::get('/admin/categoria/nuevo', 'ControladorCategoria@nuevo');
-    Route::post('/admin/categoria/nuevo', 'ControladorCategoria@guardar');
-    Route::get('/admin/categorias/cargarGrilla', 'ControladorCategoria@cargarGrilla')->name('categorias.cargarGrilla');
-    Route::get('/admin/categoria/eliminar', 'ControladorCategoria@eliminar');
-    Route::get('/admin/categoria/{id}', 'ControladorCategoria@editar');
-    Route::post('/admin/categoria/{id}', 'ControladorCategoria@guardar');
+    Route::get('/admin/categorias', 'ControladorCategoria@index')->middleware(['autorizar:CATEGORIACONSULTA']);
+    Route::get('/admin/categoria/nuevo', 'ControladorCategoria@nuevo')->middleware(['autorizar:CATEGORIAALTA']);
+    Route::post('/admin/categoria/nuevo', 'ControladorCategoria@guardar')->middleware(['autorizar:CATEGORIAALTA']);
+    Route::get('/admin/categorias/cargarGrilla', 'ControladorCategoria@cargarGrilla')
+        ->middleware(['autorizar.json:CATEGORIACONSULTA'])
+        ->name('categorias.cargarGrilla');
+    Route::get('/admin/categoria/eliminar', 'ControladorCategoria@eliminar')->middleware(['autorizar:CATEGORIABAJA']);
+    Route::get('/admin/categoria/{id}', 'ControladorCategoria@editar')->middleware(['autorizar:CATEGORIACONSULTA']);
+    Route::post('/admin/categoria/{id}', 'ControladorCategoria@guardar')->middleware(['autorizar:CATEGORIAEDITAR']);
 });

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Entidades\Categoria;
 use App\Entidades\Sistema\Patente;
-use App\Entidades\Sistema\Usuario;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -14,24 +13,12 @@ class ControladorCategoria extends Controller
     {
         $titulo = "Lista de Categorías de Productos";
 
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         return view("sistema.categoria-listar", compact("titulo"));
     }
 
     public function nuevo()
     {
         $titulo = "Nueva Categoría de Producto";
-
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         $categoria = new Categoria();
         return view("sistema.categoria-nuevo", compact("titulo", "categoria"));
@@ -40,12 +27,6 @@ class ControladorCategoria extends Controller
     public function editar(Request $request)
     {
         $titulo = "Modificar Categoría de Productos";
-
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         if ($categoria = Categoria::find($request->id)) {
             $permisoEditar = Patente::autorizarOperacion("PRODUCTOEDITAR");
@@ -64,12 +45,6 @@ class ControladorCategoria extends Controller
         $titulo = "Modificar Categoría de Productos";
 
         $categoria = Categoria::findOrNew($request->input('id'));
-
-        if (!Patente::autorizarOperacion($codigo = $categoria->exists ? "PRODUCTOEDITAR" : "PRODUCTOSALTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         $categoria->cargarDesdeRequest($request);
 
@@ -106,12 +81,6 @@ class ControladorCategoria extends Controller
 
     public function eliminar(Request $request)
     {
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOELIMINAR")) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
-            return json_encode($aResultado);
-        }
-
         try {
             Categoria::destroy($request->id);
 
@@ -127,9 +96,6 @@ class ControladorCategoria extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Patente::autorizarOperacion("PRODUCTOCONSULTA"))
-            return null;
-
         // NOTE: Posible injection en los valores de DataTables?
         $orderColumn = $request->order[0]['column'];
         $orderDirection = $request->order[0]['dir'];

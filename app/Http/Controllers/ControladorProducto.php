@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Entidades\Categoria;
 use App\Entidades\Producto;
-use App\Entidades\Sistema\Usuario;
-use App\Entidades\Sistema\Patente;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -17,24 +15,12 @@ class ControladorProducto extends Controller
     {
         $titulo = "Lista de Productos";
 
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         return view("sistema.producto-listar", compact("titulo"));
     }
 
     public function nuevo()
     {
         $titulo = "Nuevo Producto";
-
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         $producto = new Producto();
         $aCategorias = Categoria::all();
@@ -44,12 +30,6 @@ class ControladorProducto extends Controller
     public function editar(Request $request)
     {
         $titulo = "Modificar Producto";
-
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
 
         if ($producto = Producto::find($request->id)) {
             $aCategorias = Categoria::all();
@@ -76,12 +56,6 @@ class ControladorProducto extends Controller
             }
 
             if ($_POST["id"] > 0) {
-                if (!Patente::autorizarOperacion($codigo = "PRODUCTOEDITAR")) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                    return view("sistema.error", compact("titulo", "msg"));
-                }
-
                 $productoAnt = Producto::find($entidad->idproducto);
                 if (!is_null($imagen)) {
                     try {
@@ -99,12 +73,6 @@ class ControladorProducto extends Controller
                 $msg["ESTADO"] = MSG_SUCCESS;
                 $msg["MSG"] = OKINSERT;
             } else {
-                if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-                    return view("sistema.error", compact("titulo", "msg"));
-                }
-
                 if (empty($entidad->nombre) || empty($entidad->precio)) {
                     $msg["ESTADO"] = MSG_ERROR;
                     $msg["MSG"] = "Ingrese todos los datos requeridos.";
@@ -123,12 +91,6 @@ class ControladorProducto extends Controller
             $msg["MSG"] = ERRORINSERT;
         }
 
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOCONSULTA")) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
-            return view("sistema.error", compact("titulo", "msg"));
-        }
-
         $producto = Producto::find($entidad->idproducto) ?? new Producto();
         $aCategorias = Categoria::all();
         return view("sistema.producto-nuevo", compact("titulo", "msg", "producto", "aCategorias"));
@@ -136,18 +98,12 @@ class ControladorProducto extends Controller
 
     public function eliminar(Request $request)
     {
-        if (!Patente::autorizarOperacion($codigo = "PRODUCTOELIMINAR")) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
-            return json_encode($aResultado);
-        }
-
         try {
             // TODO: No eliminar productos que tengan pedidos asociados.
             Producto::destroy($request->id);
 
             $aResultado["err"] = EXIT_SUCCESS;
-            $aResultadp["msg"] = "Producto eliminado exitosamente.";
+            $aResultado["msg"] = "Producto eliminado exitosamente.";
         } catch (Exception $e) {
             $aResultado["err"] = EXIT_FAILURE;
             $aResultado["msg"] = "No se pudo eliminar el producto.";
@@ -158,9 +114,6 @@ class ControladorProducto extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Patente::autorizarOperacion("PRODUCTOCONSULTA"))
-            return null;
-
         // NOTE: Posible injection en los valores de DataTables?
         $orderColumn = $request->order[0]['column'];
         $orderDirection = $request->order[0]['dir'];
