@@ -14,9 +14,6 @@ class ControladorSucursal extends Controller
     {
         $titulo = "Lista de Sucursales";
 
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
-
         if (!Patente::autorizarOperacion($codigo = "SUCURSALCONSULTA")) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
@@ -29,9 +26,6 @@ class ControladorSucursal extends Controller
     public function nuevo()
     {
         $titulo = "Nueva Sucursal";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "SUCURSALALTA")) {
             $msg["ESTADO"] = MSG_ERROR;
@@ -46,9 +40,6 @@ class ControladorSucursal extends Controller
     public function editar(Request $request)
     {
         $titulo = "Modificar Sucursales";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "SUCURSALCONSULTA")) {
             $msg["ESTADO"] = MSG_ERROR;
@@ -69,9 +60,6 @@ class ControladorSucursal extends Controller
     public function guardar(Request $request)
     {
         $titulo = "Modificar Sucursales";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         $entidad = new Sucursal();
         $entidad->cargarDesdeRequest($request);
@@ -128,12 +116,6 @@ class ControladorSucursal extends Controller
 
     public function eliminar(Request $request)
     {
-        if (!Usuario::autenticado()) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "Usuario no autenticado.";
-            return json_encode($aResultado);
-        }
-
         if (!Patente::autorizarOperacion($codigo = "SUCURSALBAJA")) {
             $aResultado["err"] = EXIT_FAILURE;
             $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
@@ -155,7 +137,7 @@ class ControladorSucursal extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Usuario::autenticado() || !Patente::autorizarOperacion("SUCURSALCONSULTA"))
+        if (!Patente::autorizarOperacion("SUCURSALCONSULTA"))
             return null;
 
         // NOTE: Posible injection en los valores de DataTables?

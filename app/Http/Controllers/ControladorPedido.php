@@ -19,9 +19,6 @@ class ControladorPedido extends Controller
     {
         $titulo = "Lista de Pedidos";
 
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
-
         if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
@@ -39,9 +36,6 @@ class ControladorPedido extends Controller
     {
         $titulo = "Nuevo Pedido";
 
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
-
         if (!Patente::autorizarOperacion($codigo = "PEDIDOALTA")) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
@@ -58,9 +52,6 @@ class ControladorPedido extends Controller
     public function editar(Request $request)
     {
         $titulo = "Modificar Pedido";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "PEDIDOCONSULTA")) {
             $msg["ESTADO"] = MSG_ERROR;
@@ -86,9 +77,6 @@ class ControladorPedido extends Controller
     public function guardar(Request $request)
     {
         $titulo = "Modificar Pedido";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         $entidad = new Pedido();
         $entidad->cargarDesdeRequest($request);
@@ -154,12 +142,6 @@ class ControladorPedido extends Controller
 
     public function eliminar(Request $request)
     {
-        if (!Usuario::autenticado()) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "Usuario no autenticado.";
-            return json_encode($aResultado);
-        }
-
         if (!Patente::autorizarOperacion($codigo = "PEDIDOBAJA")) {
             $aResultado["err"] = EXIT_FAILURE;
             $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
@@ -181,12 +163,6 @@ class ControladorPedido extends Controller
 
     public function setEstado(Request $request)
     {
-        if (!Usuario::autenticado()) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "Usuario no autenticado.";
-            return json_encode($aResultado);
-        }
-
         if (!Patente::autorizarOperacion($codigo = "PEDIDOEDITAR")) {
             $aResultado["err"] = EXIT_FAILURE;
             $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
@@ -230,7 +206,7 @@ class ControladorPedido extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Usuario::autenticado() || !Patente::autorizarOperacion("PEDIDOCONSULTA"))
+        if (!Patente::autorizarOperacion("PEDIDOCONSULTA"))
             return null;
 
         // NOTE: Posible injection en los valores de DataTables?

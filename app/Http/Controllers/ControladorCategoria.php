@@ -14,9 +14,6 @@ class ControladorCategoria extends Controller
     {
         $titulo = "Lista de Categorías de Productos";
 
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
-
         if (!Patente::autorizarOperacion($codigo = "PRODUCTOCONSULTA")) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = "No tiene permisos para la operación ($codigo).";
@@ -29,9 +26,6 @@ class ControladorCategoria extends Controller
     public function nuevo()
     {
         $titulo = "Nueva Categoría de Producto";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "PRODUCTOSALTA")) {
             $msg["ESTADO"] = MSG_ERROR;
@@ -46,9 +40,6 @@ class ControladorCategoria extends Controller
     public function editar(Request $request)
     {
         $titulo = "Modificar Categoría de Productos";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         if (!Patente::autorizarOperacion($codigo = "PRODUCTOCONSULTA")) {
             $msg["ESTADO"] = MSG_ERROR;
@@ -71,9 +62,6 @@ class ControladorCategoria extends Controller
     public function guardar(Request $request)
     {
         $titulo = "Modificar Categoría de Productos";
-
-        if (!Usuario::autenticado())
-            return redirect("admin/login");
 
         $categoria = Categoria::findOrNew($request->input('id'));
 
@@ -118,12 +106,6 @@ class ControladorCategoria extends Controller
 
     public function eliminar(Request $request)
     {
-        if (!Usuario::autenticado()) {
-            $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "Usuario no autenticado.";
-            return json_encode($aResultado);
-        }
-
         if (!Patente::autorizarOperacion($codigo = "PRODUCTOELIMINAR")) {
             $aResultado["err"] = EXIT_FAILURE;
             $aResultado["msg"] = "No tiene permisos para la operación ($codigo).";
@@ -145,7 +127,7 @@ class ControladorCategoria extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        if (!Usuario::autenticado() || !Patente::autorizarOperacion("PRODUCTOCONSULTA"))
+        if (!Patente::autorizarOperacion("PRODUCTOCONSULTA"))
             return null;
 
         // NOTE: Posible injection en los valores de DataTables?
