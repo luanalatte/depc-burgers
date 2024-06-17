@@ -317,7 +317,7 @@ INSERT INTO `sistema_patentes` VALUES (177, 'BAJA', 'Patentes', 'PATENTESBAJA', 
 INSERT INTO `sistema_patentes` VALUES (178, 'EDITAR', 'Patentes', 'PATENTESMODIFICACION', 'Patentes', 0, 'Modifica patentes existentes');
 INSERT INTO `sistema_patentes` VALUES (179, 'CONSULTA', 'Patentes', 'PATENTESCONSULTA', 'Patentes', 0, 'Consulta patentes');
 INSERT INTO `sistema_patentes` VALUES (181, 'CONSULTA', 'Pedido', 'PEDIDOCONSULTA', 'Pedido', 1, 'Permite listar los pedidos');
-INSERT INTO `sistema_patentes` VALUES (184, 'Eliminar', 'Listar categorias', 'CATEGORIAELIMINAR', 'Categorias', 0, 'Elimina una categoria');
+INSERT INTO `sistema_patentes` VALUES (184, 'BAJA', 'Listar categorias', 'CATEGORIABAJA', 'Categorias', 0, 'Elimina una categoria');
 INSERT INTO `sistema_patentes` VALUES (185, 'CONSULTA', 'Listar consultas', 'CONSULTACONSULTA', 'Consultas', 1, 'Consultar las consultas');
 INSERT INTO `sistema_patentes` VALUES (186, 'ALTA', 'Nueva consulta', 'CONSULTAALTA', 'Consultas', 1, 'Alta de categorias');
 INSERT INTO `sistema_patentes` VALUES (187, 'BAJA', 'Listar consultas', 'CONSULTAELIMINAR', 'Consultas', 1, 'Elimina una consulta');
