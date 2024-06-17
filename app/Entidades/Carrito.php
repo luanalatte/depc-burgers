@@ -48,11 +48,6 @@ class Carrito extends Model
         ]);
     }
 
-    public function eliminar() {
-        $sql = "DELETE FROM carritos WHERE idcarrito = ?";
-        DB::delete($sql, [$this->idcarrito]);
-    }
-
     public function obtenerCantidad($idproducto)
     {
         $sql = "SELECT cantidad FROM carrito_productos WHERE fk_idcarrito = ? AND fk_idproducto = ?";

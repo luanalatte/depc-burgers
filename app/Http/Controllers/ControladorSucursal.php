@@ -141,9 +141,7 @@ class ControladorSucursal extends Controller
         }
 
         try {
-            $sucursal = new Sucursal();
-            $sucursal->idsucursal = $request->id;
-            $sucursal->eliminar();
+            Sucursal::destroy($request->id);
 
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultado["msg"] = "Sucursal eliminada exitosamente.";

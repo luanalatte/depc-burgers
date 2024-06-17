@@ -42,9 +42,4 @@ class Estado extends Model
 
         DB::update($sql, [$this->nombre, $this->color, $this->idestado]);
     }
-
-    public function eliminar() {
-        $sql = "DELETE FROM estados WHERE idestado = ?";
-        DB::delete($sql, [$this->idestado]);
-    }
 }

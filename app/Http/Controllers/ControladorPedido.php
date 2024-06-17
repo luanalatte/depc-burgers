@@ -167,9 +167,7 @@ class ControladorPedido extends Controller
         }
 
         try {
-            $pedido = new Pedido();
-            $pedido->idpedido = $request->id;
-            $pedido->eliminar();
+            Pedido::destroy($request->id);
 
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultado["msg"] = "Pedido eliminado exitosamente.";

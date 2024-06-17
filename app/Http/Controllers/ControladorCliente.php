@@ -141,9 +141,7 @@ class ControladorCliente extends Controller
         }
 
         try {
-            $cliente = new Cliente();
-            $cliente->idcliente = $request->id;
-            $cliente->eliminar();
+            Cliente::destroy($request->id);
 
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultado["msg"] = "Cliente eliminado exitosamente.";

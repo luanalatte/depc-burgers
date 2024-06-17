@@ -182,9 +182,4 @@ class Pedido extends Model
 
         DB::update($sql, $aValores);
     }
-
-    public function eliminar() {
-        $sql = "DELETE FROM pedidos WHERE idpedido = ?";
-        DB::delete($sql, [$this->idpedido]);
-    }
 }

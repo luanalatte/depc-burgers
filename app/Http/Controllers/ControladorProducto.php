@@ -162,9 +162,7 @@ class ControladorProducto extends Controller
 
         try {
             // TODO: No eliminar productos que tengan pedidos asociados.
-            $producto = new Producto();
-            $producto->idproducto = $request->id;
-            $producto->eliminar();
+            Producto::destroy($request->id);
 
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultadp["msg"] = "Producto eliminado exitosamente.";

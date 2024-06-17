@@ -158,11 +158,6 @@ class Cliente extends Model
         DB::update($sql, $aValores);
     }
 
-    public function eliminar() {
-        $sql = "DELETE FROM clientes WHERE idcliente = ?";
-        DB::delete($sql, [$this->idcliente]);
-    }
-
     public static function autenticado()
     {
         if ($id = Session::get('cliente_id')) {

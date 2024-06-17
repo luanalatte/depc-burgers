@@ -84,9 +84,4 @@ class Sucursal extends Model
             $this->idsucursal
         ]);
     }
-
-    public function eliminar() {
-        $sql = "DELETE FROM sucursales WHERE idsucursal = ?";
-        DB::delete($sql, [$this->idsucursal]);
-    }
 }

@@ -49,9 +49,4 @@ class Postulacion extends Model
             $this->idpostulacion
         ]);
     }
-
-    public function eliminar() {
-        $sql = "DELETE FROM postulaciones WHERE idpostulacion = ?";
-        DB::delete($sql, [$this->idpostulacion]);
-    }
 }

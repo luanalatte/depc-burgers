@@ -96,9 +96,4 @@ class Producto extends Model
             $this->idproducto
         ]);
     }
-
-    public function eliminar() {
-        $sql = "DELETE FROM productos WHERE idproducto = ?";
-        DB::delete($sql, [$this->idproducto]);
-    }
 }
