@@ -101,8 +101,6 @@ class Pedido extends Model
 
     public function cargarDesdeRequest(Request $request)
     {
-        $this->idpedido = $request->input('id') != "0" ? $request->input('id') : $this->idpedido;
-
         if ($request->filled('lstCliente'))
             $this->fk_idcliente = $request->input('lstCliente');
 
@@ -120,66 +118,5 @@ class Pedido extends Model
         
         if ($request->has('txtComentarios'))
             $this->comentarios = trimIfString($request->input('txtComentarios'));
-    }
-
-    public function insertar() {
-        $sql = "INSERT INTO pedidos (
-                  fk_idcliente,
-                  fk_idsucursal,
-                  fk_idestado,
-                  fecha,
-                  total,
-                  comentarios
-                ) VALUES (?, ?, ?, ?, ?, ?)";
-
-        DB::insert($sql, [$this->fk_idcliente, $this->fk_idsucursal, $this->fk_idestado, $this->fecha, $this->total, $this->comentarios]);
-        $this->idpedido = DB::getPdo()->lastInsertId();
-
-        return $this->idpedido;
-    }
-
-    public function actualizar() {
-        $aCampos = [];
-        $aValores = [];
-
-        if (isset($this->fk_idcliente)) {
-            $aCampos[] = "fk_idcliente = ?";
-            $aValores[] = $this->fk_idcliente;
-        }
-
-        if (isset($this->fk_idsucursal)) {
-            $aCampos[] = "fk_idsucursal = ?";
-            $aValores[] = $this->fk_idsucursal;
-        }
-
-        if (isset($this->fk_idestado)) {
-            $aCampos[] = "fk_idestado = ?";
-            $aValores[] = $this->fk_idestado;
-        }
-
-        if (isset($this->fecha)) {
-            $aCampos[] = "fecha = ?";
-            $aValores[] = $this->fecha;
-        }
-
-        if (isset($this->total)) {
-            $aCampos[] = "total = ?";
-            $aValores[] = $this->total;
-        }
-
-        if (isset($this->comentarios)) {
-            $aCampos[] = "comentarios = ?";
-            $aValores[] = $this->comentarios;
-        }
-
-        if (empty($aCampos)) {
-            return;
-        }
-
-        $aValores[] = $this->idpedido;
-
-        $sql = "UPDATE pedidos SET " . implode(", ", $aCampos) . " WHERE idpedido = ?";
-
-        DB::update($sql, $aValores);
     }
 }

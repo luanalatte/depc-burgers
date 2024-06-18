@@ -6,6 +6,7 @@ use App\Entidades\Categoria;
 use App\Entidades\Sistema\Patente;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ControladorCategoria extends Controller
 {
@@ -34,10 +35,12 @@ class ControladorCategoria extends Controller
             return view("sistema.categoria-nuevo", compact("titulo", "categoria", "permisoEditar", "permisoBaja"));
         }
 
-        $titulo = "Lista de Categorías de Producto";
-        $msg["ESTADO"] = MSG_ERROR;
-        $msg["MSG"] = "La categoría de producto especificada no existe.";
-        return view("sistema.categoria-listar", compact("titulo", "msg"));
+        Session::flash("msg", [
+            "ESTADO" => MSG_ERROR,
+            "MSG" => "La categoría de producto especificada no existe."
+        ]);
+
+        return redirect("/admin/categorias");
     }
 
     public function guardar(Request $request)
@@ -49,34 +52,40 @@ class ControladorCategoria extends Controller
         $categoria->cargarDesdeRequest($request);
 
         if (empty($categoria->nombre)) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "Ingrese todos los datos requeridos.";
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => "Ingrese todos los datos requeridos."
+            ]);
 
             if ($categoria->exists) {
                 $categoria->refresh();
             }
-            return view("sistema.categoria-nuevo", compact("titulo", "msg", "categoria"));
+
+            return view("sistema.categoria-nuevo", compact("titulo", "categoria"));
         }
 
         try {
             $categoria->save();
 
             $_POST["id"] = $categoria->idcategoria;
-            $msg["ESTADO"] = MSG_SUCCESS;
-            $msg["MSG"] = OKINSERT;
+            Session::flash("msg", [
+                "ESTADO" => MSG_SUCCESS,
+                "MSG" => OKINSERT
+            ]);
 
-            // TODO: Requerir permiso PRODUCTOLISTAR
-            return view("sistema.categoria-listar", compact("titulo", "msg"));
+            return redirect("/admin/categorias");
         } catch (Exception $e) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = ERRORINSERT;
-
-            if ($categoria->exists) {
-                $categoria->refresh();
-            }
-
-            return view("sistema.categoria-nuevo", compact("titulo", "msg", "categoria"));
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => ERRORINSERT
+            ]);
         }
+
+        if ($categoria->exists) {
+            $categoria->refresh();
+        }
+
+        return view("sistema.categoria-nuevo", compact("titulo", "categoria"));
     }
 
     public function eliminar(Request $request)

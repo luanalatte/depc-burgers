@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entidades\Cliente;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 require app_path() . '/start/constants.php';
 
@@ -34,9 +35,12 @@ class ControladorCliente extends Controller
         }
 
         $titulo = "Lista de Clientes";
-        $msg["ESTADO"] = MSG_ERROR;
-        $msg["MSG"] = "El cliente especificado no existe.";
-        return view("sistema.cliente-listar", compact("titulo", "msg"));
+        Session::flash("msg", [
+            "ESTADO" => MSG_ERROR,
+            "MSG" => "La cliente especificado no existe."
+        ]);
+
+        return redirect("/admin/clientes");
     }
 
     public function guardar(Request $request)
@@ -51,29 +55,37 @@ class ControladorCliente extends Controller
                 $entidad->actualizar();
 
                 $_POST["id"] = $entidad->idcliente;
-                $msg["ESTADO"] = MSG_SUCCESS;
-                $msg["MSG"] = OKINSERT;
+                Session::flash("msg", [
+                    "ESTADO" => MSG_SUCCESS,
+                    "MSG" => OKINSERT
+                ]);
             } else {
                 if (empty($entidad->nombre) || empty($entidad->apellido) || empty($entidad->dni) || empty($entidad->email) || empty($entidad->clave)) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "Ingrese todos los datos requeridos.";
+                    Session::flash("msg", [
+                        "ESTADO" => MSG_ERROR,
+                        "MSG" => "Ingrese todos los datos requeridos."
+                    ]);
                 } else {
                     $entidad->insertar();
 
                     $_POST["id"] = $entidad->idcliente;
-                    $msg["ESTADO"] = MSG_SUCCESS;
-                    $msg["MSG"] = OKINSERT;
+                    Session::flash("msg", [
+                        "ESTADO" => MSG_SUCCESS,
+                        "MSG" => OKINSERT
+                    ]);
                 }
             }
 
-            return view("sistema.cliente-listar", compact("titulo", "msg"));
+            return redirect("/admin/clientes");
         } catch (Exception $e) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = ERRORINSERT;
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => ERRORINSERT
+            ]);
         }
 
         $cliente = Cliente::find($entidad->idcliente) ?? new Cliente();
-        return view("sistema.cliente-nuevo", compact("titulo", "msg", "cliente"));
+        return view("sistema.cliente-nuevo", compact("titulo", "cliente"));
     }
 
     public function eliminar(Request $request)

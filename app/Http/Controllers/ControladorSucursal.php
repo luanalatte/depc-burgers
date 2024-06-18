@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entidades\Sucursal;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class ControladorSucursal extends Controller
 {
@@ -31,10 +32,12 @@ class ControladorSucursal extends Controller
             return view("sistema.sucursal-nuevo", compact("titulo", "sucursal"));
         }
 
-        $titulo = "Lista de Sucursales";
-        $msg["ESTADO"] = MSG_ERROR;
-        $msg["MSG"] = "La sucursal especificada no existe.";
-        return view("sistema.sucursal-listar", compact("titulo", "msg"));
+        Session::flash("msg", [
+            "ESTADO" => MSG_ERROR,
+            "MSG" => "La sucursal especificada no existe."
+        ]);
+
+        return redirect("/admin/sucursales");
     }
 
     public function guardar(Request $request)
@@ -48,28 +51,37 @@ class ControladorSucursal extends Controller
             $bEditando = $_POST["id"] > 0;
 
             if (empty($entidad->nombre) || empty($entidad->direccion) || empty($entidad->telefono)) {
-                $msg["ESTADO"] = MSG_ERROR;
-                $msg["MSG"] = "Ingrese todos los datos requeridos.";
+                Session::flash("msg", [
+                    "ESTADO" => MSG_ERROR,
+                    "MSG" => "Ingrese todos los datos requeridos."
+                ]);
+
             } else {
                 if ($bEditando) {
                     $entidad->actualizar();
 
                     $_POST["id"] = $entidad->idsucursal;
-                    $msg["ESTADO"] = MSG_SUCCESS;
-                    $msg["MSG"] = OKINSERT;
+                    Session::flash("msg", [
+                        "ESTADO" => MSG_SUCCESS,
+                        "MSG" => OKINSERT
+                    ]);
                 } else {
                     $entidad->insertar();
                     
                     $_POST["id"] = $entidad->idsucursal;
-                    $msg["ESTADO"] = MSG_SUCCESS;
-                    $msg["MSG"] = OKINSERT;
+                    Session::flash("msg", [
+                        "ESTADO" => MSG_SUCCESS,
+                        "MSG" => OKINSERT
+                    ]);
                 }
 
-                return view("sistema.sucursal-listar", compact("titulo", "msg"));
+                return redirect("/admin/sucursales");
             }
         } catch (Exception $e) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = ERRORINSERT;
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => ERRORINSERT
+            ]);
         }
 
         $sucursal = Sucursal::find($entidad->idsucursal) ?? new Sucursal();

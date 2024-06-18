@@ -6,6 +6,7 @@ use App\Entidades\Categoria;
 use App\Entidades\Producto;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 require app_path() . '/start/constants.php';
 
@@ -36,64 +37,67 @@ class ControladorProducto extends Controller
             return view("sistema.producto-nuevo", compact("titulo", "producto", "aCategorias"));
         }
 
-        $titulo = "Lista de Productos";
-        $msg["ESTADO"] = MSG_ERROR;
-        $msg["MSG"] = "El producto especificado no existe.";
-        return view("sistema.producto-listar", compact("titulo", "msg"));
+        Session::flash("msg", [
+            "ESTADO" => MSG_ERROR,
+            "MSG" => "El producto especificado no existe."
+        ]);
+
+        return redirect("/admin/productos");
     }
 
     public function guardar(Request $request)
     {
         $titulo = "Modificar Producto";
 
-        $entidad = new Producto();
-        $entidad->cargarDesdeRequest($request);
+        $producto = Producto::findOrNew($request->input('id'));
 
-        try {
-            $imagen = uploadFile($_FILES["fileImagen"], ["jpg", "jpeg", "png", "webp", "gif"]);
-            if (!is_null($imagen)) {
-                $entidad->imagen = $imagen;
+        $producto->cargarDesdeRequest($request);
+
+        if (empty($producto->nombre) || empty($producto->precio)) {
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => "Ingrese todos los datos requeridos."
+            ]);
+
+            if ($producto->exists) {
+                $producto->refresh();
             }
 
-            if ($_POST["id"] > 0) {
-                $productoAnt = Producto::find($entidad->idproducto);
-                if (!is_null($imagen)) {
-                    try {
-                        unlink(env('APP_PATH') . "/public/files/$productoAnt->imagen");
-                    } catch (Exception $e) {
-
-                    }
-                } else {
-                    $entidad->imagen = $productoAnt->imagen;
-                }
-
-                $entidad->actualizar();
-
-                $_POST["id"] = $entidad->idproducto;
-                $msg["ESTADO"] = MSG_SUCCESS;
-                $msg["MSG"] = OKINSERT;
-            } else {
-                if (empty($entidad->nombre) || empty($entidad->precio)) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "Ingrese todos los datos requeridos.";
-                } else {
-                    $entidad->insertar();
-
-                    $_POST["id"] = $entidad->idproducto;
-                    $msg["ESTADO"] = MSG_SUCCESS;
-                    $msg["MSG"] = OKINSERT;
-                }
-            }
-
-            return view("sistema.producto-listar", compact("titulo", "msg"));
-        } catch (Exception $e) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = ERRORINSERT;
+            return view("sistema.producto-nuevo", compact("titulo", "producto"));
         }
 
-        $producto = Producto::find($entidad->idproducto) ?? new Producto();
+        $imagen = uploadFile($_FILES["fileImagen"], ["jpg", "jpeg", "png", "webp", "gif"]);
+        if (!is_null($imagen)) {
+            if ($producto->imagen) {
+                unlink(env('APP_PATH') . "/public/files/$producto->imagen");
+            }
+
+            $producto->imagen = $imagen;
+        }
+
+        try {
+            $producto->save();
+
+            $_POST["id"] = $producto->idproducto;
+            Session::flash("msg", [
+                "ESTADO" => MSG_SUCCESS,
+                "MSG" => OKINSERT
+            ]);
+
+            return redirect("/admin/productos");
+        } catch (Exception $e) {
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => ERRORINSERT
+            ]);
+        }
+
+        if ($producto->exists) {
+            $producto->refresh();
+        }
+
         $aCategorias = Categoria::all();
-        return view("sistema.producto-nuevo", compact("titulo", "msg", "producto", "aCategorias"));
+        return view("sistema.producto-nuevo", compact("titulo", "producto", "aCategorias"));
     }
 
     public function eliminar(Request $request)

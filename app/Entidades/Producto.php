@@ -3,7 +3,6 @@
 namespace App\Entidades;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -54,50 +53,11 @@ class Producto extends Model
 
     public function cargarDesdeRequest(Request $request)
     {
-        $this->idproducto = $request->input('id') != "0" ? $request->input('id') : $this->idproducto;
-
         $this->fk_idcategoria = $request->input('lstCategoria');
 
         $this->nombre = trimIfString($request->input('txtNombre'));
         $this->cantidad = trimIfString($request->input('txtCantidad'));
         $this->precio = trimIfString($request->input('txtPrecio'));
         $this->descripcion = trimIfString($request->input('txtDescripcion'));
-    }
-
-    public function insertar() {
-        $sql = "INSERT INTO productos (
-                  fk_idcategoria,
-                  nombre,
-                  cantidad,
-                  precio,
-                  descripcion,
-                  imagen
-                ) VALUES (?, ?, ?, ?, ?, ?)";
-
-        DB::insert($sql, [$this->fk_idcategoria, $this->nombre, $this->cantidad, $this->precio, $this->descripcion, $this->imagen]);
-        $this->idproducto = DB::getPdo()->lastInsertId();
-
-        return $this->idproducto;
-    }
-
-    public function actualizar() {
-        $sql = "UPDATE productos SET
-                  fk_idcategoria = ?,
-                  nombre = ?,
-                  cantidad = ?,
-                  precio = ?,
-                  descripcion = ?,
-                  imagen = ?
-                WHERE idproducto = ?";
-
-        DB::update($sql, [
-            $this->fk_idcategoria,
-            $this->nombre,
-            $this->cantidad,
-            $this->precio,
-            $this->descripcion,
-            $this->imagen,
-            $this->idproducto
-        ]);
     }
 }

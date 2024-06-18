@@ -1,4 +1,4 @@
 <div id="msg"></div>
-@if(isset($msg))
-<script>msgShow('{{ $msg["MSG"] }}', '{{ $msg["ESTADO"] }}')</script>
+@if(Session::has('msg'))
+<script>msgShow('{{ Session::get("msg")["MSG"] }}', '{{ Session::get("msg")["ESTADO"] }}')</script>
 @endif

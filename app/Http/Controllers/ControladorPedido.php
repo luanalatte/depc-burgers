@@ -8,6 +8,7 @@ use App\Entidades\Pedido;
 use App\Entidades\Sucursal;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 require app_path() . '/start/constants.php';
 
@@ -47,62 +48,60 @@ class ControladorPedido extends Controller
             return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aEstados"));
         }
 
-        $titulo = "Lista de Pedidos";
-        $msg["ESTADO"] = MSG_ERROR;
-        $msg["MSG"] = "El pedido especificado no existe.";
-
-        $aEstados = Estado::countPedidos()->get();
-        $aSucursales = Sucursal::all();
-        $countPedidos = Pedido::count();
-        return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados", "aSucursales"));
+        Session::flash("msg", [
+            "ESTADO" => MSG_ERROR,
+            "MSG" => "El pedido especificado no existe"
+        ]);
+        return redirect('/admin/pedidos');
     }
 
     public function guardar(Request $request)
     {
         $titulo = "Modificar Pedido";
 
-        $entidad = new Pedido();
-        $entidad->cargarDesdeRequest($request);
+        $pedido = Pedido::findOrNew($request->input('id'));
 
-        try {
-            if ($_POST["id"] > 0) {
-                $entidad->actualizar();
+        $pedido->cargarDesdeRequest($request);
 
-                $_POST["id"] = $entidad->idpedido;
-                $msg["ESTADO"] = MSG_SUCCESS;
-                $msg["MSG"] = OKINSERT;
-            } else {
-                if (empty($entidad->fk_idcliente) || empty($entidad->fk_idsucursal) || empty($entidad->fk_idestado) || empty($entidad->fecha) || empty($entidad->total)) {
-                    $msg["ESTADO"] = MSG_ERROR;
-                    $msg["MSG"] = "Ingrese todos los datos requeridos.";
-                } else {
-                    $entidad->insertar();
+        if (empty($pedido->fk_idcliente) || empty($pedido->fk_idsucursal) || empty($pedido->fk_idestado) || empty($pedido->fecha) || empty($pedido->total)) {
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => "Ingrese todos los datos requeridos."
+            ]);
 
-                    $_POST["id"] = $entidad->idpedido;
-                    $msg["ESTADO"] = MSG_SUCCESS;
-                    $msg["MSG"] = OKINSERT;
-                }
+            if ($pedido->exists) {
+                $pedido->refresh();
             }
 
-            $_POST["id"] = $entidad->idpedido;
-
-            $msg["ESTADO"] = MSG_SUCCESS;
-            $msg["MSG"] = OKINSERT;
-
-            $aEstados = Estado::countPedidos()->get();
-            $aSucursales = Sucursal::all();
-            $countPedidos = Pedido::count();
-            return view("sistema.pedido-listar", compact("titulo", "countPedidos", "msg", "aEstados", "aSucursales"));
-        } catch (Exception $e) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = ERRORINSERT;
+            $aEstados = Estado::all();
+            return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aEstados"));
         }
 
-        $pedido = Pedido::find($entidad->idpedido) ?? new Pedido();
+        try {
+            $pedido->save();
+
+            $_POST["id"] = $pedido->idpedido;
+            Session::flash("msg", [
+                "ESTADO" => MSG_SUCCESS,
+                "MSG" => OKINSERT
+            ]);
+
+            return redirect('/admin/pedidos');
+        } catch (Exception $e) {
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => ERRORINSERT
+            ]);
+        }
+
+        if ($pedido->exists) {
+            $pedido->refresh();
+        }
+
         $aClientes = Cliente::all();
         $aSucursales = Sucursal::all();
         $aEstados = Estado::all();
-        return view("sistema.pedido-nuevo", compact("titulo", "msg", "pedido", "aClientes", "aSucursales", "aEstados"));
+        return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aClientes", "aSucursales", "aEstados"));
     }
 
     public function eliminar(Request $request)

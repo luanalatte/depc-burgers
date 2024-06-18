@@ -39,10 +39,6 @@ class Categoria extends Model
 
     public function cargarDesdeRequest(Request $request)
     {
-        if (is_null($this->idcategoria) && $request->input('id') != "0") {
-            $this->idcategoria = $request->input('id');
-        }
-
         $this->nombre = trimIfString($request->input('txtNombre'));
         $this->posicion = trimIfString($request->input('txtPosicion')) ?? 0;
     }
