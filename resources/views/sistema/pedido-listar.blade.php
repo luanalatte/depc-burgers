@@ -67,11 +67,8 @@
             data: { id:idpedido, estado:val },
             async: true,
             dataType: "json",
-            success: function (data) {
+            complete: function (data) {
                 msgShow(data.msg, data.err == 0 ? "success" : "danger");
-            },
-            error: function (data) {
-                msgShow("No se pudo cambiar el estado del pedido.", "danger");
             }
         });
     }
