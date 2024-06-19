@@ -33,6 +33,7 @@ Route::post('/micuenta', 'ControladorWebMiCuenta@editar');
 Route::get('/carrito', 'ControladorWebCarrito@index');
 Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
 Route::post('/carrito/editar', 'ControladorWebCarrito@editar');
+Route::post('/carrito/confirmar', 'ControladorWebCarrito@confirmar');
 
 /* --------------------------------------------- */
 /* CONTROLADOR LOGIN                             */

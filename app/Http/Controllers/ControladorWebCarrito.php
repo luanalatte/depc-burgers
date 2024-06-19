@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Entidades\Carrito;
 use App\Entidades\Cliente;
+use App\Entidades\Pedido;
+use App\Entidades\Sucursal;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -26,7 +29,8 @@ class ControladorWebCarrito extends Controller
             $carrito->insertar();
         }
 
-        return view('web.carrito', compact('carrito'));
+        $aSucursales = Sucursal::all();
+        return view('web.carrito', compact('carrito', 'aSucursales'));
     }
 
     public function agregar(Request $request)
@@ -54,7 +58,7 @@ class ControladorWebCarrito extends Controller
 
         $carrito = Carrito::where('fk_idcliente', $cliente->idcliente)->first();
         if (is_null($carrito)) {
-            return view('web.carrito');
+            return redirect('/carrito');
         }
 
         $idproducto = $request->get('idproducto');
@@ -64,5 +68,69 @@ class ControladorWebCarrito extends Controller
         }
 
         return redirect('/carrito');
+    }
+
+    public function confirmar(Request $request)
+    {
+        if (!$cliente = Cliente::autenticado()) {
+            return redirect('/login');
+        }
+
+        $medioDePago = $request->input('lstMedioDePago');
+        if (!$medioDePago) {
+            Session::flash('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => "Selecciona un medio de pago."
+            ]);
+
+            return redirect('/carrito');
+        }
+
+        $sucursal = Sucursal::find($request->input('lstSucursal'));
+        if (!$sucursal) {
+            Session::flash('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => "La sucursal seleccionada no está disponible."
+            ]);
+
+            return redirect('/carrito');
+        }
+
+        $carrito = Carrito::cargarCompleto($cliente->idcliente);
+        if (is_null($carrito) || !$carrito->aProductos) {
+            return redirect('/carrito');
+        }
+
+        $pedido = new Pedido();
+        $pedido->fk_idcliente = $carrito->fk_idcliente;
+        $pedido->fk_idsucursal = $sucursal->idsucursal;
+
+        // TODO: No hardcodear estados
+        if ($medioDePago == "sucursal") {
+            $pedido->fk_idestado = 1; // Estado de pedido pendiente de preparación.
+        } else {
+            $pedido->fk_idestado = 5; // Estado de pago pendiente.
+        }
+        
+        $pedido->total = $carrito->total;
+        $pedido->comentarios = $request->input('txtComentarios');
+        
+        try {
+            // TODO: Generar pedido con estado oculto, y cambiarlo una vez hayan sido agregados todos los productos.
+            $pedido->save();
+
+            foreach ($carrito->aProductos as $producto) {
+                $pedido->agregarProducto($producto['producto']->idproducto, $producto['cantidad']);
+            }
+        } catch (Exception $e) {
+            Session::flash('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => "Algo salió mal generando tu pedido. Vuelve a intentar"
+            ]);
+
+            return redirect('/carrito');
+        }
+
+        return redirect("/pedido/$pedido->idpedido");
     }
 }

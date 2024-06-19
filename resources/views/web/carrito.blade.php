@@ -7,6 +7,11 @@
     </hgroup>
     <div class="row">
       <div class="col-md-6 offset-md-3">
+        @if(Session::has('msg'))
+        <div id="msg" class="mb-5 alert alert-{{Session::get('msg')['ESTADO']}}">{{ Session::get('msg')['MSG'] }}</div>
+        @endif
+      </div>
+      <div class="col-md-6 offset-md-3">
         @if(!isset($carrito) || !$carrito->aProductos)
           <p class="text-center">Tu carrito está vacío. Comienza a <a href="/takeaway">Agregar Productos</a> para ordenar.</p>
         @else
@@ -46,16 +51,33 @@
           </div>
           <div class="mt-4">
             <form action="/carrito/confirmar" method="post">
+              <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
               <div>
                 <strong>TOTAL $ {{ number_format($carrito->total, 2, ',', '.') }}</strong>
               </div>
-              <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center">
-                <select class="form-control" name="lstOpcionPago" id="lstOpcionPago" required>
-                  <option value="" selected disabled>Seleccionar Medio De Pago</option>
-                  <option value="0">Mercadopago</option>
-                  <option value="1">Abonar en sucursal</option>
-                </select>
-                <button name="btnPagar" id="btnPagar" type="submit" class="btn btn-primary my-3">CONTINUAR AL PAGO</button>
+              <div class="row">
+                <div class="col-12 mt-3">
+                  <label for="txtComentarios">Comentarios:</label>
+                  <textarea class="form-control" name="txtComentarios" id="txtComentarios"></textarea>
+                </div>
+                <div class="col-12 mt-3 d-flex align-items-center">
+                  <select class="form-control w-100" name="lstSucursal" id="lstSucursal" required>
+                    <option value="" selected disabled>Seleccionar sucursal de retiro</option>
+                    @foreach($aSucursales as $sucursal)
+                    <option value="{{ $sucursal->idsucursal }}">{{ $sucursal->nombre }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="col-lg-6 mt-3 d-flex align-items-center">
+                  <select class="form-control w-100" name="lstMedioDePago" id="lstMedioDePago" required>
+                    <option value="" selected disabled>Seleccionar Medio De Pago</option>
+                    <option value="mercadopago">Mercadopago</option>
+                    <option value="sucursal">Abonar en sucursal</option>
+                  </select>
+                </div>
+                <div class="col-lg-6 mt-3">
+                  <button type="submit" class="d-block btn btn-primary w-100">CONTINUAR</button>
+                </div>
               </div>
             </form>
           </div>

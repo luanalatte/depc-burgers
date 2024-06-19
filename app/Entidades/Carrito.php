@@ -144,7 +144,7 @@ class Carrito extends Model
                     'idproducto' => $fila->idproducto,
                     'nombre' => $fila->prod_nombre,
                     'cantidad' => $fila->prod_cantidad,
-                    'precio' => $fila->prod_precio,
+                    'precio' => (float) $fila->prod_precio, // TODO: Usar Eloquent con $casts en Producto.php
                     'descripcion' => $fila->prod_descripcion,
                     'imagen' => $fila->prod_imagen
                 ]),

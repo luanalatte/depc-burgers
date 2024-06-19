@@ -19,6 +19,10 @@ class Producto extends Model
         'idproducto', 'fk_idcategoria', 'nombre', 'cantidad', 'precio', 'descripcion', 'imagen'
     ];
 
+    protected $casts = [
+        'precio' => 'float',
+    ];
+
     public function scopeOrderByCategoria(Builder $query)
     {
         if(is_null($query->getQuery()->columns)){
