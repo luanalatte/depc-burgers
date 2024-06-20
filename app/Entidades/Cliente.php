@@ -59,7 +59,7 @@ class Cliente extends Model
 
         if (is_null($this->idcliente)) {
             // Creando cliente, nueva clave
-            $this->clave = trimIfString($request->input('txtClave'));
+            $this->clave = password_hash(trimIfString($request->input('txtClave')), PASSWORD_DEFAULT);
         } elseif ($request->filled('txtClave') && $request->filled('txtClaveAntigua')) {
             // Editando cliente, cambiando clave
             $claveNueva = trimIfString($request->input('txtClave'));
