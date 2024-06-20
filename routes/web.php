@@ -15,7 +15,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::group(array('domain' => '127.0.0.1'), function () {
 
 /* --------------------------------------------- */
 /* WEB ECOMMERCE                                 */
@@ -28,12 +27,19 @@ Route::get('/contacto', 'ControladorWebHome@contacto');
 Route::get('/login', 'ControladorWebLogin@index');
 Route::post('/login', 'ControladorWebLogin@login');
 Route::get('/logout', 'ControladorWebLogin@logout');
-Route::get('/micuenta', 'ControladorWebMiCuenta@index');
-Route::post('/micuenta', 'ControladorWebMiCuenta@editar');
-Route::get('/carrito', 'ControladorWebCarrito@index');
-Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
-Route::post('/carrito/editar', 'ControladorWebCarrito@editar');
-Route::post('/carrito/confirmar', 'ControladorWebCarrito@confirmar');
+
+Route::middleware(['auth'])->group(function() {
+
+    Route::get('/micuenta', 'ControladorWebMiCuenta@index');
+    Route::post('/micuenta', 'ControladorWebMiCuenta@editar');
+    Route::get('/carrito', 'ControladorWebCarrito@index');
+    Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
+    Route::post('/carrito/editar', 'ControladorWebCarrito@editar');
+    Route::post('/carrito/confirmar', 'ControladorWebCarrito@confirmar');
+
+});
+
+Route::group(array('domain' => '127.0.0.1'), function () {
 
 /* --------------------------------------------- */
 /* CONTROLADOR LOGIN                             */

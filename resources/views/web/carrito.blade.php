@@ -12,34 +12,34 @@
         @endif
       </div>
       <div class="col-md-6 offset-md-3">
-        @if(!isset($carrito) || !$carrito->aProductos)
+        @if(empty($carrito->productos))
           <p class="text-center">Tu carrito está vacío. Comienza a <a href="/takeaway">Agregar Productos</a> para ordenar.</p>
         @else
           <div class="d-flex flex-column">
-            @foreach($carrito->aProductos as $fila)
+            @foreach($carrito->productos as $producto)
               <div class="border py-3 px-1 row">
                 <div class="col-3">
-                  @if($fila['producto']->imagen)
-                  <img src="files/{{ $fila['producto']->imagen }}" class="img-fluid">
+                  @if($producto->imagen)
+                  <img src="files/{{ $producto->imagen }}" class="img-fluid">
                   @endif
                 </div>
                 <div class="col-9">
-                  <h4>{{ $fila['producto']->nombre }} <small class="font-weight-light">{{ $fila['producto']->cantidad }}</small></h4>
-                  @if($fila['producto']->descripcion)
-                  <p>{{ $fila['producto']->descripcion }}</p>
+                  <h4>{{ $producto->nombre }} <small class="font-weight-light">{{ $producto->cantidad }}</small></h4>
+                  @if($producto->descripcion)
+                  <p>{{ $producto->descripcion }}</p>
                   @endif
                   <form action="/carrito/editar" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
-                    <input type="hidden" name="idproducto" value="{{ $fila['producto']->idproducto }}">
+                    <input type="hidden" name="idproducto" value="{{ $producto->idproducto }}">
                     <div class="input-group">
                       <div class="input-group-prepend">
                         <span class="input-group-text">Cantidad:</span>
                       </div>
-                      <input class="form-control" type="number" name="txtCantidad" id="txtCantidad" value="{{ $fila['cantidad'] }}">
+                      <input class="form-control" type="number" name="txtCantidad" id="txtCantidad" value="{{ $producto->pivot->cantidad }}">
                     </div>
                     <div class="my-2 d-flex justify-content-between">
-                      <span class="d-block text-right">$ {{ number_format($fila['producto']->precio, 2, ',', '.') }}</span>
-                      <span class="d-block text-right">SUBTOTAL $ {{ number_format($fila['subtotal'], 2, ',', '.') }}</span>
+                      <span class="d-block text-right">$ {{ number_format($producto->precio, 2, ',', '.') }}</span>
+                      <span class="d-block text-right">SUBTOTAL $ {{ number_format($producto->precio * $producto->pivot->cantidad, 2, ',', '.') }}</span>
                     </div>
                     <div class="text-right">
                       <button name="btnEliminar" id="btnEliminar" type="submit" class="btn">Eliminar Producto</button>

@@ -17,17 +17,7 @@ class ControladorWebCarrito extends Controller
 {
     public function index()
     {
-        if (!$cliente = Cliente::autenticado()) {
-            return redirect('/login');
-        }
-
-        $carrito = Carrito::cargarCompleto($cliente->idcliente);
-
-        if (is_null($carrito)) {
-            $carrito = new Carrito();
-            $carrito->fk_idcliente = $cliente->idcliente;
-            $carrito->insertar();
-        }
+        $carrito = Carrito::latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
 
         $aSucursales = Sucursal::all();
         return view('web.carrito', compact('carrito', 'aSucursales'));
@@ -35,16 +25,12 @@ class ControladorWebCarrito extends Controller
 
     public function agregar(Request $request)
     {
-        if (!$cliente = Cliente::autenticado()) {
-            return redirect('/login');
-        }
-
-        $carrito = Carrito::firstOrCreate(['fk_idcliente' => $cliente->idcliente]);
+        $carrito = Carrito::latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
 
         $idproducto = $request->get('idproducto');
         $cantidad = $request->input('txtCantidad', 1);
-        $carrito->agregarProducto($idproducto, $cantidad);
 
+        $carrito->productos()->attach($idproducto, ['cantidad', $cantidad]);
 
         // TODO: No redireccionar, solo notificar. Popup Toast?
         return redirect('/carrito');
@@ -52,19 +38,14 @@ class ControladorWebCarrito extends Controller
 
     public function editar(Request $request)
     {
-        if (!$cliente = Cliente::autenticado()) {
-            return redirect('/login');
-        }
-
-        $carrito = Carrito::where('fk_idcliente', $cliente->idcliente)->first();
-        if (is_null($carrito)) {
+        $carrito = Carrito::latest('idcarrito')->where('fk_idcliente', Cliente::autenticado())->firstOr(function () {
             return redirect('/carrito');
-        }
+        });
 
         $idproducto = $request->get('idproducto');
 
         if (isset($_POST["btnEliminar"])) {
-            $carrito->eliminarProducto($idproducto);
+            $carrito->productos()->detach($idproducto);
         }
 
         return redirect('/carrito');
@@ -72,10 +53,6 @@ class ControladorWebCarrito extends Controller
 
     public function confirmar(Request $request)
     {
-        if (!$cliente = Cliente::autenticado()) {
-            return redirect('/login');
-        }
-
         $medioDePago = $request->input('lstMedioDePago');
         if (!$medioDePago) {
             Session::flash('msg', [
@@ -86,18 +63,18 @@ class ControladorWebCarrito extends Controller
             return redirect('/carrito');
         }
 
-        $sucursal = Sucursal::find($request->input('lstSucursal'));
-        if (!$sucursal) {
+        $sucursal = Sucursal::findOr($request->input('lstSucursal'), function() {
             Session::flash('msg', [
                 'ESTADO' => MSG_ERROR,
                 'MSG' => "La sucursal seleccionada no está disponible."
             ]);
 
             return redirect('/carrito');
-        }
+        });
 
-        $carrito = Carrito::cargarCompleto($cliente->idcliente);
-        if (is_null($carrito) || !$carrito->aProductos) {
+        $carrito = Carrito::latest('idcarrito')->where('fk_idcliente', Cliente::autenticado())->first();
+
+        if (is_null($carrito) || empty($carrito->productos)) {
             return redirect('/carrito');
         }
 
@@ -111,16 +88,16 @@ class ControladorWebCarrito extends Controller
         } else {
             $pedido->fk_idestado = 5; // Estado de pago pendiente.
         }
-        
+
         $pedido->total = $carrito->total;
         $pedido->comentarios = $request->input('txtComentarios');
-        
+
         try {
             // TODO: Generar pedido con estado oculto, y cambiarlo una vez hayan sido agregados todos los productos.
             $pedido->save();
 
-            foreach ($carrito->aProductos as $producto) {
-                $pedido->agregarProducto($producto['producto']->idproducto, $producto['cantidad']);
+            foreach ($carrito->productos as $producto) {
+                $pedido->agregarProducto($producto->idproducto, $producto->pivot->cantidad);
             }
         } catch (Exception $e) {
             Session::flash('msg', [

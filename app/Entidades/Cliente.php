@@ -40,6 +40,11 @@ class Cliente extends Model
             );
     }
 
+    public function carrito()
+    {
+        return $this->hasOne(Carrito::class, 'fk_idcliente')->latestOfMany('idcarrito');
+    }
+
     public function cargarDesdeRequest(Request $request)
     {
         $this->idcliente = $request->input('id') != "0" ? $request->input('id') : $this->idcliente;
@@ -160,10 +165,6 @@ class Cliente extends Model
 
     public static function autenticado()
     {
-        if ($id = Session::get('cliente_id')) {
-            return self::find($id);
-        }
-
-        return null;
+        return Session::get('cliente_id');
     }
 }
