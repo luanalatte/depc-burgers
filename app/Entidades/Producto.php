@@ -23,6 +23,21 @@ class Producto extends Model
         'precio' => 'float',
     ];
 
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'fk_idcategoria');
+    }
+
+    public function carritos()
+    {
+        return $this->belongsToMany(Carrito::class, 'carrito_productos', 'fk_idproducto', 'fk_idcarrito');
+    }
+
+    public function pedidos()
+    {
+        return $this->belongsToMany(Pedido::class, 'pedido_productos', 'fk_idproducto', 'fk_idpedido');
+    }
+
     public function scopeOrderByCategoria(Builder $query)
     {
         if(is_null($query->getQuery()->columns)){

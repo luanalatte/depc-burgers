@@ -20,6 +20,26 @@ class Pedido extends Model
         'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'comentarios'
     ];
 
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'fk_idcliente');
+    }
+
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'fk_idsucursal');
+    }
+
+    public function estado()
+    {
+        return $this->belongsTo(Estado::class, 'fk_idestado');
+    }
+
+    public function productos()
+    {
+        return $this->belongsToMany(Producto::class, 'pedido_productos', 'fk_idpedido', 'fk_idproducto')->withPivot('cantidad');
+    }
+
     public function scopeIncluirCliente(Builder $query)
     {
         if(is_null($query->getQuery()->columns)){

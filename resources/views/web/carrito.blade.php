@@ -12,7 +12,7 @@
         @endif
       </div>
       <div class="col-md-6 offset-md-3">
-        @if(empty($carrito->productos))
+        @if($carrito->nProductos === 0)
           <p class="text-center">Tu carrito está vacío. Comienza a <a href="/takeaway">Agregar Productos</a> para ordenar.</p>
         @else
           <div class="d-flex flex-column">

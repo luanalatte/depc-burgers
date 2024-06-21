@@ -20,6 +20,11 @@ class Sucursal extends Model
         'idsucursal', 'nombre', 'direccion', 'telefono', 'maps_url'
     ];
 
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'fk_idsucursal');
+    }
+
     protected static function booted() {
         static::addGlobalScope('order', function (Builder $builder) {
             $builder->orderBy('nombre');

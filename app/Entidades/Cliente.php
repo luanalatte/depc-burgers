@@ -45,6 +45,11 @@ class Cliente extends Model
         return $this->hasOne(Carrito::class, 'fk_idcliente')->latestOfMany('idcarrito');
     }
 
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'fk_idcliente');
+    }
+
     public function cargarDesdeRequest(Request $request)
     {
         $this->idcliente = $request->input('id') != "0" ? $request->input('id') : $this->idcliente;

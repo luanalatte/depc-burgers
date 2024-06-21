@@ -30,7 +30,7 @@ class ControladorWebCarrito extends Controller
         $idproducto = $request->get('idproducto');
         $cantidad = $request->input('txtCantidad', 1);
 
-        $carrito->productos()->attach($idproducto, ['cantidad', $cantidad]);
+        $carrito->productos()->attach($idproducto, ['cantidad' => $cantidad]);
 
         // TODO: No redireccionar, solo notificar. Popup Toast?
         return redirect('/carrito');
@@ -63,18 +63,19 @@ class ControladorWebCarrito extends Controller
             return redirect('/carrito');
         }
 
-        $sucursal = Sucursal::findOr($request->input('lstSucursal'), function() {
+        $sucursal = Sucursal::find($request->input('lstSucursal'));
+        if (!$sucursal) {
             Session::flash('msg', [
                 'ESTADO' => MSG_ERROR,
                 'MSG' => "La sucursal seleccionada no está disponible."
             ]);
 
             return redirect('/carrito');
-        });
+        }
 
         $carrito = Carrito::latest('idcarrito')->where('fk_idcliente', Cliente::autenticado())->first();
 
-        if (is_null($carrito) || empty($carrito->productos)) {
+        if (is_null($carrito) || $carrito->nProductos === 0) {
             return redirect('/carrito');
         }
 
@@ -93,13 +94,19 @@ class ControladorWebCarrito extends Controller
         $pedido->comentarios = $request->input('txtComentarios');
 
         try {
+            $pedidoProductos = [];
+            foreach ($carrito->productos as $producto) {
+                $pedidoProductos[$producto->idproducto] = ['cantidad' => $producto->pivot->cantidad];
+            }
+
             // TODO: Generar pedido con estado oculto, y cambiarlo una vez hayan sido agregados todos los productos.
             $pedido->save();
-
-            foreach ($carrito->productos as $producto) {
-                $pedido->agregarProducto($producto->idproducto, $producto->pivot->cantidad);
-            }
+            $pedido->productos()->attach($pedidoProductos);
         } catch (Exception $e) {
+            try {
+                $pedido->delete();
+            } catch (Exception $e) {}
+
             Session::flash('msg', [
                 'ESTADO' => MSG_ERROR,
                 'MSG' => "Algo salió mal generando tu pedido. Vuelve a intentar"
@@ -108,6 +115,7 @@ class ControladorWebCarrito extends Controller
             return redirect('/carrito');
         }
 
+        $carrito->vaciar();
         return redirect("/pedido/$pedido->idpedido");
     }
 }

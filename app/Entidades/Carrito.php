@@ -25,6 +25,11 @@ class Carrito extends Model
         return $this->belongsToMany(Producto::class, 'carrito_productos', 'fk_idcarrito', 'fk_idproducto')->withPivot('cantidad');
     }
 
+    public function getNProductosAttribute()
+    {
+        return count($this->productos);
+    }
+
     public function getTotalAttribute()
     {
         $sum = 0;
@@ -32,5 +37,10 @@ class Carrito extends Model
             $sum += $producto->precio * $producto->pivot->cantidad;
         }
         return $sum;
+    }
+
+    public function vaciar()
+    {
+        $this->productos()->detach();
     }
 }

@@ -19,6 +19,11 @@ class Categoria extends Model
         'idcategoria', 'nombre', 'posicion'
     ];
 
+    public function productos()
+    {
+        return $this->hasMany(Producto::class, 'fk_idcategoria');
+    }
+
     protected static function booted() {
         static::addGlobalScope('order', function (Builder $builder) {
             $builder->orderBy('posicion', 'desc')->orderBy('nombre', 'asc');

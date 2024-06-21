@@ -22,6 +22,11 @@ class Estado extends Model
         return $query->addSelect(['count' => Pedido::selectRaw('COUNT(*)')->whereColumn('fk_idestado', 'estados.idestado')]);
     }
 
+    public function pedidos()
+    {
+        return $this->hasMany(Pedido::class, 'fk_idestado');
+    }
+
     public function insertar() {
         $sql = "INSERT INTO estados (
                   nombre,
