@@ -67,7 +67,7 @@
             data: { id:idpedido, estado:val },
             async: true,
             dataType: "json",
-            complete: function (data) {
+            success: function (data) {
                 msgShow(data.msg, data.err == 0 ? "success" : "danger");
             }
         });

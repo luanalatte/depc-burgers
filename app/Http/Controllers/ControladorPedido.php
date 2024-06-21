@@ -129,7 +129,7 @@ class ControladorPedido extends Controller
 
         try {
             $pedido->fk_idestado = $request->estado;
-            $pedido->actualizar();
+            $pedido->save();
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultado["msg"] = "Pedido editado exitosamente.";
         } catch (Exception $e) {
