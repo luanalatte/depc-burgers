@@ -44,7 +44,7 @@ class Categoria extends Model
 
     public function cargarDesdeRequest(Request $request)
     {
-        $this->nombre = trimIfString($request->input('txtNombre'));
-        $this->posicion = trimIfString($request->input('txtPosicion')) ?? 0;
+        $this->nombre = $request->input('txtNombre');
+        $this->posicion = $request->input('txtPosicion', 0);
     }
 }

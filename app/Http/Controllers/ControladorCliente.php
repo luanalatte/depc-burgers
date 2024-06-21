@@ -47,36 +47,32 @@ class ControladorCliente extends Controller
     {
         $titulo = "Modificar Cliente";
 
-        $entidad = new Cliente();
-        $entidad->cargarDesdeRequest($request);
+        $cliente = Cliente::findOrNew($request->input('id'));
+        $cliente->cargarDesdeRequest($request);
 
-        try {
-            if ($_POST["id"] > 0) {
-                $entidad->actualizar();
+        if (empty($cliente->nombre) || empty($cliente->apellido) || empty($cliente->dni) || empty($cliente->email) || empty($cliente->clave)) {
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => "Ingrese todos los datos requeridos."
+            ]);
 
-                $_POST["id"] = $entidad->idcliente;
-                Session::flash("msg", [
-                    "ESTADO" => MSG_SUCCESS,
-                    "MSG" => OKINSERT
-                ]);
-            } else {
-                if (empty($entidad->nombre) || empty($entidad->apellido) || empty($entidad->dni) || empty($entidad->email) || empty($entidad->clave)) {
-                    Session::flash("msg", [
-                        "ESTADO" => MSG_ERROR,
-                        "MSG" => "Ingrese todos los datos requeridos."
-                    ]);
-                } else {
-                    $entidad->insertar();
-
-                    $_POST["id"] = $entidad->idcliente;
-                    Session::flash("msg", [
-                        "ESTADO" => MSG_SUCCESS,
-                        "MSG" => OKINSERT
-                    ]);
-                }
+            if ($cliente->exists) {
+                $cliente->refresh();
             }
 
-            return redirect("/admin/clientes");
+            return view("sistema.cliente-nuevo", compact("titulo", "cliente"));
+        }
+
+        try {
+            $cliente->save();
+
+            $_POST["id"] = $cliente->idcliente;
+            Session::flash("msg", [
+                "ESTADO" => MSG_SUCCESS,
+                "MSG" => OKINSERT
+            ]);
+
+            return redirect('/admin/clientes');
         } catch (Exception $e) {
             Session::flash("msg", [
                 "ESTADO" => MSG_ERROR,
@@ -84,7 +80,10 @@ class ControladorCliente extends Controller
             ]);
         }
 
-        $cliente = Cliente::find($entidad->idcliente) ?? new Cliente();
+        if ($cliente->exists) {
+            $cliente->refresh();
+        }
+
         return view("sistema.cliente-nuevo", compact("titulo", "cliente"));
     }
 

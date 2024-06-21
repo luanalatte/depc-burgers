@@ -18,8 +18,7 @@ class ControladorPedido extends Controller
     {
         $titulo = "Lista de Pedidos";
 
-        // TODO: Cambiar a Estado::withCount('pedidos')
-        $aEstados = Estado::countPedidos()->get();
+        $aEstados = Estado::withCount('pedidos')->get();
         $aSucursales = Sucursal::all();
         // TODO: Contar solo pedidos de la sucursal y/o período seleccionado actualmente.
         $countPedidos = Pedido::count();

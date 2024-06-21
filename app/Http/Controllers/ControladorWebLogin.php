@@ -32,7 +32,7 @@ class ControladorWebLogin extends Controller
 
         $cliente = Cliente::where('email', $emailIngresado)->first();
 
-        if (is_null($cliente) || !$cliente->verificarClave($claveIngresada)) {
+        if (is_null($cliente) || !password_verify($claveIngresada, $cliente->clave)) {
             $msg["ESTADO"] = MSG_ERROR;
             $msg["MSG"] = "Email o clave incorrectos.";
             return view('web.login', compact('msg'));

@@ -16,6 +16,7 @@ class Pedido extends Model
 
     public $timestamps = false;
 
+    // TODO: Agregar forma de pago a `pedidos`.
     protected $fillable = [
         'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'comentarios'
     ];
@@ -121,22 +122,28 @@ class Pedido extends Model
 
     public function cargarDesdeRequest(Request $request)
     {
-        if ($request->filled('lstCliente'))
+        if ($request->filled('lstCliente')) {
             $this->fk_idcliente = $request->input('lstCliente');
+        }
 
-        if ($request->filled('lstSucursal'))
+        if ($request->filled('lstSucursal')) {
             $this->fk_idsucursal = $request->input('lstSucursal');
+        }
 
-        if ($request->filled('lstEstado'))
+        if ($request->filled('lstEstado')) {
             $this->fk_idestado = $request->input('lstEstado');
+        }
 
-        if ($request->filled('txtFecha'))
-            $this->fecha = trimIfString($request->input('txtFecha'));
+        if ($request->filled('txtFecha')) {
+            $this->fecha = $request->input('txtFecha');
+        }
 
-        if ($request->filled('txtTotal'))
-            $this->total = trimIfString($request->input('txtTotal'));
-        
-        if ($request->has('txtComentarios'))
-            $this->comentarios = trimIfString($request->input('txtComentarios'));
+        if ($request->filled('txtTotal')) {
+            $this->total = $request->input('txtTotal');
+        }
+
+        if ($request->has('txtComentarios')) {
+            $this->comentarios = $request->input('txtComentarios');
+        }
     }
 }

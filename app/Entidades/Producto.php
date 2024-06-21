@@ -74,9 +74,9 @@ class Producto extends Model
     {
         $this->fk_idcategoria = $request->input('lstCategoria');
 
-        $this->nombre = trimIfString($request->input('txtNombre'));
-        $this->cantidad = trimIfString($request->input('txtCantidad'));
-        $this->precio = trimIfString($request->input('txtPrecio'));
-        $this->descripcion = trimIfString($request->input('txtDescripcion'));
+        $this->nombre = $request->input('txtNombre');
+        $this->cantidad = $request->input('txtCantidad');
+        $this->precio = $request->input('txtPrecio');
+        $this->descripcion = $request->input('txtDescripcion');
     }
 }

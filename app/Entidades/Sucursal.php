@@ -3,7 +3,6 @@
 namespace App\Entidades;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -51,42 +50,9 @@ class Sucursal extends Model
 
     public function cargarDesdeRequest(Request $request)
     {
-        $this->idsucursal = $request->input('id') != "0" ? $request->input('id') : $this->idsucursal;
-
-        $this->nombre = trimIfString($request->input('txtNombre'));
-        $this->direccion = trimIfString($request->input('txtDireccion'));
-        $this->telefono = trimIfString($request->input('txtTelefono'));
-        $this->maps_url = trimIfString($request->input('txtMapsUrl'));
-    }
-
-    public function insertar() {
-        $sql = "INSERT INTO sucursales (
-                  nombre,
-                  direccion,
-                  telefono,
-                  maps_url
-                ) VALUES (?, ?, ?, ?)";
-
-        DB::insert($sql, [$this->nombre, $this->direccion, $this->telefono, $this->maps_url]);
-        $this->idsucursal = DB::getPdo()->lastInsertId();
-
-        return $this->idsucursal;
-    }
-
-    public function actualizar() {
-        $sql = "UPDATE sucursales SET
-                  nombre = ?,
-                  direccion = ?,
-                  telefono = ?,
-                  maps_url = ?
-                WHERE idsucursal = ?";
-
-        DB::update($sql, [
-            $this->nombre,
-            $this->direccion,
-            $this->telefono,
-            $this->maps_url,
-            $this->idsucursal
-        ]);
+        $this->nombre = $request->input('txtNombre');
+        $this->direccion = $request->input('txtDireccion');
+        $this->telefono = $request->input('txtTelefono');
+        $this->maps_url = $request->input('txtMapsUrl');
     }
 }

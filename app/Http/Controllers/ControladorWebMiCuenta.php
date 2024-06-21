@@ -12,10 +12,7 @@ class ControladorWebMiCuenta extends Controller
 {
     public function index(Request $request)
     {
-        if (!$cliente = Cliente::autenticado()) {
-            return redirect('/login');
-        }
-
+        $cliente = Cliente::find(Cliente::autenticado());
         return view('web.micuenta', compact('cliente'));
     }
 }

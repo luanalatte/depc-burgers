@@ -44,39 +44,32 @@ class ControladorSucursal extends Controller
     {
         $titulo = "Modificar Sucursales";
 
-        $entidad = new Sucursal();
-        $entidad->cargarDesdeRequest($request);
+        $sucursal = Sucursal::findOrNew($request->input('id'));
+        $sucursal->cargarDesdeRequest($request);
+
+        if (empty($sucursal->nombre) || empty($sucursal->direccion) || empty($sucursal->telefono)) {
+            Session::flash("msg", [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => "Ingrese todos los datos requeridos."
+            ]);
+
+            if ($sucursal->exists) {
+                $sucursal->refresh();
+            }
+
+            return view("sistema.sucursal-nuevo", compact("titulo", "sucursal"));
+        }
 
         try {
-            $bEditando = $_POST["id"] > 0;
+            $sucursal->save();
 
-            if (empty($entidad->nombre) || empty($entidad->direccion) || empty($entidad->telefono)) {
-                Session::flash("msg", [
-                    "ESTADO" => MSG_ERROR,
-                    "MSG" => "Ingrese todos los datos requeridos."
-                ]);
+            $_POST["id"] = $sucursal->idsucursal;
+            Session::flash("msg", [
+                "ESTADO" => MSG_SUCCESS,
+                "MSG" => OKINSERT
+            ]);
 
-            } else {
-                if ($bEditando) {
-                    $entidad->actualizar();
-
-                    $_POST["id"] = $entidad->idsucursal;
-                    Session::flash("msg", [
-                        "ESTADO" => MSG_SUCCESS,
-                        "MSG" => OKINSERT
-                    ]);
-                } else {
-                    $entidad->insertar();
-                    
-                    $_POST["id"] = $entidad->idsucursal;
-                    Session::flash("msg", [
-                        "ESTADO" => MSG_SUCCESS,
-                        "MSG" => OKINSERT
-                    ]);
-                }
-
-                return redirect("/admin/sucursales");
-            }
+            return redirect('/admin/sucursales');
         } catch (Exception $e) {
             Session::flash("msg", [
                 "ESTADO" => MSG_ERROR,
@@ -84,8 +77,11 @@ class ControladorSucursal extends Controller
             ]);
         }
 
-        $sucursal = Sucursal::find($entidad->idsucursal) ?? new Sucursal();
-        return view("sistema.sucursal-nuevo", compact("titulo", "msg", "sucursal"));
+        if ($sucursal->exists) {
+            $sucursal->refresh();
+        }
+
+        return view("sistema.sucursal-nuevo", compact("titulo", "sucursal"));
     }
 
     public function eliminar(Request $request)

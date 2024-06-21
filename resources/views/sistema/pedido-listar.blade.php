@@ -20,7 +20,7 @@
     <div class="d-flex flex-wrap justify-content-center">
         <a href="#" onclick="javascript: filtrarEstado(0);" class="m-1 btn btn-primary">Todos ({{ $countPedidos }})</a>
         @foreach($aEstados as $estado)
-        <a href="#" onclick="javascript: filtrarEstado({{ $estado->idestado }});" class="m-1 btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->count }})</a>
+        <a href="#" onclick="javascript: filtrarEstado({{ $estado->idestado }});" class="m-1 btn btn-{{ $estado->color ?? 'primary' }}">{{ $estado->nombre }} ({{ $estado->pedidos_count }})</a>
         @endforeach
     </div>
     <div class="d-flex flex-wrap justify-content-between">

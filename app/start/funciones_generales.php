@@ -40,10 +40,6 @@ function fescape_string($vcparam)
     return $targetString;
 }
 
-function trimIfString($value) {
-    return is_string($value) ? trim($value) : $value;
-}
-
 function uploadFile($file, array $valid_ext)
 {
     if ($file["error"] == UPLOAD_ERR_OK) {
