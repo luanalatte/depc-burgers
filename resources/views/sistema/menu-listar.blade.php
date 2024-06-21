@@ -1,4 +1,4 @@
-@extends('plantilla')
+@extends('sistema.plantilla')
 
 @section('titulo', "Listado del menú")
 

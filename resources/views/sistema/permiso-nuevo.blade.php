@@ -1,4 +1,4 @@
-@extends('plantilla')
+@extends('sistema.plantilla')
 @section('titulo', "Datos del permiso")
 @section('scripts')
 <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
