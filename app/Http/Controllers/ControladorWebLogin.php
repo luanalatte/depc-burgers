@@ -28,8 +28,6 @@ class ControladorWebLogin extends Controller
         $emailIngresado = fescape_string($request->input('txtEmail'));
         $claveIngresada = fescape_string($request->input('txtClave'));
 
-        // TODO: Implementar 'recordar contraseña' con cookies.
-
         $cliente = Cliente::where('email', $emailIngresado)->first();
 
         if (is_null($cliente) || !password_verify($claveIngresada, $cliente->clave)) {

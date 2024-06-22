@@ -15,10 +15,6 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
             <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Email">
             <input class="form-control" type="password" name="txtClave" id="txtClave" placeholder="Contraseña">
-            <div class="text-center">
-                <input type="checkbox" name="chkRecuerdame" id="chkRecuerdame">
-                <label for="chkRecuerdame">Recordar contraseña</label>
-            </div>
             <button type="submit" class="btn btn-primary">Iniciar sesión</button>
           </form>
           <div class="d-flex align-items-center justify-content-center">
