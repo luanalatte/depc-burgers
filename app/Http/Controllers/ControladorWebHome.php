@@ -10,14 +10,14 @@ class ControladorWebHome extends Controller
 {
     public function index()
     {
-        $aSucursales = Sucursal::all();
+        $aSucursales = Sucursal::get(['nombre', 'direccion', 'telefono', 'maps_url']);
         return view('web.index', compact('aSucursales'));
     }
 
     public function takeaway()
     {
-        $aProductos = Producto::orderByCategoria()->get();
-        $aCategorias = Categoria::all();
+        $aProductos = Producto::takeaway()->get();
+        $aCategorias = Categoria::get(['idcategoria', 'nombre']);
         return view('web.takeaway', compact('aProductos', 'aCategorias'));
     }
 

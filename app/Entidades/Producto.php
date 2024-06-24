@@ -40,13 +40,22 @@ class Producto extends Model
 
     public function scopeOrderByCategoria(Builder $query)
     {
-        if(is_null($query->getQuery()->columns)){
-            $query->addSelect('productos.*');
-        }
-
         return $query->withoutGlobalScope('order')
             ->join('categorias', 'productos.fk_idcategoria', '=', 'categorias.idcategoria')
             ->orderBy('categorias.posicion', 'desc');
+    }
+
+    public function scopeTakeaway(Builder $query)
+    {
+        return $query->select(
+            'productos.idproducto',
+            'productos.fk_idcategoria',
+            'productos.nombre',
+            'productos.cantidad',
+            'productos.precio',
+            'productos.descripcion',
+            'productos.imagen'
+        )->orderByCategoria();
     }
 
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")

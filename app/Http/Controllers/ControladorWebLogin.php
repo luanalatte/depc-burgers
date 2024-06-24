@@ -28,7 +28,7 @@ class ControladorWebLogin extends Controller
         $emailIngresado = fescape_string($request->input('txtEmail'));
         $claveIngresada = fescape_string($request->input('txtClave'));
 
-        $cliente = Cliente::where('email', $emailIngresado)->first();
+        $cliente = Cliente::select('idcliente', 'email', 'clave', 'nombre', 'apellido')->firstWhere('email', $emailIngresado);
 
         if (is_null($cliente) || !password_verify($claveIngresada, $cliente->clave)) {
             $msg["ESTADO"] = MSG_ERROR;

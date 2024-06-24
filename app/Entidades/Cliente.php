@@ -20,6 +20,19 @@ class Cliente extends Model
         'idcliente', 'nombre', 'apellido', 'dni', 'email', 'clave', 'telefono'
     ];
 
+    public function scopeMiCuenta(Builder $query)
+    {
+        return $query->select(
+            'idcliente',
+            'nombre',
+            'apellido',
+            'dni',
+            'email',
+            'clave',
+            'telefono'
+        );
+    }
+
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
     {
         $columnas = ['nombre', 'apellido', 'dni', 'email', 'telefono'];

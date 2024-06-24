@@ -38,6 +38,7 @@ class Pedido extends Model
 
     public function productos()
     {
+        // TODO: Añadir pivot de precio al momento de hacer el pedido.
         return $this->belongsToMany(Producto::class, 'pedido_productos', 'fk_idpedido', 'fk_idproducto')->withPivot('cantidad');
     }
 

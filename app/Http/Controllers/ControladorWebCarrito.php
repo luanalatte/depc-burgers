@@ -17,15 +17,15 @@ class ControladorWebCarrito extends Controller
 {
     public function index()
     {
-        $carrito = Carrito::latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
+        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
 
-        $aSucursales = Sucursal::all();
+        $aSucursales = Sucursal::get(['idsucursal', 'nombre']);
         return view('web.carrito', compact('carrito', 'aSucursales'));
     }
 
     public function agregar(Request $request)
     {
-        $carrito = Carrito::latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
+        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
 
         $idproducto = $request->get('idproducto');
         $cantidad = $request->input('txtCantidad', 1);
@@ -38,9 +38,11 @@ class ControladorWebCarrito extends Controller
 
     public function editar(Request $request)
     {
-        $carrito = Carrito::latest('idcarrito')->where('fk_idcliente', Cliente::autenticado())->firstOr(function () {
+        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstWhere('fk_idcliente', Cliente::autenticado());
+
+        if (is_null($carrito)) {
             return redirect('/carrito');
-        });
+        }
 
         $idproducto = $request->get('idproducto');
 
@@ -63,7 +65,7 @@ class ControladorWebCarrito extends Controller
             return redirect('/carrito');
         }
 
-        $sucursal = Sucursal::find($request->input('lstSucursal'));
+        $sucursal = Sucursal::select('idsucursal')->find($request->input('lstSucursal'));
         if (!$sucursal) {
             Session::flash('msg', [
                 'ESTADO' => MSG_ERROR,
@@ -73,7 +75,7 @@ class ControladorWebCarrito extends Controller
             return redirect('/carrito');
         }
 
-        $carrito = Carrito::latest('idcarrito')->where('fk_idcliente', Cliente::autenticado())->first();
+        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstWhere('fk_idcliente', Cliente::autenticado());
 
         if (is_null($carrito) || $carrito->nProductos === 0) {
             return redirect('/carrito');
