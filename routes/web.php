@@ -21,17 +21,21 @@ use Illuminate\Support\Facades\Route;
 /* --------------------------------------------- */
 
 Route::get('/', 'ControladorWebHome@index');
-Route::get('/takeaway', 'ControladorWebHome@takeaway');
-Route::get('/nosotros', 'ControladorWebHome@nosotros');
-Route::get('/contacto', 'ControladorWebHome@contacto');
+Route::get('/takeaway', 'ControladorWebTakeaway@index');
+Route::get('/nosotros', 'ControladorWebNosotros@index');
+Route::post('/nosotros', 'ControladorWebNosotros@postular');
+Route::get('/contacto', 'ControladorWebContacto@index');
+Route::post('/contacto', 'ControladorWebContacto@contactar');
 Route::get('/login', 'ControladorWebLogin@index');
 Route::post('/login', 'ControladorWebLogin@login');
 Route::get('/logout', 'ControladorWebLogin@logout');
+Route::get('/registrarse', 'ControladorWebRegistro@index');
+Route::post('/registrarse', 'ControladorWebRegistro@guardar');
 
 Route::middleware(['auth'])->group(function() {
 
     Route::get('/micuenta', 'ControladorWebMiCuenta@index');
-    Route::post('/micuenta', 'ControladorWebMiCuenta@editar');
+    Route::post('/micuenta', 'ControladorWebMiCuenta@guardar');
     Route::get('/carrito', 'ControladorWebCarrito@index');
     Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
     Route::post('/carrito/editar', 'ControladorWebCarrito@editar');

@@ -8,9 +8,7 @@
           <hgroup class="mb-4">
             <h2>Iniciar sesión</h2>
           </hgroup>
-          @if(isset($msg))
-          <div id="msg" class="alert alert-danger">{{ $msg["MSG"] }}</div>
-          @endif
+          @include('web.msg')
           <form action="" method="post" class="text-center mb-3 text-white">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
             <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Email">

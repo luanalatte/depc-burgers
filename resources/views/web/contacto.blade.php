@@ -7,7 +7,9 @@
     </hgroup>
     <div class="row">
       <div class="col-md-6">
+        @include('web.msg')
         <form action="" method="post">
+          <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
           <input class="form-control" type="text" name="txtNombre" id="txtNombre" placeholder="Nombre">
           <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Correo Electrónico">
           <input class="form-control" type="tel" name="txtTelefono" id="txtTelefono" placeholder="Celular / Whatsapp">

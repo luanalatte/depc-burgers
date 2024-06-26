@@ -81,12 +81,10 @@
                             <a href="/carrito" class="link" title="Carrito">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                             </a>
+                            <a href="/logout" class="btn btn-primary">Cerrar Sesión</a>
                             @else
-                            <a href="/login" class="link" title="Iniciar Sesión">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                            </a>
+                            <a href="/login" class="btn btn-primary">Inciar Sesión</a>
                             @endif
-                            <a href="" class="btn btn-primary">Pedir Ahora</a>
                         </div>
                     </div>
                 </nav>

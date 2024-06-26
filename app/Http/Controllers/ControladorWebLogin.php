@@ -13,6 +13,10 @@ class ControladorWebLogin extends Controller
 {
     public function index()
     {
+        if (Cliente::autenticado()) {
+            return redirect('/micuenta');
+        }
+
         return view('web.login');
     }
 
@@ -31,9 +35,12 @@ class ControladorWebLogin extends Controller
         $cliente = Cliente::select('idcliente', 'email', 'clave', 'nombre', 'apellido')->firstWhere('email', $emailIngresado);
 
         if (is_null($cliente) || !password_verify($claveIngresada, $cliente->clave)) {
-            $msg["ESTADO"] = MSG_ERROR;
-            $msg["MSG"] = "Email o clave incorrectos.";
-            return view('web.login', compact('msg'));
+            Session::now('msg', [
+                "ESTADO" => MSG_ERROR,
+                "MSG" => "Email o clave incorrectos."
+            ]);
+
+            return view('web.login');
         }
 
         Session::put('cliente_id', $cliente->idcliente);

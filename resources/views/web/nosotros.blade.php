@@ -12,16 +12,19 @@
         </div>
         <div class="col-md-6 offset-md-1">
           <div class="detail-box">
+            @include('web.msg')
             <hgroup class="mb-4">
               <h2>Trabajá con nosotros</h2>
             </hgroup>
             <form action="" method="post">
+              <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
               <input class="form-control" type="text" name="txtNombre" id="txtNombre" placeholder="Nombre Completo">
               <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Correo Electrónico">
               <input class="form-control" type="text" name="txtDomicilio" id="txtDomicilio" placeholder="Domicilio">
               <input class="form-control" type="tel" name="txtTelefono" id="txtTelefono" placeholder="Celular / Whatsapp">
               <label for="fileCV">Adjuntar Currículum:</label>
-              <input class="form-control-file" type="file" name="fileCV" id="fileCV" accept=".pdf, .doc, .docx">
+              <input class="form-control-file mb-3" type="file" name="fileCV" id="fileCV" accept=".pdf, .doc, .docx">
+              <button type="submit" class="btn btn-primary">Enviar</button>
             </form>
           </div>
         </div>
