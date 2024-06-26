@@ -17,7 +17,7 @@
           </form>
           <div class="d-flex align-items-center justify-content-center">
             <p class="my-0 mr-2">¿Aún no tienes una cuenta?</p>
-            <a href="/register" class="btn btn-secondary py-1 px-3 m-0">Regístrate ahora</a>
+            <a href="/registrarse" class="btn btn-secondary py-1 px-3 m-0">Regístrate ahora</a>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ class ControladorWebLogin extends Controller
     public function logout()
     {
         Session::flush(); // TODO: no usar flush?
-        return redirect('');
+        return redirect('/');
     }
 
     public function login(Request $request)
@@ -50,6 +50,6 @@ class ControladorWebLogin extends Controller
         // TODO: Agregar fecha de ultimo ingreso
         // $cliente->actualizarFechaIngreso();
 
-        return redirect('');
+        return redirect('/');
     }
 }
