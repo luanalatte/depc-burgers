@@ -23,33 +23,23 @@ class ControladorWebCarrito extends Controller
         return view('web.carrito', compact('carrito', 'aSucursales'));
     }
 
-    public function agregar(Request $request)
-    {
-        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
-
-        $idproducto = $request->get('idproducto');
-        $cantidad = $request->input('txtCantidad', 1);
-
-        $carrito->productos()->attach($idproducto, ['cantidad' => $cantidad]);
-
-        // TODO: No redireccionar, solo notificar. Popup Toast?
-        return redirect('/carrito');
-    }
-
     public function editar(Request $request)
     {
-        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstWhere('fk_idcliente', Cliente::autenticado());
-
-        if (is_null($carrito)) {
-            return redirect('/carrito');
-        }
+        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
 
         $idproducto = $request->get('idproducto');
 
         if (isset($_POST["btnEliminar"])) {
             $carrito->productos()->detach($idproducto);
+        } else {
+            $cantidad = $request->input('txtCantidad', 1);
+
+            $carrito->productos()->syncWithoutDetaching([$idproducto => ['cantidad' => $cantidad]], false);
         }
 
+        Session::put('nCarrito', $carrito->nProductos);
+
+        // TODO: No redireccionar, solo notificar. Popup Toast?
         return redirect('/carrito');
     }
 

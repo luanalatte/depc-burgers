@@ -80,6 +80,9 @@
                             </a>
                             <a href="/carrito" class="link" title="Carrito">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                @if(Session::get('nCarrito'))
+                                <span>{{ Session::get('nCarrito') }}</span>
+                                @endif
                             </a>
                             <a href="/logout" class="btn btn-primary">Cerrar Sesión</a>
                             @else

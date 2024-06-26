@@ -35,7 +35,7 @@
                     <div class="d-flex justify-content-between align-items-center mt-auto">
                       <h6 class="price my-0 mr-2 font-weight-bold">${{ number_format($producto->precio, 2, ",", ".") }}</h6>
                       @if(Session::get('cliente_id'))
-                      <form action="/carrito/agregar" method="POST">
+                      <form action="/carrito/editar" method="POST">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
                         <input type="hidden" name="idproducto" value="{{$producto->idproducto}}">
                         <div class="input-group justify-content-end flex-nowrap">

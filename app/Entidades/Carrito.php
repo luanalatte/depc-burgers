@@ -27,7 +27,7 @@ class Carrito extends Model
 
     public function getNProductosAttribute()
     {
-        return count($this->productos);
+        return $this->productos()->count();
     }
 
     public function getTotalAttribute()
