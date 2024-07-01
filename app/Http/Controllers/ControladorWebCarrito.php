@@ -65,7 +65,7 @@ class ControladorWebCarrito extends Controller
             return redirect('/carrito');
         }
 
-        $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstWhere('fk_idcliente', Cliente::autenticado());
+        $carrito = Carrito::select('idcarrito', 'fk_idcliente')->latest('idcarrito')->firstWhere('fk_idcliente', Cliente::autenticado());
 
         if (is_null($carrito) || $carrito->nProductos === 0) {
             return redirect('/carrito');
@@ -108,6 +108,7 @@ class ControladorWebCarrito extends Controller
         }
 
         $carrito->vaciar();
-        return redirect("/pedido/$pedido->idpedido");
+        Session::put('nCarrito', 0);
+        return redirect("/micuenta");
     }
 }
