@@ -3,7 +3,7 @@
 <section class="layout_padding" id="micuenta">
   <div class="container">
     <div class="row">
-      <div class="mb-5 col-md-6 order-md-2 mb-md-0">
+      <div class="mb-5 col-12">
         <hgroup class="mb-5">
           <h2>Pedidos Activos</h2>
         </hgroup>
@@ -15,6 +15,7 @@
               <th>Estado</th>
               <th>Pagado</th>
               <th>Sucursal</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -25,12 +26,19 @@
               <td>{{ $pedido->estado }}</td>
               <td>{{ $pedido->pagado ? "Sí" : "No" }}</td>
               <td>{{ $pedido->sucursal }}</td>
+              @if(!$pedido->pagado)
+              <td>
+                <a href="/mercadopago/pagar/{{ $pedido->idpedido }}" class="btn btn-primary">Pagar con Mercado Pago</a>
+              </td>
+              @else
+              <td></td>
+              @endif
             </tr>
             @endforeach
           </tbody>
         </table>
       </div>
-      <div class="col-md-6">
+      <div class="col-12">
         <hgroup class="mb-5">
           <h2>Mi Cuenta</h2>
         </hgroup>

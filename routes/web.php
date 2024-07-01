@@ -32,6 +32,11 @@ Route::get('/logout', 'ControladorWebLogin@logout');
 Route::get('/registrarse', 'ControladorWebRegistro@index');
 Route::post('/registrarse', 'ControladorWebRegistro@guardar');
 
+Route::get('/mercadopago/pagar/{id}', 'ControladorMercadoPago@pagar');
+Route::get('/mercadopago/aprobado/{id}', 'ControladorMercadoPago@aprobado');
+Route::get('/mercadopago/pendiente/{id}', 'ControladorMercadoPago@pendiente');
+Route::get('/mercadopago/error/{id}', 'ControladorMercadoPago@error');
+
 Route::middleware(['auth'])->group(function() {
 
     Route::get('/micuenta', 'ControladorWebMiCuenta@index');
