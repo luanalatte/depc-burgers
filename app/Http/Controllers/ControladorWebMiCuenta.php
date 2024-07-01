@@ -21,12 +21,13 @@ class ControladorWebMiCuenta extends Controller
     public function guardar(Request $request)
     {
         $cliente = Cliente::miCuenta()->find(Cliente::autenticado());
+        $aPedidos = $cliente->pedidosActivos;
 
         Session::now('msg', [
             'ESTADO' => MSG_SUCCESS,
             'MSG' => 'Guardado correctamente.'
         ]);
 
-        return view('web.micuenta', compact('cliente'));
+        return view('web.micuenta', compact('cliente', 'aPedidos'));
     }
 }

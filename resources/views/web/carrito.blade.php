@@ -24,7 +24,7 @@
                   @endif
                 </div>
                 <div class="col-9">
-                  <h4>{{ $producto->nombre }} <small class="font-weight-light">{{ $producto->cantidad }}</small></h4>
+                  <h4>{{ $producto->nombre }}</h4>
                   @if($producto->descripcion)
                   <p>{{ $producto->descripcion }}</p>
                   @endif

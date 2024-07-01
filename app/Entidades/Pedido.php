@@ -20,6 +20,12 @@ class Pedido extends Model
         'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'metodo_pago', 'comentarios'
     ];
 
+    protected static function booted() {
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('fecha', 'desc');
+        });
+    }
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'fk_idcliente');
