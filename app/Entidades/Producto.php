@@ -20,6 +20,7 @@ class Producto extends Model
     ];
 
     protected $casts = [
+        'cantidad' => 'int',
         'precio' => 'float',
     ];
 

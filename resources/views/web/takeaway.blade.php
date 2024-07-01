@@ -29,24 +29,25 @@
                     @if($producto->descripcion)
                     <p>{{$producto->descripcion}}</p>
                     @endif
-                    @if($producto->cantidad)
-                    <p>{{$producto->cantidad}}</p>
-                    @endif
                     <div class="d-flex justify-content-between align-items-center mt-auto">
                       <h6 class="price my-0 mr-2 font-weight-bold">${{ number_format($producto->precio, 2, ",", ".") }}</h6>
-                      @if(Session::get('cliente_id'))
-                      <form action="/carrito/editar" method="POST">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
-                        <input type="hidden" name="idproducto" value="{{$producto->idproducto}}">
-                        <div class="input-group justify-content-end flex-nowrap">
-                          <input type="number" class="form-control" name="txtCantidad" id="txtCantidad" value="1">
-                          <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary py-0"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                      @if($producto->cantidad > 1)
+                        @if(Session::get('cliente_id'))
+                        <form action="/carrito/editar" method="POST">
+                          <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
+                          <input type="hidden" name="idproducto" value="{{$producto->idproducto}}">
+                          <div class="input-group justify-content-end flex-nowrap">
+                            <input type="number" class="form-control" name="txtCantidad" id="txtCantidad" value="1">
+                            <div class="input-group-append">
+                              <button type="submit" class="btn btn-primary py-0"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                            </div>
                           </div>
-                        </div>
-                      </form>
+                        </form>
+                        @else
+                        <a href="/login" class="btn btn-primary">Pedir Ahora</a>
+                        @endif
                       @else
-                      <a href="/login" class="btn btn-primary">Pedir Ahora</a>
+                        <div class="btn disabled">No disponible</div>
                       @endif
                     </div>
                   </div>

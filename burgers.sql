@@ -181,7 +181,7 @@ CREATE TABLE `productos` (
   `idproducto` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `fk_idcategoria` int(10) unsigned NOT NULL,
   `nombre` varchar(50) NOT NULL,
-  `cantidad` varchar(10) DEFAULT NULL,
+  `cantidad` mediumint(8) UNSIGNED DEFAULT NULL,
   `precio` decimal(10,2) unsigned NOT NULL,
   `descripcion` text DEFAULT NULL,
   `imagen` varchar(255) DEFAULT NULL,

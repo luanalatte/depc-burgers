@@ -47,8 +47,8 @@
                 </select>
             </div>
             <div class="form-group col-lg-6">
-                <label>Cantidad:</label>
-                <input type="text" id="txtCantidad" name="txtCantidad" class="form-control" value="{{ $producto->cantidad }}">
+                <label>Cantidad en stock:</label>
+                <input type="number" min="0" max="999999" id="txtCantidad" name="txtCantidad" class="form-control" value="{{ $producto->cantidad }}">
             </div>
             <div class="form-group col-lg-6">
                 <label>Precio: *</label>

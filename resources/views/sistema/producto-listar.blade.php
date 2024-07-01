@@ -21,7 +21,7 @@
         <tr>
             <th>Nombre</th>
             <th>Categoría</th>
-            <th>Cantidad</th>
+            <th>Cantidad en Stock</th>
             <th>Precio</th>
             <th>Descripcion</th>
             <th>Imagen</th>
