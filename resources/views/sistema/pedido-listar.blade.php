@@ -75,6 +75,22 @@
         });
     }
 
+    function setPagado(idpedido)
+    {
+        let val = $('#lstPagado-id' + idpedido).val();
+
+        $.ajax({
+            type: "GET",
+            url: "{{ route('pedidos.setPagado') }}",
+            data: { id:idpedido, pagado:val },
+            async: true,
+            dataType: "json",
+            success: function (data) {
+                msgShow(data.msg, data.err == 0 ? "success" : "danger");
+            }
+        });
+    }
+
     var filtroEstado = 0;
     var filtroSucursal = 0;
     var filtroFechaDesde = null;

@@ -120,7 +120,7 @@ class ControladorPedido extends Controller
 
     public function setEstado(Request $request)
     {
-        $pedido = Pedido::find($request->id);
+        $pedido = Pedido::select('idpedido', 'fk_idestado')->find($request->id);
         if ($pedido == null) {
             $aResultado["err"] = EXIT_FAILURE;
             $aResultado["msg"] = "No se pudo encontrar el pedido.";
@@ -129,6 +129,28 @@ class ControladorPedido extends Controller
 
         try {
             $pedido->fk_idestado = $request->estado;
+            $pedido->save();
+            $aResultado["err"] = EXIT_SUCCESS;
+            $aResultado["msg"] = "Pedido editado exitosamente.";
+        } catch (Exception $e) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "Fallo al editar el estado del pedido.";
+        }
+
+        return json_encode($aResultado);
+    }
+
+    public function setPagado(Request $request)
+    {
+        $pedido = Pedido::select('idpedido', 'pagado')->find($request->id);
+        if ($pedido == null) {
+            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["msg"] = "No se pudo encontrar el pedido.";
+            return json_encode($aResultado);
+        }
+
+        try {
+            $pedido->pagado = (bool) $request->pagado;
             $pedido->save();
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultado["msg"] = "Pedido editado exitosamente.";
@@ -149,6 +171,21 @@ class ControladorPedido extends Controller
             } else {
                 $select .= '<option value="' . $estado->idestado .'">'. $estado->nombre . '</option>';
             }
+        }
+        $select .= '</select>';
+
+        return $select;
+    }
+
+    private function selectPagado(Pedido $pedido)
+    {
+        $select = '<select id="lstPagado-id' . $pedido->idpedido . '" class="form-control" onchange="javascript: setPagado(' . $pedido->idpedido . ');">';
+        if ($pedido->pagado) {
+            $select .= '<option value="0">No</option>';
+            $select .= '<option value="1" selected>Sí</option>';
+        } else {
+            $select .= '<option value="0" selected>No</option>';
+            $select .= '<option value="1">Sí</option>';
         }
         $select .= '</select>';
 
@@ -189,7 +226,7 @@ class ControladorPedido extends Controller
             $row[] = $this->selectEstado($aEstados, $pedido);
             $row[] = date("d/m/Y H:i", strtotime($pedido->fecha));
             $row[] = $pedido->metodo_pago == 0 ? "Efectivo" : "Mercado Pago";
-            $row[] = $pedido->pagado ? "Sí" : "No";
+            $row[] = $this->selectPagado($pedido);
             $row[] = number_format($pedido->total, 2, ',', '.');
             $data[] = $row;
         }

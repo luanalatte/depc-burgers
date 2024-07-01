@@ -162,6 +162,9 @@ Route::middleware(['auth.sistema'])->group(function() {
     Route::get('/admin/pedido/setEstado', 'ControladorPedido@setEstado')
         ->middleware(['autorizar.json:PEDIDOEDITAR'])
         ->name('pedidos.setEstado');
+    Route::get('/admin/pedido/setPagado', 'ControladorPedido@setPagado')
+        ->middleware(['autorizar.json:PEDIDOEDITAR'])
+        ->name('pedidos.setPagado');
     Route::get('/admin/pedido/eliminar', 'ControladorPedido@eliminar')->middleware(['autorizar:PEDIDOBAJA']);
     Route::get('/admin/pedido/{id}', 'ControladorPedido@editar')->middleware(['autorizar:PEDIDOCONSULTA']);
     Route::post('/admin/pedido/{id}', 'ControladorPedido@guardar')->middleware(['autorizar:PEDIDOEDITAR']);
