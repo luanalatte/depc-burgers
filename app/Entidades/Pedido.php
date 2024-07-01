@@ -16,9 +16,8 @@ class Pedido extends Model
 
     public $timestamps = false;
 
-    // TODO: Agregar forma de pago a `pedidos`.
     protected $fillable = [
-        'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'comentarios'
+        'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'metodo_pago', 'comentarios'
     ];
 
     public function cliente()

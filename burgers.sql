@@ -159,6 +159,7 @@ CREATE TABLE `pedidos` (
   `fk_idestado` int(10) unsigned NOT NULL,
   `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `total` decimal(10,2) unsigned NOT NULL,
+  `metodo_pago` int(10) unsigned NOT NULL DEFAULT '0',
   `comentarios` text DEFAULT NULL,
   PRIMARY KEY (`idpedido`),
   KEY `fk_idcliente` (`fk_idcliente`),

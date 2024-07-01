@@ -78,8 +78,10 @@ class ControladorWebCarrito extends Controller
         // TODO: No hardcodear estados
         if ($medioDePago == "sucursal") {
             $pedido->fk_idestado = 1; // Estado de pedido pendiente de preparación.
+            $pedido->metodo_pago = 0;
         } else {
             $pedido->fk_idestado = 5; // Estado de pago pendiente.
+            $pedido->metodo_pago = 1;
         }
 
         $pedido->total = $carrito->total;
