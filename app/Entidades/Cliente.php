@@ -30,7 +30,9 @@ class Cliente extends Model
             'email',
             'clave',
             'telefono'
-        );
+        )->with(['pedidosActivos' => function ($query) {
+            $query->select('idpedido', 'fk_idcliente', 'total')->incluirEstado()->incluirSucursal();
+        }]);
     }
 
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
@@ -60,6 +62,11 @@ class Cliente extends Model
     public function pedidos()
     {
         return $this->hasMany(Pedido::class, 'fk_idcliente');
+    }
+
+    public function pedidosActivos()
+    {
+        return $this->hasMany(Pedido::class, 'fk_idcliente')->activo();
     }
 
     public function cargarDesdeRequest(Request $request)

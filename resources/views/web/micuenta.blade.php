@@ -2,11 +2,36 @@
 @section('contenido')
 <section class="layout_padding" id="micuenta">
   <div class="container">
-    <hgroup class="mb-5 text-center">
-      <h2>Mi Cuenta</h2>
-    </hgroup>
     <div class="row">
-      <div class="col-md-6 offset-md-3">
+      <div class="mb-5 col-md-6 order-md-2 mb-md-0">
+        <hgroup class="mb-5">
+          <h2>Pedidos Activos</h2>
+        </hgroup>
+        <table class="table border">
+          <thead>
+            <tr>
+              <th>Pedido</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Sucursal</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($aPedidos as $pedido)
+            <tr>
+              <td>{{ $pedido->idpedido }}</td>
+              <td>{{ $pedido->total }}</td>
+              <td>{{ $pedido->estado }}</td>
+              <td>{{ $pedido->sucursal }}</td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <hgroup class="mb-5">
+          <h2>Mi Cuenta</h2>
+        </hgroup>
         @include('web.msg')
         <form action="" method="POST">
           <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>

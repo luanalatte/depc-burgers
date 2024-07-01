@@ -42,6 +42,11 @@ class Pedido extends Model
         return $this->belongsToMany(Producto::class, 'pedido_productos', 'fk_idpedido', 'fk_idproducto')->withPivot('cantidad');
     }
 
+    public function scopeActivo(Builder $query)
+    {
+        return $query->whereIn('fk_idestado', [1, 2, 5]);
+    }
+
     public function scopeIncluirCliente(Builder $query)
     {
         if(is_null($query->getQuery()->columns)){

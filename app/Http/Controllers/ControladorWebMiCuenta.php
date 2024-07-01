@@ -14,7 +14,8 @@ class ControladorWebMiCuenta extends Controller
     public function index(Request $request)
     {
         $cliente = Cliente::miCuenta()->find(Cliente::autenticado());
-        return view('web.micuenta', compact('cliente'));
+        $aPedidos = $cliente->pedidosActivos;
+        return view('web.micuenta', compact('cliente', 'aPedidos'));
     }
 
     public function guardar(Request $request)

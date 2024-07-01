@@ -84,7 +84,7 @@
                                 <span>{{ Session::get('nCarrito') }}</span>
                                 @endif
                             </a>
-                            <a href="/logout" class="btn btn-primary">Cerrar Sesión</a>
+                            <a href="/logout" class="btn btn-secondary">Cerrar Sesión</a>
                             @else
                             <a href="/login" class="btn btn-primary">Inciar Sesión</a>
                             @endif
