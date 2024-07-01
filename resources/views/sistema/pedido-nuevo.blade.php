@@ -113,6 +113,18 @@
                 <label>Total:</label>
                 <input type="number" id="txtTotal" class="form-control" value="{{ $pedido->total }}" readonly>
             </div>
+            <div class="form-group col-lg-6">
+                <label>Pagado:</label><br>
+                <select name="lstPagado" id="lstPagado" class="form-control">
+                    @if($pedido->pagado)
+                    <option value="0">No</option>
+                    <option value="1" selected>Sí</option>
+                    @else
+                    <option value="0" selected>No</option>
+                    <option value="1">Sí</option>
+                    @endif
+                </select>
+            </div>
             <div class="form-group col-12">
                 <label>Comentarios:</label>
                 <textarea id="txtComentarios" class="form-control" style="min-height: 6rem;" readonly>{{ $pedido->comentarios }}</textarea>

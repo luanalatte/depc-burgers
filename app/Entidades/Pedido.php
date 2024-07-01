@@ -17,7 +17,12 @@ class Pedido extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'metodo_pago', 'comentarios'
+        'idpedido', 'fk_idcliente', 'fk_idsucursal', 'fk_idestado', 'fecha', 'total', 'metodo_pago', 'pagado', 'comentarios'
+    ];
+
+    protected $casts = [
+        'metodo_pago' => 'int',
+        'pagado' => 'bool',
     ];
 
     protected static function booted() {
@@ -125,7 +130,7 @@ class Pedido extends Model
 
         return $query->withoutGlobalScope('order')
             ->orderBy($orderColumn, $orderDirection)
-            ->select('idpedido', 'fk_idestado', 'fecha', 'total')
+            ->select('idpedido', 'fk_idestado', 'fecha', 'total', 'metodo_pago', 'pagado')
             ->incluirCliente()
             ->incluirSucursal()
             ->incluirEstado();
@@ -151,6 +156,10 @@ class Pedido extends Model
 
         if ($request->filled('txtTotal')) {
             $this->total = $request->input('txtTotal');
+        }
+
+        if ($request->filled('lstPagado')) {
+            $this->pagado = $request->boolean('lstPagado');
         }
 
         if ($request->has('txtComentarios')) {

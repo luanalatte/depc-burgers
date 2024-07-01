@@ -52,6 +52,8 @@
             <th>Sucursal</th>
             <th>Estado</th>
             <th>Fecha</th>
+            <th>Método de Pago</th>
+            <th>Pagado</th>
             <th>Total</th>
         </tr>
     </thead>
@@ -86,6 +88,8 @@
         "pageLength": 25,
         columns: [
             { searchable: false, orderable: false, width: "0" },
+            null,
+            null,
             null,
             null,
             null,

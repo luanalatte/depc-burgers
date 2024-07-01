@@ -13,6 +13,7 @@
               <th>Pedido</th>
               <th>Total</th>
               <th>Estado</th>
+              <th>Pagado</th>
               <th>Sucursal</th>
             </tr>
           </thead>
@@ -22,6 +23,7 @@
               <td>{{ $pedido->idpedido }}</td>
               <td>{{ $pedido->total }}</td>
               <td>{{ $pedido->estado }}</td>
+              <td>{{ $pedido->pagado ? "Sí" : "No" }}</td>
               <td>{{ $pedido->sucursal }}</td>
             </tr>
             @endforeach

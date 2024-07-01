@@ -31,7 +31,7 @@ class Cliente extends Model
             'clave',
             'telefono'
         )->with(['pedidosActivos' => function ($query) {
-            $query->select('idpedido', 'fk_idcliente', 'total')->incluirEstado()->incluirSucursal();
+            $query->select('idpedido', 'fk_idcliente', 'total', 'pagado')->incluirEstado()->incluirSucursal();
         }]);
     }
 

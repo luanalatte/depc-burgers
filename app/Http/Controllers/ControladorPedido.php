@@ -188,6 +188,8 @@ class ControladorPedido extends Controller
             $row[] = $pedido->sucursal;
             $row[] = $this->selectEstado($aEstados, $pedido);
             $row[] = date("d/m/Y H:i", strtotime($pedido->fecha));
+            $row[] = $pedido->metodo_pago == 0 ? "Efectivo" : "Mercado Pago";
+            $row[] = $pedido->pagado ? "Sí" : "No";
             $row[] = number_format($pedido->total, 2, ',', '.');
             $data[] = $row;
         }

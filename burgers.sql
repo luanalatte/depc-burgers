@@ -43,7 +43,7 @@ CREATE TABLE `estados` (
   `nombre` varchar(30) NOT NULL,
   `color` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`idestado`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +52,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (1,'Pendiente','warning'),(2,'En preparación','info'),(3,'Entregado','success'),(4,'Cancelado','danger'),(5,'Pago Pendiente','secondary');
+INSERT INTO `estados` VALUES (1,'Pendiente','warning'),(2,'En preparación','info'),(3,'Entregado','success'),(4,'Cancelado','danger');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
