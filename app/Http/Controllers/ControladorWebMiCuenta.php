@@ -48,4 +48,62 @@ class ControladorWebMiCuenta extends Controller
 
         return view('web.micuenta', compact('cliente', 'aPedidos'));
     }
+
+    public function getCambiarClave()
+    {
+        return view('web.cambiar-clave');
+    }
+
+    public function postCambiarClave(Request $request)
+    {
+        $cliente = Cliente::select('idcliente', 'clave')->find(Cliente::autenticado());
+
+        if (!$request->filled(['txtClaveAntigua', 'txtClave1', 'txtClave2'])) {
+            Session::now('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => 'Por favor ingresa todos los campos requeridos.'
+            ]);
+
+            return view('web.cambiar-clave');
+        }
+
+        $claveAntigua = $request->input('txtClaveAntigua');
+        if (!password_verify($claveAntigua, $cliente->clave)) {
+            Session::now('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => 'La clave antigua no es correcta.'
+            ]);
+
+            return view('web.cambiar-clave');
+        }
+
+        $clave1 = $request->input('txtClave1');
+        $clave2 = $request->input('txtClave2');
+
+        if ($clave1 != $clave2) {
+            Session::now('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => 'Las claves ingresadas no son iguales.'
+            ]);
+
+            return view('web.cambiar-clave');
+        }
+
+        $cliente->clave = password_hash($clave1, PASSWORD_DEFAULT);
+        try {
+            $cliente->save();
+        } catch (Exception $e) {
+            Session::now('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => 'Ocurrió un error al actualizar tu clave. No se ha modificado.'
+            ]);
+
+            return view('web.cambiar-clave');
+        }
+
+        $page = 'cambiar-clave';
+        $titulo = 'Clave cambiada';
+        $mensaje = "Tu clave ha sido cambiada exitosamente";
+        return view('web.mensaje', compact('page', 'titulo', 'mensaje'));
+    }
 }

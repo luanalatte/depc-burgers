@@ -43,6 +43,8 @@ Route::middleware(['auth'])->group(function() {
 
     Route::get('/micuenta', 'ControladorWebMiCuenta@index');
     Route::post('/micuenta', 'ControladorWebMiCuenta@guardar');
+    Route::get('/cambiar-clave', 'ControladorWebMiCuenta@getCambiarClave');
+    Route::post('/cambiar-clave', 'ControladorWebMiCuenta@postCambiarClave');
     Route::get('/carrito', 'ControladorWebCarrito@index');
     Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
     Route::post('/carrito/editar', 'ControladorWebCarrito@editar');

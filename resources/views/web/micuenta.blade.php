@@ -44,21 +44,21 @@
     <form action="" method="POST" class="mb-3">
       <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
       <div class="row">
-        <div class="col-md 6">
+        <div class="col-md-6">
           <label for="txtNombre">Nombre:</label>
-          <input type="text" name="txtNombre" id="txtNombre" class="form-control" value="{{ $cliente->nombre }}"></input>
+          <input type="text" name="txtNombre" id="txtNombre" class="form-control" required value="{{ $cliente->nombre }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtApellido">Apellido:</label>
-          <input type="text" name="txtApellido" id="txtApellido" class="form-control" value="{{ $cliente->apellido }}"></input>
+          <input type="text" name="txtApellido" id="txtApellido" class="form-control" required value="{{ $cliente->apellido }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtDocumento">Documento:</label>
-          <input type="text" name="txtDocumento" id="txtDocumento" class="form-control" value="{{ $cliente->dni }}"></input>
+          <input type="text" name="txtDocumento" id="txtDocumento" class="form-control" required value="{{ $cliente->dni }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtEmail">Correo Electrónico:</label>
-          <input type="email" name="txtEmail" id="txtEmail" class="form-control" value="{{ $cliente->email }}"></input>
+          <input type="email" name="txtEmail" id="txtEmail" class="form-control" required value="{{ $cliente->email }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtTelefono">Celular / Whatsapp:</label>

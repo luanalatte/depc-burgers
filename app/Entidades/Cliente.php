@@ -86,17 +86,8 @@ class Cliente extends Model
             $this->email = $request->input('txtEmail');
         }
 
-        if ($request->has('txtClave')) {
-            $claveNueva = (string) $request->input('txtClave');
-
-            if (!$this->exists) {
-                $this->clave = password_hash($claveNueva, PASSWORD_DEFAULT);
-            } elseif ($request->has('txtClaveAntigua')) {
-                $claveAntigua = (string) $request->input('txtClaveAntigua');
-                if (password_verify($claveAntigua, $this->clave)) {
-                    $this->clave = password_hash($claveNueva, PASSWORD_DEFAULT);
-                }
-            }
+        if ($request->filled('txtClave') && !$this->exists) {
+            $this->clave = password_hash($request->input('txtClave'), PASSWORD_DEFAULT);
         }
 
         if ($request->has('txtTelefono')) {
