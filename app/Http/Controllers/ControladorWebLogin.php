@@ -70,7 +70,7 @@ class ControladorWebLogin extends Controller
             return redirect('/');
         }
 
-        $emailIngresado = $request->input('txtEmail');
+        $emailIngresado = fescape_string($request->input('txtEmail'));
 
         $cliente = Cliente::select('idcliente', 'email', 'clave')->firstWhere('email', $emailIngresado);
 
