@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /public/files
+/storage/app/
 /storage/framework/views/*
 /storage/framework/cache/*
 /storage/framework/sessions/*

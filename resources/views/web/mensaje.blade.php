@@ -1,4 +1,4 @@
-@extends('web.plantilla', ['page'=>'{{ $page }}'])
+@extends('web.plantilla', ['page'=>$page])
 @section('contenido')
 <section class="layout_padding">
   <div class="container">

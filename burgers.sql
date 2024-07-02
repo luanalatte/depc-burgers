@@ -223,6 +223,7 @@ CREATE TABLE `postulaciones` (
   `idpostulacion` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL,
   `apellido` varchar(50) NOT NULL,
+  `domicilio` varchar(100) NOT NULL,
   `telefono` varchar(30) NOT NULL,
   `email` varchar(50) NOT NULL,
   `archivo` varchar(255) NOT NULL,

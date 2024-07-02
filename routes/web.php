@@ -34,11 +34,6 @@ Route::post('/registrarse', 'ControladorWebRegistro@guardar');
 Route::get('/recuperar-clave', 'ControladorWebLogin@getRecuperarClave');
 Route::post('/recuperar-clave', 'ControladorWebLogin@postRecuperarClave');
 
-Route::get('/mercadopago/pagar/{id}', 'ControladorMercadoPago@pagar')->name('mercadopago.pagar');
-Route::get('/mercadopago/aprobado/{id}', 'ControladorMercadoPago@aprobado')->name('mercadopago.aprobado');
-Route::get('/mercadopago/pendiente/{id}', 'ControladorMercadoPago@pendiente')->name('mercadopago.pendiente');
-Route::get('/mercadopago/error/{id}', 'ControladorMercadoPago@error')->name('mercadopago.error');
-
 Route::middleware(['auth'])->group(function() {
 
     Route::get('/micuenta', 'ControladorWebMiCuenta@index');
@@ -49,6 +44,11 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
     Route::post('/carrito/editar', 'ControladorWebCarrito@editar');
     Route::post('/carrito/confirmar', 'ControladorWebCarrito@confirmar');
+
+    Route::get('/mercadopago/pagar/{id}', 'ControladorMercadoPago@pagar')->name('mercadopago.pagar');
+    Route::get('/mercadopago/aprobado/{id}', 'ControladorMercadoPago@aprobado')->name('mercadopago.aprobado');
+    Route::get('/mercadopago/pendiente/{id}', 'ControladorMercadoPago@pendiente')->name('mercadopago.pendiente');
+    Route::get('/mercadopago/error/{id}', 'ControladorMercadoPago@error')->name('mercadopago.error');
 
 });
 
@@ -182,14 +182,15 @@ Route::middleware(['auth.sistema'])->group(function() {
 /* CONTROLADOR POSTULACION                       */
 /* --------------------------------------------- */
     Route::get('/admin/postulaciones', 'ControladorPostulacion@index')->middleware(['autorizar:POSTULANTECONSULTA']);
-    Route::get('/admin/postulacion/nuevo', 'ControladorPostulacion@nuevo')->middleware(['autorizar:POSTULANTEALTA']);
-    Route::post('/admin/postulacion/nuevo', 'ControladorPostulacion@guardar')->middleware(['autorizar:POSTULANTEALTA']);
+    // Route::get('/admin/postulacion/nuevo', 'ControladorPostulacion@nuevo')->middleware(['autorizar:POSTULANTEALTA']);
+    // Route::post('/admin/postulacion/nuevo', 'ControladorPostulacion@guardar')->middleware(['autorizar:POSTULANTEALTA']);
     Route::get('/admin/postulaciones/cargarGrilla', 'ControladorPostulacion@cargarGrilla')
         ->middleware(['autorizar.json:POSTULANTECONSULTA'])
         ->name('postulaciones.cargarGrilla');
-    Route::get('/admin/postulacion/eliminar', 'ControladorPostulacion@eliminar')->middleware(['autorizar:POSTULANTEBAJA']);
+    Route::get('/admin/postulacion/eliminar/{id}', 'ControladorPostulacion@eliminar')->middleware(['autorizar:POSTULANTEBAJA']);
+    Route::get('/admin/postulacion/descargar/{id}', 'ControladorPostulacion@descargar')->middleware(['autorizar:POSTULANTECONSULTA']);
     Route::get('/admin/postulacion/{id}', 'ControladorPostulacion@editar')->middleware(['autorizar:POSTULANTECONSULTA']);
-    Route::post('/admin/postulacion/{id}', 'ControladorPostulacion@guardar')->middleware(['autorizar:POSTULANTEEDITAR']);
+    // Route::post('/admin/postulacion/{id}', 'ControladorPostulacion@guardar')->middleware(['autorizar:POSTULANTEEDITAR']);
 
 /* --------------------------------------------- */
 /* CONTROLADOR SUCURSAL                          */
