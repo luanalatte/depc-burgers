@@ -31,7 +31,7 @@
                     @endif
                     <div class="d-flex justify-content-between align-items-center mt-auto">
                       <h6 class="price my-0 mr-2 font-weight-bold">${{ number_format($producto->precio, 2, ",", ".") }}</h6>
-                      @if($producto->cantidad > 1)
+                      @if($producto->cantidad > 0)
                         @if(Session::get('cliente_id'))
                         <form action="/carrito/editar" method="POST">
                           <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
