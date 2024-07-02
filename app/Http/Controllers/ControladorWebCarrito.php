@@ -107,6 +107,18 @@ class ControladorWebCarrito extends Controller
             return redirect('/carrito');
         }
 
+        // Actualizar stock de productos
+        foreach ($carrito->productos as $producto) {
+            $producto->cantidad -= $producto->pivot->cantidad;
+            if ($producto->cantidad < 0) {
+                $producto->cantidad = 0;
+            }
+
+            try {
+                $producto->save();
+            } catch (Exception $e) {}
+        }
+
         $carrito->vaciar();
         Session::put('nCarrito', 0);
 
