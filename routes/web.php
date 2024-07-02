@@ -31,6 +31,8 @@ Route::post('/login', 'ControladorWebLogin@login');
 Route::get('/logout', 'ControladorWebLogin@logout');
 Route::get('/registrarse', 'ControladorWebRegistro@index');
 Route::post('/registrarse', 'ControladorWebRegistro@guardar');
+Route::get('/recuperar-clave', 'ControladorWebLogin@getRecuperarClave');
+Route::post('/recuperar-clave', 'ControladorWebLogin@postRecuperarClave');
 
 Route::get('/mercadopago/pagar/{id}', 'ControladorMercadoPago@pagar')->name('mercadopago.pagar');
 Route::get('/mercadopago/aprobado/{id}', 'ControladorMercadoPago@aprobado')->name('mercadopago.aprobado');

@@ -40,6 +40,19 @@ function fescape_string($vcparam)
     return $targetString;
 }
 
+function generarClaveAleatoria($length = 8, $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+{
+    $clave = '';
+    $max = strlen($chars) - 1;
+
+    for ($i = 0; $i < $length; $i++)
+    {
+        $clave .= $chars[random_int(0, $max)];
+    }
+
+    return $clave;
+}
+
 function uploadFile($file, array $valid_ext)
 {
     if ($file["error"] == UPLOAD_ERR_OK) {

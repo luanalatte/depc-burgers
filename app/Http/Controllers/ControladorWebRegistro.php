@@ -23,7 +23,7 @@ class ControladorWebRegistro extends Controller
 
     public function guardar(Request $request)
     {
-        if (Cliente::autenticado()) {
+        if (Session::has('cliente_id')) {
             return redirect('/');
         }
 
