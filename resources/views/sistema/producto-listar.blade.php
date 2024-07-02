@@ -22,6 +22,7 @@
             <th>Nombre</th>
             <th>Categoría</th>
             <th>Cantidad en Stock</th>
+            <th>Oculto</th>
             <th>Precio</th>
             <th>Descripcion</th>
             <th>Imagen</th>
@@ -37,6 +38,7 @@
 	    "bSearchable": true,
         "pageLength": 25,
         columns: [
+            null,
             null,
             null,
             null,

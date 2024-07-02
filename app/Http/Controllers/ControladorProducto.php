@@ -131,6 +131,7 @@ class ControladorProducto extends Controller
             $row[] = '<a href="/admin/producto/' . $producto->idproducto . '">' . $producto->nombre . '</a>';
             $row[] = $producto->categoria;
             $row[] = $producto->cantidad;
+            $row[] = $producto->oculto ? "Sí" : "No";
             $row[] = number_format($producto->precio, 2, ',', ".");
             $row[] = $producto->descripcion;
 

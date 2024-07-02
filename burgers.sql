@@ -184,6 +184,7 @@ CREATE TABLE `productos` (
   `fk_idcategoria` int(10) unsigned NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `cantidad` mediumint(8) UNSIGNED DEFAULT NULL,
+  `oculto` tinyint(1) NOT NULL DEFAULT 0,
   `precio` decimal(10,2) unsigned NOT NULL,
   `descripcion` text DEFAULT NULL,
   `imagen` varchar(255) DEFAULT NULL,

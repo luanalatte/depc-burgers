@@ -16,11 +16,12 @@ class Producto extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'idproducto', 'fk_idcategoria', 'nombre', 'cantidad', 'precio', 'descripcion', 'imagen'
+        'idproducto', 'fk_idcategoria', 'nombre', 'cantidad', 'oculto', 'precio', 'descripcion', 'imagen'
     ];
 
     protected $casts = [
         'cantidad' => 'int',
+        'oculto' => 'bool',
         'precio' => 'float',
     ];
 
@@ -56,12 +57,12 @@ class Producto extends Model
             'productos.precio',
             'productos.descripcion',
             'productos.imagen'
-        )->orderByCategoria();
+        )->where('oculto', false)->orderByCategoria();
     }
 
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
     {
-        $columnas = ['nombre', 'categoria', 'cantidad', 'precio', 'descripcion'];
+        $columnas = ['nombre', 'categoria', 'cantidad', 'oculto', 'precio', 'descripcion'];
 
         $orderColumn = $columnas[$orderColumnIdx] ?? 'nombre';
         $orderDirection = $orderDirection == 'desc' ? 'desc' : 'asc';
@@ -73,6 +74,7 @@ class Producto extends Model
                 'productos.idproducto',
                 'productos.nombre',
                 'productos.cantidad',
+                'productos.oculto',
                 'productos.precio',
                 'productos.descripcion',
                 'productos.imagen',
@@ -86,6 +88,7 @@ class Producto extends Model
 
         $this->nombre = $request->input('txtNombre');
         $this->cantidad = $request->input('txtCantidad');
+        $this->oculto = $request->boolean('lstOculto');
         $this->precio = $request->input('txtPrecio');
         $this->descripcion = $request->input('txtDescripcion');
     }

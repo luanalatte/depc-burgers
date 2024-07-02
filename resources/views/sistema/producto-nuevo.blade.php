@@ -46,9 +46,21 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group col-lg-6">
+            <div class="form-group col-lg-3">
                 <label>Cantidad en stock:</label>
                 <input type="number" min="0" max="999999" id="txtCantidad" name="txtCantidad" class="form-control" value="{{ $producto->cantidad }}">
+            </div>
+            <div class="form-group col-lg-3">
+                <label>Oculto:</label>
+                <select name="lstOculto" id="lstOculto" class="form-control">
+                    @if($producto->oculto)
+                    <option value="0">No</option>
+                    <option value="1" selected>Sí</option>
+                    @else
+                    <option value="0" selected>No</option>
+                    <option value="1">Sí</option>
+                    @endif
+                </select>
             </div>
             <div class="form-group col-lg-6">
                 <label>Precio: *</label>
