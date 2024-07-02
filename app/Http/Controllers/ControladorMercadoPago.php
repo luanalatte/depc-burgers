@@ -3,24 +3,29 @@
 namespace App\Http\Controllers;
 
 use MercadoPago\MercadoPagoConfig;
-MercadoPagoConfig::setAccessToken(env('MP_TOKEN'));
-MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
 
 use App\Entidades\Cliente;
 use App\Entidades\Pedido;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\Exceptions\MPApiException;
 
 require app_path() . '/start/constants.php';
-require app_path() . '/start/funciones_generales.php';
 
 class ControladorMercadoPago extends Controller
 {
-    public function pagar(Request $request)
+    private function autenticar()
+    {
+        MercadoPagoConfig::setAccessToken(env('MP_TOKEN'));
+        MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
+    }
+
+    private function crearPreferenceRequest($idpedido)
     {
         $cliente = Cliente::find(Cliente::autenticado());
-        $pedido = Pedido::find($request->id);
+        $pedido = Pedido::find($idpedido);
 
         $items = [];
         foreach ($pedido->productos as $producto) {
@@ -37,21 +42,46 @@ class ControladorMercadoPago extends Controller
         $payer = [
             "name" => $cliente->nombre,
             "surname" => $cliente->apellido,
-            "email" => $cliente->email
+            "email" => $cliente->email,
+            "identification" => [
+                "type" => "DNI",
+                "number" => $cliente->documento
+            ]
         ];
 
+        $back_urls = [
+            "success" => route('mercadopago.aprobado', [$pedido->idpedido]),
+            "failure" => route('mercadopago.error', [$pedido->idpedido]),
+            "pending" => route('mercadopago.pendiente', [$pedido->idpedido])
+        ];
+
+        return [
+            "items" => $items,
+            "payer" => $payer,
+            "back_urls" => $back_urls,
+            "auto_return" => "approved"
+        ];
+    }
+
+    public function pagar(Request $request)
+    {
+        $this->autenticar();
+
+        $request = $this->crearPreferenceRequest($request->id);
         $mpClient = new PreferenceClient();
-        $preference = $mpClient->create(["items" => $items, "payer" => $payer]);
 
-        $preference->back_urls = [
-            "success" => env("APP_URL") . "/mercadopago/correcto/$pedido->idpedido",
-            "failure" => env("APP_URL") . "/mercadopago/error/$pedido->idpedido",
-            "pending" => env("APP_URL") . "/mercadopago/pendiente/$pedido->idpedido"
-        ];
+        try {
+            $preference = $mpClient->create($request);
 
-        $preference->auto_return = "approved";
+            return Redirect::to($preference->init_point);
+        } catch (MPApiException $e) {
+            Session::now('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => 'Ocurrió un error al generar el link de pago.'
+            ]);
 
-        return Redirect::to($preference->init_point);
+            return redirect('/micuenta');
+        }
     }
 
     public function aprobado(Request $request)
