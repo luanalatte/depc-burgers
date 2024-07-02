@@ -104,7 +104,6 @@ class ControladorCliente extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        // NOTE: Posible injection en los valores de DataTables?
         $orderColumn = $request->order[0]['column'];
         $orderDirection = $request->order[0]['dir'];
         $offset = $request->start ?? 0;

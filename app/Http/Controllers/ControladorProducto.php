@@ -103,14 +103,13 @@ class ControladorProducto extends Controller
     public function eliminar(Request $request)
     {
         try {
-            // TODO: No eliminar productos que tengan pedidos asociados.
             Producto::destroy($request->id);
 
             $aResultado["err"] = EXIT_SUCCESS;
             $aResultado["msg"] = "Producto eliminado exitosamente.";
         } catch (Exception $e) {
             $aResultado["err"] = EXIT_FAILURE;
-            $aResultado["msg"] = "No se pudo eliminar el producto.";
+            $aResultado["msg"] = "No se pudo eliminar el producto. Es posible que tenga pedidos asociados.";
         }
 
         return json_encode($aResultado);
@@ -118,7 +117,6 @@ class ControladorProducto extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        // NOTE: Posible injection en los valores de DataTables?
         $orderColumn = $request->order[0]['column'];
         $orderDirection = $request->order[0]['dir'];
         $offset = $request->start ?? 0;

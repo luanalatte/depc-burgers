@@ -194,7 +194,6 @@ class ControladorPedido extends Controller
 
     public function cargarGrilla(Request $request)
     {
-        // NOTE: Posible injection en los valores de DataTables?
         try {
             $orderColumn = $request->order[0]['column'] - 1;
         } catch (Exception $e) {}

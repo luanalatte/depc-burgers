@@ -25,6 +25,7 @@ class ControladorWebCarrito extends Controller
 
     public function editar(Request $request)
     {
+        // TODO: Usar Ajax
         $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
 
         $idproducto = $request->get('idproducto');
@@ -39,7 +40,6 @@ class ControladorWebCarrito extends Controller
 
         Session::put('nCarrito', $carrito->nProductos);
 
-        // TODO: No redireccionar, solo notificar. Popup Toast?
         return redirect('/carrito');
     }
 
@@ -92,7 +92,6 @@ class ControladorWebCarrito extends Controller
                 $pedidoProductos[$producto->idproducto] = ['cantidad' => $producto->pivot->cantidad];
             }
 
-            // TODO: Generar pedido con estado oculto, y cambiarlo una vez hayan sido agregados todos los productos.
             $pedido->save();
             $pedido->productos()->attach($pedidoProductos);
         } catch (Exception $e) {
