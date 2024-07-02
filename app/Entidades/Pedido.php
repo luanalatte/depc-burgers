@@ -123,7 +123,7 @@ class Pedido extends Model
 
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "desc")
     {
-        $columnas = ['idpedido', 'cliente', 'sucursal', 'estado', 'fecha', 'total'];
+        $columnas = ['idpedido', 'cliente', 'sucursal', 'estado', 'fecha', 'metodo_pago', 'pagado', 'total'];
 
         $orderColumn = $columnas[$orderColumnIdx] ?? 'fecha';
         $orderDirection = $orderDirection == 'asc' ? 'asc' : 'desc';
