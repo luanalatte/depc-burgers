@@ -10,11 +10,11 @@
         @include('web.msg')
         <form action="" method="post">
           <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
-          <input class="form-control" type="text" name="txtNombre" id="txtNombre" placeholder="Nombre">
-          <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Correo Electrónico">
-          <input class="form-control" type="tel" name="txtTelefono" id="txtTelefono" placeholder="Celular / Whatsapp">
+          <input class="form-control" type="text" name="txtNombre" id="txtNombre" placeholder="Nombre *" required value="{{ $nombre ?? '' }}">
+          <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Correo Electrónico *" required value="{{ $email ?? '' }}">
+          <input class="form-control" type="tel" name="txtTelefono" id="txtTelefono" placeholder="Celular / Whatsapp" value="{{ $telefono ?? '' }}">
           <!-- FIXME: Fix textarea height -->
-          <textarea class="form-control" name="txtMensaje" id="txtMensaje" placeholder="Escribe tu mensaje aquí" rows="5"></textarea>
+          <textarea class="form-control" name="txtMensaje" id="txtMensaje" placeholder="Escribe tu mensaje aquí *" rows="5" required>{{ $mensaje ?? '' }}</textarea>
           <button type="submit" class="btn btn-primary">ENVIAR</button>
         </form>
       </div>
