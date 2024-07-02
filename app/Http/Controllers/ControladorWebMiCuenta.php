@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entidades\Cliente;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -21,12 +22,29 @@ class ControladorWebMiCuenta extends Controller
     public function guardar(Request $request)
     {
         $cliente = Cliente::miCuenta()->find(Cliente::autenticado());
-        $aPedidos = $cliente->pedidosActivos;
+        $cliente->cargarDesdeRequest($request);
+        
+        if (!$request->filled(['txtNombre', 'txtApellido', 'txtDocumento', 'txtEmail'])) {
+            Session::now('msg', [
+                'ESTADO' => MSG_ERROR,
+                'MSG' => 'Por favor ingresa todos los campos requeridos.'
+            ]);
+        } else {
+            try {
+                $cliente->save();
+                Session::now('msg', [
+                    'ESTADO' => MSG_SUCCESS,
+                    'MSG' => 'Guardado correctamente.'
+                ]);
+            } catch (Exception $e) {
+                Session::now('msg', [
+                    'ESTADO' => MSG_ERROR,
+                    'MSG' => 'Ocurrió un error al guardar tus datos.'
+                ]);
+            }
+        }
 
-        Session::now('msg', [
-            'ESTADO' => MSG_SUCCESS,
-            'MSG' => 'Guardado correctamente.'
-        ]);
+        $aPedidos = $cliente->pedidosActivos;
 
         return view('web.micuenta', compact('cliente', 'aPedidos'));
     }

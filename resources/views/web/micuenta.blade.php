@@ -46,23 +46,23 @@
       <div class="row">
         <div class="col-md 6">
           <label for="txtNombre">Nombre:</label>
-          <input type="text" readonly class="form-control" value="{{ $cliente->nombre }}"></input>
+          <input type="text" name="txtNombre" id="txtNombre" class="form-control" value="{{ $cliente->nombre }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtApellido">Apellido:</label>
-          <input type="text" readonly class="form-control" value="{{ $cliente->apellido }}"></input>
+          <input type="text" name="txtApellido" id="txtApellido" class="form-control" value="{{ $cliente->apellido }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtDocumento">Documento:</label>
-          <input type="text" readonly class="form-control" value="{{ $cliente->dni }}"></input>
+          <input type="text" name="txtDocumento" id="txtDocumento" class="form-control" value="{{ $cliente->dni }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtEmail">Correo Electrónico:</label>
-          <input type="text" readonly class="form-control" value="{{ $cliente->email }}"></input>
+          <input type="email" name="txtEmail" id="txtEmail" class="form-control" value="{{ $cliente->email }}"></input>
         </div>
         <div class="col-md-6">
           <label for="txtTelefono">Celular / Whatsapp:</label>
-          <input type="text" readonly class="form-control" value="{{ $cliente->telefono }}"></input>
+          <input type="tel" name="txtTelefono" id="txtTelefono" class="form-control" value="{{ $cliente->telefono }}"></input>
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary mr-2">Guardar</button>

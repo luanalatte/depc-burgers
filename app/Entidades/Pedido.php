@@ -54,7 +54,7 @@ class Pedido extends Model
 
     public function scopeActivo(Builder $query)
     {
-        return $query->whereIn('fk_idestado', [1, 2, 5]);
+        return $query->whereIn('fk_idestado', [1, 2]);
     }
 
     public function scopeIncluirCliente(Builder $query)
