@@ -41,10 +41,13 @@ class ControladorPedido extends Controller
     {
         $titulo = "Modificar Pedido";
 
-        $pedido = Pedido::incluirCliente()->incluirSucursal()->find($request->id);
+        $pedido = Pedido::with(['productos' => function ($q) {
+            $q->select('productos.idproducto', 'productos.nombre', 'productos.imagen');
+        }])->incluirCliente()->incluirSucursal()->find($request->id);
         if ($pedido) {
             $aEstados = Estado::all();
-            return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aEstados"));
+            $aProductos = $pedido->productos;
+            return view("sistema.pedido-nuevo", compact("titulo", "pedido", "aEstados", "aProductos"));
         }
 
         Session::flash("msg", [

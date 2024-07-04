@@ -130,6 +130,27 @@
                 <textarea id="txtComentarios" class="form-control" style="min-height: 6rem;" readonly>{{ $pedido->comentarios }}</textarea>
             </div>
             @endif
+            <div class="col-12 mt-3">
+                <h2>Productos</h2>
+                <table class="table table-hover border">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Imagen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($aProductos as $producto)
+                        <tr>
+                            <td><a href="/admin/producto/{{ $producto->idproducto }}">{{ $producto->nombre }}</a></td>
+                            <td>{{ $producto->pivot->cantidad }}</td>
+                            <td><img src="/files/{{ $producto->imagen }}" alt="imagen de producto" width="100"></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </form>
 </div>
