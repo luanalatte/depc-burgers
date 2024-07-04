@@ -80,9 +80,7 @@
                             </a>
                             <a href="/carrito" class="link" title="Carrito">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                @if(Session::get('nCarrito'))
-                                <span>{{ Session::get('nCarrito') }}</span>
-                                @endif
+                                <span id="nCarrito">{{ Session::get('nCarrito') ?: "" }}</span>
                             </a>
                             <a href="/logout" class="btn btn-secondary">Cerrar Sesión</a>
                             @else
@@ -158,6 +156,44 @@
         </div>
     </footer>
     <!-- footer section -->
+    <script>
+        var MSG_WARNING = "warning";
+        var MSG_SUCCESS = "success";
+        var MSG_ERROR = "danger";
+        var MSG_INFO = "info";
+
+        function msgShow(mensaje, tipo) {
+            switch (tipo) {
+                case MSG_WARNING:
+                {
+                    $("#msg").addClass("alert alert-warning my-3");
+                    $("#msg").html("<strong>Alerta:</strong> " + mensaje);
+                    break;
+                }
+                case MSG_SUCCESS:
+                {
+                    $("#msg").addClass("alert alert-success my-3");
+                    $("#msg").html("<strong>&#161;Bien&#33; </strong> " + mensaje);
+                    break;
+                }
+                case MSG_ERROR:
+                {
+                    $("#msg").addClass("alert alert-danger my-3");
+                    $("#msg").html("<strong>&#161;Error&#33; </strong> " + mensaje);
+                    break;
+                }
+                case MSG_INFO:
+                {
+                    $("#msg").addClass("alert alert-info my-3");
+                    $("#msg").html("<strong>&#161;Atento&#33; </strong> " + mensaje);
+                    break;
+                }
+            }
+
+            $("#msg").show();
+            $("html, body").animate({scrollTop: 0}, 300);
+        }
+    </script>
     <!-- jQuery -->
     <script src="/web/js/jquery-3.4.1.min.js"></script>
     <!-- popper js -->

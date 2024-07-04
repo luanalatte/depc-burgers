@@ -40,10 +40,9 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/micuenta', 'ControladorWebMiCuenta@guardar');
     Route::get('/cambiar-clave', 'ControladorWebMiCuenta@getCambiarClave');
     Route::post('/cambiar-clave', 'ControladorWebMiCuenta@postCambiarClave');
-    Route::get('/carrito', 'ControladorWebCarrito@index');
-    Route::post('/carrito/agregar', 'ControladorWebCarrito@agregar');
-    Route::post('/carrito/editar', 'ControladorWebCarrito@editar');
-    Route::post('/carrito/confirmar', 'ControladorWebCarrito@confirmar');
+    Route::get('/carrito', 'ControladorWebCarrito@index')->name('carrito');
+    Route::post('/carrito/editar', 'ControladorWebCarrito@editar')->name('carrito.editar');
+    Route::post('/carrito/confirmar', 'ControladorWebCarrito@confirmar')->name('carrito.confirmar');
 
     Route::get('/mercadopago/pagar/{id}', 'ControladorMercadoPago@pagar')->name('mercadopago.pagar');
     Route::get('/mercadopago/aprobado/{id}', 'ControladorMercadoPago@aprobado')->name('mercadopago.aprobado');

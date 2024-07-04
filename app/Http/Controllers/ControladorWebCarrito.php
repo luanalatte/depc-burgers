@@ -25,22 +25,37 @@ class ControladorWebCarrito extends Controller
 
     public function editar(Request $request)
     {
-        // TODO: Usar Ajax
         $carrito = Carrito::select('idcarrito')->latest('idcarrito')->firstOrCreate(['fk_idcliente' => Cliente::autenticado()]);
 
-        $idproducto = $request->get('idproducto');
+        if (!$request->filled('idproducto')) {
+            $response = [
+                "err" => MSG_ERROR,
+                "msg" => "Producto no especificado"
+            ];
+            
+            return json_encode($response);
+        }
 
-        if (isset($_POST["btnEliminar"])) {
+        $idproducto = intval($request->idproducto);
+        $cantidad = intval($request->cantidad ?? 1);
+
+        if ($cantidad < 1) {
             $carrito->productos()->detach($idproducto);
         } else {
-            $cantidad = $request->input('txtCantidad', 1);
-
+            // TODO: Si el producto está oculto/inactivo, no agregar.
             $carrito->productos()->syncWithoutDetaching([$idproducto => ['cantidad' => $cantidad]], false);
         }
 
         Session::put('nCarrito', $carrito->nProductos);
 
-        return redirect('/carrito');
+        $response = [
+            "err" => MSG_SUCCESS,
+            "msg" => "Se ha actualizado el carrito",
+            "nCarrito" => $carrito->nProductos,
+            "cantidad" => $cantidad
+        ];
+
+        return json_encode($response);
     }
 
     public function confirmar(Request $request)

@@ -7,7 +7,7 @@
       <hgroup class="text-center">
         <h2>Take Away</h2>
       </hgroup>
-
+      <div id="msg"></div>
       <ul class="filters_menu">
         <li class="active" data-filter="*">Todos</li>
         @foreach($aCategorias as $categoria)
@@ -33,16 +33,19 @@
                       <h6 class="price my-0 mr-2 font-weight-bold">${{ number_format($producto->precio, 2, ",", ".") }}</h6>
                       @if($producto->cantidad > 0)
                         @if(Session::get('cliente_id'))
-                        <form action="/carrito/editar" method="POST">
-                          <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
-                          <input type="hidden" name="idproducto" value="{{$producto->idproducto}}">
-                          <div class="input-group justify-content-end flex-nowrap">
-                            <input type="number" class="form-control" name="txtCantidad" id="txtCantidad" value="1">
-                            <div class="input-group-append">
-                              <button type="submit" class="btn btn-primary py-0"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
-                            </div>
+                        <div class="input-group justify-content-end flex-nowrap">
+                          <div class="input-group-prepend">
+                            <button class="btn btn-primary py-0 subtract-button">
+                              <i class="fa fa-minus" aria-hidden="true"></i>
+                            </button>
                           </div>
-                        </form>
+                          <input type="text" class="form-control" readonly data-idproducto="{{ $producto->idproducto }}" name="txtCantidad" id="txtCantidad" value="{{ $producto->nCarrito ?? 0 }}">
+                          <div class="input-group-append">
+                            <button class="btn btn-primary py-0 add-button">
+                              <i class="fa fa-plus" aria-hidden="true"></i>
+                            </button>
+                          </div>
+                        </div>
                         @else
                         <a href="/login" class="btn btn-primary">Pedir Ahora</a>
                         @endif
@@ -64,4 +67,33 @@
   </section>
 
   <!-- end food section -->
+<script>
+  function editarCarrito(idproducto, cantidad)
+  {
+    $.ajax({
+      type: "POST",
+      url: "{{ route('carrito.editar') }}",
+      data: { _token: "{{ csrf_token() }}", idproducto:idproducto, cantidad:cantidad },
+      async: true,
+      dataType: "json",
+      success: function (data) {
+        $('#nCarrito').html(data.nCarrito ? data.nCarrito : "");
+      }
+    });
+  }
+
+  document.querySelectorAll('.product').forEach(producto => {
+    let input = producto.querySelector('input#txtCantidad')
+
+    producto.querySelector('.subtract-button').addEventListener('click', () => {
+      input.value = Math.max(parseInt(input.value) - 1, 0);
+      editarCarrito(input.dataset.idproducto, input.value);
+    });
+    
+    producto.querySelector('.add-button').addEventListener('click', () => {
+      input.value = parseInt(input.value) + 1;
+      editarCarrito(input.dataset.idproducto, input.value);
+    });
+  });
+</script>
 @endsection

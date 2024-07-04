@@ -47,9 +47,9 @@ class Producto extends Model
             ->orderBy('categorias.posicion', 'desc');
     }
 
-    public function scopeTakeaway(Builder $query)
+    public function scopeTakeaway(Builder $query, $idcarrito = null)
     {
-        return $query->select(
+        $query->select(
             'productos.idproducto',
             'productos.fk_idcategoria',
             'productos.nombre',
@@ -57,7 +57,17 @@ class Producto extends Model
             'productos.precio',
             'productos.descripcion',
             'productos.imagen'
-        )->where('oculto', false)->orderByCategoria();
+        );
+
+        if (!is_null($idcarrito)) {
+            $query->addSelect('carrito_productos.cantidad AS nCarrito')
+                ->leftJoin('carrito_productos', function ($join) use ($idcarrito) {
+                    $join->on('productos.idproducto', '=', 'carrito_productos.fk_idproducto')
+                    ->where('carrito_productos.fk_idcarrito', '=', $idcarrito);
+                });
+        }
+
+        return $query->where('oculto', false)->orderByCategoria();
     }
 
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
