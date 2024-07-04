@@ -186,8 +186,12 @@ Route::middleware(['auth.sistema'])->group(function() {
     Route::get('/admin/postulaciones/cargarGrilla', 'ControladorPostulacion@cargarGrilla')
         ->middleware(['autorizar.json:POSTULANTECONSULTA'])
         ->name('postulaciones.cargarGrilla');
-    Route::get('/admin/postulacion/eliminar/{id}', 'ControladorPostulacion@eliminar')->middleware(['autorizar:POSTULANTEBAJA']);
-    Route::get('/admin/postulacion/descargar/{id}', 'ControladorPostulacion@descargar')->middleware(['autorizar:POSTULANTECONSULTA']);
+    Route::get('/admin/postulacion/eliminar', 'ControladorPostulacion@eliminar')
+        ->middleware(['autorizar:POSTULANTEBAJA'])
+        ->name('postulaciones.eliminar');
+    Route::get('/admin/postulacion/descargar/{id}', 'ControladorPostulacion@descargar')
+        ->middleware(['autorizar:POSTULANTECONSULTA'])
+        ->name('postulaciones.descargar');
     Route::get('/admin/postulacion/{id}', 'ControladorPostulacion@editar')->middleware(['autorizar:POSTULANTECONSULTA']);
     // Route::post('/admin/postulacion/{id}', 'ControladorPostulacion@guardar')->middleware(['autorizar:POSTULANTEEDITAR']);
 

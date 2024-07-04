@@ -30,6 +30,20 @@
     </thead>
 </table> 
 <script>
+    function eliminar(idpostulacion) {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('postulaciones.eliminar') }}",
+            data: { id:idpostulacion },
+            async: true,
+            dataType: "json",
+            success: function (data) {
+                msgShow(data.msg, data.err);
+                $('#grilla').DataTable().ajax.reload();
+            }
+        });
+    }
+
 	var dataTable = $('#grilla').DataTable({
 	    "processing": true,
         "serverSide": true,

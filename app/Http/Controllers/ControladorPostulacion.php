@@ -32,10 +32,10 @@ class ControladorPostulacion extends Controller
         try {
             Postulacion::destroy($request->id);
 
-            $aResultado["err"] = EXIT_SUCCESS;
-            $aResultado["msg"] = "postulación eliminada exitosamente.";
+            $aResultado["err"] = MSG_SUCCESS;
+            $aResultado["msg"] = "Postulación eliminada exitosamente.";
         } catch (Exception $e) {
-            $aResultado["err"] = EXIT_FAILURE;
+            $aResultado["err"] = MSG_ERROR;
             $aResultado["msg"] = "No se pudo eliminar la postulación.";
         }
 
@@ -70,8 +70,7 @@ class ControladorPostulacion extends Controller
             $row[] = $postulacion->telefono;
             $row[] = $postulacion->domicilio;
             $row[] = '<a href="/admin/postulacion/descargar/' . $postulacion->idpostulacion . '" class="btn btn-secondary">' . '<i class="fas fa-download">' . '</a>';
-            // TODO: Ajax, eliminar y devolver notificación.
-            $row[] = '<a href="/admin/postulacion/eliminar/' . $postulacion->idpostulacion . '" class="btn btn-secondary">' . '<i class="fas fa-trash">' . '</a>';
+            $row[] = '<a href="#" class="btn btn-secondary" onclick="javascript: eliminar(' . $postulacion->idpostulacion . ')">' . '<i class="fas fa-trash">' . '</a>';
             $data[] = $row;
         }
 
