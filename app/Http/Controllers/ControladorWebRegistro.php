@@ -6,6 +6,7 @@ use App\Entidades\Cliente;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rules\Password;
 
 require app_path() . '/start/constants.php';
 require app_path() . '/start/funciones_generales.php';
@@ -27,42 +28,16 @@ class ControladorWebRegistro extends Controller
             return redirect('/');
         }
 
-        if (!$request->filled(['txtNombre', 'txtApellido', 'txtEmail', 'txtDNI', 'txtClave', 'txtClave2'])) {
-            Session::now('msg', [
-                'ESTADO' => MSG_ERROR,
-                'MSG' => "Ingrese todos los campos requeridos."
-            ]);
+        $request->validate([
+            'txtNombre' => 'required|string',
+            'txtApellido' => 'required|string',
+            'txtEmail' => 'required|email|unique:clientes,email',
+            'txtDocumento' => 'required|string',
+            'txtClave' => ['required', 'confirmed', 'string', Password::min(8)->mixedCase()->numbers()],
+            'txtTelefono' => 'nullable|string'
+        ]);
 
-            return view('web.register');
-        }
-
-        // $nombre = $request->input('txtNombre');
-        // $apellido = $request->input('txtApellido');
-        $email = $request->input('txtEmail');
-        // $documento = $request->input('txtDocumento');
-        // $telefono = $request->input('txtTelefono');
-        $clave1 = $request->input('txtClave');
-        $clave2 = $request->input('txtClave2');
-
-        if ($clave1 != $clave2) {
-            Session::now('msg', [
-                'ESTADO' => MSG_ERROR,
-                'MSG' => "Las claves ingresadas no son iguales."
-            ]);
-
-            return view('web.register');
-        }
-
-        $cliente = Cliente::firstOrNew(['email' => $email]);
-        if ($cliente->exists) {
-            Session::now('msg', [
-                'ESTADO' => MSG_ERROR,
-                'MSG' => "El correo electrónico especificado ya está asociado a una cuenta."
-            ]);
-
-            return view('web.register');
-        }
-
+        $cliente = new Cliente();
         $cliente->cargarDesdeRequest($request);
 
         try {

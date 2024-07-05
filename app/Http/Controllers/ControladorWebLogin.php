@@ -30,13 +30,14 @@ class ControladorWebLogin extends Controller
 
     public function login(Request $request)
     {
-        // TODO: usar algo mejor que fescape_string?
-        $emailIngresado = fescape_string($request->input('txtEmail'));
-        $claveIngresada = fescape_string($request->input('txtClave'));
+        $request->validate([
+            'txtEmail' => 'required|email',
+            'txtClave' => 'required|string'
+        ]);
 
-        $cliente = Cliente::select('idcliente', 'email', 'clave', 'nombre', 'apellido')->firstWhere('email', $emailIngresado);
+        $cliente = Cliente::select('idcliente', 'email', 'clave', 'nombre', 'apellido')->firstWhere('email', $request->txtEmail);
 
-        if (is_null($cliente) || !password_verify($claveIngresada, $cliente->clave)) {
+        if (is_null($cliente) || !password_verify($request->txtClave, $cliente->clave)) {
             Session::now('msg', [
                 "ESTADO" => MSG_ERROR,
                 "MSG" => "Email o clave incorrectos."
@@ -70,9 +71,11 @@ class ControladorWebLogin extends Controller
             return redirect('/');
         }
 
-        $emailIngresado = fescape_string($request->input('txtEmail'));
+        $request->validate([
+            'txtEmail' => 'required|email'
+        ]);
 
-        $cliente = Cliente::select('idcliente', 'email', 'clave')->firstWhere('email', $emailIngresado);
+        $cliente = Cliente::select('idcliente', 'email', 'clave')->firstWhere('email', $request->txtEmail);
 
         $clave = "";
         if (!is_null($cliente)) {

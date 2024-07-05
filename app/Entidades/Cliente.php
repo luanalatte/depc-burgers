@@ -78,8 +78,8 @@ class Cliente extends Model
             $this->apellido = $request->input('txtApellido');
         }
 
-        if ($request->filled('txtDNI')) {
-            $this->dni = $request->input('txtDNI');
+        if ($request->filled('txtDocumento')) {
+            $this->dni = $request->input('txtDocumento');
         }
 
         if ($request->filled('txtEmail')) {

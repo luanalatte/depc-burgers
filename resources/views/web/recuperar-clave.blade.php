@@ -9,10 +9,13 @@
             <h2>Recuperar Clave</h2>
           </hgroup>
           @include('web.msg')
-          <form action="" method="post" class="text-center text-white">
+          <form action="" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
+            @error('txtEmail')
+              <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
             <input class="form-control" type="email" name="txtEmail" id="txtEmail" placeholder="Email" required>
-            <button type="submit" class="btn btn-primary">Recuperar Clave</button>
+            <div class="text-center"><button type="submit" class="btn btn-primary">Recuperar Clave</button></div>
           </form>
         </div>
       </div>
