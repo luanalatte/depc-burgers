@@ -17,7 +17,7 @@ class SistemaAutorizarOperacion
                 "MSG" => "No tiene permisos para la operación ($codigo)."
             ]);
 
-            return response(view("sistema.error", compact("msg")));
+            return response(view("sistema.error"));
         }
 
         return $next($request);

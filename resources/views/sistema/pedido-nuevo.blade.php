@@ -129,7 +129,6 @@
                 <label>Comentarios:</label>
                 <textarea id="txtComentarios" class="form-control" style="min-height: 6rem;" readonly>{{ $pedido->comentarios }}</textarea>
             </div>
-            @endif
             <div class="col-12 mt-3">
                 <h2>Productos</h2>
                 <table class="table table-hover border">
@@ -151,6 +150,7 @@
                     </tbody>
                 </table>
             </div>
+            @endif
         </div>
     </form>
 </div>

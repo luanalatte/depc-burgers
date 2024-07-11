@@ -1,0 +1,127 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_areas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_areas` (
+  `idarea` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ncarea` varchar(50) NOT NULL,
+  `descarea` varchar(50) NOT NULL,
+  `activo` smallint(6) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`idarea`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_familias`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_familias` (
+  `idfamilia` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL DEFAULT '',
+  `descripcion` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`idfamilia`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_menu_area`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_menu_area` (
+  `fk_idmenu` int(11) unsigned NOT NULL,
+  `fk_idarea` int(11) unsigned NOT NULL,
+  KEY `fk_idmenu` (`fk_idmenu`) USING BTREE,
+  KEY `fk_idarea` (`fk_idarea`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_menues`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_menues` (
+  `idmenu` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(250) DEFAULT '',
+  `orden` int(11) DEFAULT 0,
+  `nombre` varchar(200) NOT NULL DEFAULT '0',
+  `id_padre` int(11) DEFAULT 0,
+  `fk_idpatente` int(11) DEFAULT NULL,
+  `css` varchar(255) DEFAULT '0',
+  `activo` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`idmenu`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_patente_familia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_patente_familia` (
+  `fk_idpatente` int(11) unsigned NOT NULL,
+  `fk_idfamilia` int(11) unsigned NOT NULL,
+  KEY `fk_idpatente` (`fk_idpatente`) USING BTREE,
+  KEY `fk_idfamilia` (`fk_idfamilia`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_patentes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_patentes` (
+  `idpatente` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tipo` varchar(50) NOT NULL DEFAULT '',
+  `submodulo` varchar(50) NOT NULL DEFAULT '',
+  `nombre` varchar(50) DEFAULT '',
+  `modulo` varchar(50) DEFAULT '',
+  `log_operacion` smallint(6) NOT NULL DEFAULT 0,
+  `descripcion` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`idpatente`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_usuario_familia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_usuario_familia` (
+  `fk_idusuario` int(11) unsigned NOT NULL,
+  `fk_idfamilia` int(11) unsigned NOT NULL,
+  `fk_idarea` int(11) unsigned NOT NULL,
+  KEY `fk_idusuario` (`fk_idusuario`) USING BTREE,
+  KEY `fk_idfamilia` (`fk_idfamilia`) USING BTREE,
+  KEY `fk_idarea` (`fk_idarea`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sistema_usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sistema_usuarios` (
+  `idusuario` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `usuario` varchar(30) NOT NULL,
+  `nombre` varchar(30) NOT NULL,
+  `apellido` varchar(30) NOT NULL,
+  `mail` varchar(30) DEFAULT NULL,
+  `clave` varchar(250) NOT NULL,
+  `ultimo_ingreso` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `token` varchar(50) NOT NULL DEFAULT 'current_timestamp()',
+  `root` smallint(6) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `cantidad_bloqueo` int(11) DEFAULT NULL,
+  `areapredeterminada` smallint(6) DEFAULT NULL,
+  `activo` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`idusuario`) USING BTREE,
+  UNIQUE KEY `usuario` (`usuario`) USING BTREE,
+  UNIQUE KEY `email` (`mail`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

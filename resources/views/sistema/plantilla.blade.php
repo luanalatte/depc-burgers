@@ -92,32 +92,31 @@
     <!--Side bar-->
     <div id="wrapper">
       <ul class="sidebar navbar-nav">
-      @for ($i = 0; Session::get('array_menu') && $i < count(Session::get('array_menu')); $i++)
-          @if (Session::get('array_menu')[$i]->id_padre == 0)
-              
-              @if(Session::get('array_menu')[$i]->url != "")
+      @foreach (Session::get('array_menu', []) as $menu)
+          @if ($menu->id_padre == 0)
+              @if($menu->url != "")
               <li class="nav-item">
-                <a class="nav-link" href="{{ Session::get('array_menu')[$i]->url }}">
-                  <i class="{{ Session::get('array_menu')[$i]->css }}"></i>
-                  <span>{{ Session::get('array_menu')[$i]->nombre }}</span>
+                <a class="nav-link" href="{{ $menu->url }}">
+                  <i class="{{ $menu->css }}"></i>
+                  <span>{{ $menu->nombre }}</span>
                 </a>
               @else
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle"  href="#" id="{{ Session::get('array_menu')[$i]->idmenu }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="{{ Session::get('array_menu')[$i]->css }}"></i>
-                  <span>{{ Session::get('array_menu')[$i]->nombre }}</span>
+                <a class="nav-link dropdown-toggle"  href="#" id="{{ $menu->idmenu }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="{{ $menu->css }}"></i>
+                  <span>{{ $menu->nombre }}</span>
                 </a>
-                <div class="dropdown-menu" aria-labelledby="{{ Session::get('array_menu')[$i]->idmenu }}">
-                 @for ($j = 0; $j < count(Session::get('array_menu')); $j++)
-                    @if(Session::get('array_menu')[$j]->id_padre == Session::get('array_menu')[$i]->idmenu)
-                      <a  class="dropdown-item" href="{{ Session::get('array_menu')[$j]->url }}">{{ Session::get('array_menu')[$j]->nombre }}</a>
+                <div class="dropdown-menu" aria-labelledby="{{ $menu->idmenu }}">
+                  @foreach(Session::get('array_menu') as $submenu)
+                    @if($submenu->id_padre == $menu->idmenu)
+                      <a class="dropdown-item" href="{{ $submenu->url }}">{{ $submenu->nombre }}</a>
                     @endif
-                  @endfor
+                  @endforeach
                 </div>
               @endif
               </li>
           @endif
-      @endfor
+      @endforeach
       </ul>
       <div id="content-wrapper">
         <div class="container-fluid">

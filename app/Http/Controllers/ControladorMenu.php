@@ -101,7 +101,7 @@ class ControladorMenu extends Controller
         $id = $request->input('id');
 
         if (Usuario::autenticado() == true) {
-            if (Patente::autorizarOperacion("MENUELIMINAR")) {
+            if (Patente::autorizarOperacion("MENUBAJA")) {
 
                 $menu_grupo = new MenuArea();
                 $menu_grupo->fk_idmenu = $id;
@@ -113,7 +113,6 @@ class ControladorMenu extends Controller
 
                 $aResultado["err"] = EXIT_SUCCESS; //eliminado correctamente
             } else {
-                $codigo = "ELIMINARPROFESIONAL";
                 $aResultado["err"] = "No tiene pemisos para la operaci&oacute;n.";
             }
             echo json_encode($aResultado);

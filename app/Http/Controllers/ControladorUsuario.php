@@ -57,8 +57,8 @@ class ControladorUsuario extends Controller
     public function editar($us){
         $titulo = "Modificar usuario";
         if(Usuario::autenticado() == true){
-            if (!Patente::autorizarOperacion("USUARIOMODIFICAR")) {
-                $codigo = "USUARIOMODIFICAR";
+            if (!Patente::autorizarOperacion("USUARIOMODIFICACION")) {
+                $codigo = "USUARIOMODIFICACION";
                 $mensaje = "No tiene pemisos para la operaci&oacute;n.";
                 return view('sistema.pagina-error', compact('titulo', 'codigo', 'mensaje'));
             } else {

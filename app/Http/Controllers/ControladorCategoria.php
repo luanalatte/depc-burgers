@@ -30,8 +30,8 @@ class ControladorCategoria extends Controller
         $titulo = "Modificar Categoría de Productos";
 
         if ($categoria = Categoria::find($request->id)) {
-            $permisoEditar = Patente::autorizarOperacion("PRODUCTOEDITAR");
-            $permisoBaja = Patente::autorizarOperacion("PRODUCTOELIMINAR");
+            $permisoEditar = Patente::autorizarOperacion("CATEGORIAMODIFICACION");
+            $permisoBaja = Patente::autorizarOperacion("CATEGORIABAJA");
             return view("sistema.categoria-nuevo", compact("titulo", "categoria", "permisoEditar", "permisoBaja"));
         }
 

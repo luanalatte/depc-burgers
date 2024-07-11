@@ -66,8 +66,8 @@ class ControladorPatente extends Controller
     {
         $titulo = "Nueva Patente";
         if (Usuario::autenticado() == true) {
-            if (!Patente::autorizarOperacion("PATENTEALTA")) {
-                $codigo = "PATENTEALTA";
+            if (!Patente::autorizarOperacion("PATENTESALTA")) {
+                $codigo = "PATENTESALTA";
                 $mensaje = "No tiene pemisos para la operaci&oacute;n.";
                 return view('sistema.pagina-error', compact('titulo', 'codigo', 'mensaje'));
             } else {
