@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entidades\Carrito;
 use App\Entidades\Cliente;
 use App\Entidades\Pedido;
+use App\Entidades\Producto;
 use App\Entidades\Sucursal;
 use Exception;
 use Illuminate\Http\Request;
@@ -42,7 +43,18 @@ class ControladorWebCarrito extends Controller
         if ($cantidad < 1) {
             $carrito->productos()->detach($idproducto);
         } else {
-            // TODO: Si el producto está oculto/inactivo, no agregar.
+            $producto = Producto::select(['oculto', 'cantidad'])->find($idproducto);
+            if ($producto->oculto || $producto->cantidad == 0) {
+                $response = [
+                    "err" => MSG_ERROR,
+                    "msg" => "El producto ya no está disponible",
+                    "nCarrito" => $carrito->nProductos,
+                    "cantidad" => $cantidad
+                ];
+
+                return json_encode($response);
+            }
+
             $carrito->productos()->syncWithoutDetaching([$idproducto => ['cantidad' => $cantidad]], false);
         }
 
