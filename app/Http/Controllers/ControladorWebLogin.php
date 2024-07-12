@@ -52,8 +52,10 @@ class ControladorWebLogin extends Controller
         Session::put('cliente_email', $cliente->email);
         Session::put('cliente_nombre', $cliente->nombre . " " . $cliente->apellido);
 
-        // TODO: Agregar fecha de ultimo ingreso
-        // $cliente->actualizarFechaIngreso();
+        $cliente->last_login = now();
+        try {
+            $cliente->save();
+        } catch (Exception $e) {}
 
         return redirect('/');
     }

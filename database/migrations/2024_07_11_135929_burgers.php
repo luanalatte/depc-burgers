@@ -53,6 +53,7 @@ return new class extends Migration
             $table->string('email', 50)->unique();
             $table->string('clave');
             $table->string('telefono', 50)->nullable();
+            $table->timestamp('last_login')->useCurrent();
         });
 
         Schema::create('carritos', function (Blueprint $table) {

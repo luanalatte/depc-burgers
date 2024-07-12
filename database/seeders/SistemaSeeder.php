@@ -388,7 +388,7 @@ class SistemaSeeder extends Seeder
             'nombre' => 'Administrador',
             'apellido' => '',
             'mail' => 'admin@correo.com',
-            'clave' => '$2y$10$FeFXjlupKImULPF.aVRNueCALrpj55n.fotONLQ1QY3YvlYTelRP2', // 1234
+            'clave' => password_hash('1234', PASSWORD_DEFAULT),
             'root' => 1,
             'created_at' => '2021-09-17 16:05:57',
             'cantidad_bloqueo' => 0,

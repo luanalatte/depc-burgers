@@ -14,6 +14,15 @@ class BurgersSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('clientes')->insert([
+            'nombre' => 'Test',
+            'apellido' => 'Test',
+            'dni' => '12345678',
+            'email' => 'test@example.com',
+            'clave' => password_hash('1234', PASSWORD_DEFAULT),
+            'telefono' => '11 12345678',
+        ]);
+
         DB::table('estados')->insert([
             ['nombre' => 'Pendiente', 'color' => 'warning'],
             ['nombre' => 'En preparación', 'color' => 'info'],
