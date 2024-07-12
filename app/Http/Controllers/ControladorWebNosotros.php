@@ -19,34 +19,16 @@ class ControladorWebNosotros extends Controller
 
     public function postular(Request $request)
     {
-        if (!$request->filled(['txtNombre', 'txtApellido', 'txtEmail', 'txtDomicilio', 'txtTelefono'])) {
-            Session::now('msg', [
-                "ESTADO" => MSG_ERROR,
-                "MSG" => "Por favor, completa todos los campos."
-            ]);
-
-            return view('web.nosotros');
-        }
-
-        if (!$request->hasFile('fileCV')) {
-            Session::now('msg', [
-                "ESTADO" => MSG_ERROR,
-                "MSG" => "No has adjuntado tu curriculum."
-            ]);
-
-            return view('web.nosotros');
-        }
+        $request->validate([
+            'txtNombre' => 'required|string',
+            'txtApellido' => 'required|string',
+            'txtEmail' => 'required|email',
+            'txtDomicilio' => 'required|string',
+            'txtTelefono' => 'required|string',
+            'fileCV' => 'required|file|mimes:pdf,doc,docx',
+        ]);
 
         $file = $request->file('fileCV');
-
-        if (!in_array($file->extension(), ['pdf', 'doc', 'docx'])) {
-            Session::now('msg', [
-                "ESTADO" => MSG_ERROR,
-                "MSG" => "La extensión del archivo no es válida."
-            ]);
-
-            return view('web.nosotros');
-        }
 
         $postulacion = new Postulacion();
         $postulacion->cargarDesdeRequest($request);

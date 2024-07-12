@@ -20,7 +20,7 @@
               <div class="border py-3 px-1 row product" id="carritoProducto-{{ $producto->idproducto }}" data-precio="{{ $producto->precio }}">
                 <div class="col-3">
                   @if($producto->imagen)
-                  <img src="files/{{ $producto->imagen }}" class="img-fluid">
+                  <img src="/storage/productos/{{ $producto->imagen }}" class="img-fluid">
                   @endif
                 </div>
                 <div class="col-9">

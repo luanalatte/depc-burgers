@@ -2,9 +2,11 @@
 
 namespace App\Entidades;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 require_once app_path() . "/start/funciones_generales.php";
 
@@ -24,6 +26,17 @@ class Producto extends Model
         'oculto' => 'bool',
         'precio' => 'float',
     ];
+
+    protected static function booted()
+    {
+        static::deleting(function ($producto) {
+            if ($producto->imagen) {
+                try {
+                    Storage::delete('public/productos/' . $producto->imagen);
+                } catch (Exception $e) {}
+            }
+        });
+    }
 
     public function categoria()
     {

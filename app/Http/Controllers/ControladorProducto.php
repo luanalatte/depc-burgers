@@ -7,6 +7,7 @@ use App\Entidades\Producto;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 require app_path() . '/start/constants.php';
 
@@ -47,32 +48,47 @@ class ControladorProducto extends Controller
 
     public function guardar(Request $request)
     {
-        $titulo = "Modificar Producto";
+        $producto = new Producto();
 
-        $producto = Producto::findOrNew($request->input('id'));
+        $request->validate([
+            'id' => [
+                'bail',
+                'numeric',
+                function ($attribute, $value, $fail) use (&$producto) {
+                    $producto = Producto::find($value);
+                    if (is_null($producto)) {
+                        $fail('El producto especificado no existe.');
+                    }
+                }
+            ],
+            'txtNombre' => 'required|string',
+            'txtCantidad' => 'present|nullable|integer|min:0',
+            'lstOculto' => 'required|boolean',
+            'txtPrecio' => 'required|numeric',
+            'txtDescripcion' => 'nullable|string',
+            'lstCategoria' => 'present|required|numeric|exists:categorias,idcategoria',
+            'fileImagen' => 'image',
+        ]);
 
         $producto->cargarDesdeRequest($request);
 
-        if (empty($producto->nombre) || empty($producto->precio)) {
-            Session::flash("msg", [
-                "ESTADO" => MSG_ERROR,
-                "MSG" => "Ingrese todos los datos requeridos."
-            ]);
-
-            if ($producto->exists) {
-                $producto->refresh();
+        if ($request->hasFile('fileImagen')) {
+            try {
+                $path = $request->file('fileImagen')->storePublicly('public/productos');
+                if ($producto->imagen) {
+                    Storage::delete('public/productos/' . $producto->imagen);
+                }
+                $producto->imagen = basename($path);
+            } catch (Exception $e) {
+                Session::now('msg', [
+                    "ESTADO" => MSG_ERROR,
+                    "MSG" => "Ocurrió un error al cargar el archivo."
+                ]);
+    
+                $titulo = "Modificar Producto";
+                $aCategorias = Categoria::all();
+                return view("sistema.producto-nuevo", compact("titulo", "producto", "aCategorias"));
             }
-
-            return view("sistema.producto-nuevo", compact("titulo", "producto"));
-        }
-
-        $imagen = uploadFile($_FILES["fileImagen"], ["jpg", "jpeg", "png", "webp", "gif"]);
-        if (!is_null($imagen)) {
-            if ($producto->imagen) {
-                unlink(env('APP_PATH') . "/public/files/$producto->imagen");
-            }
-
-            $producto->imagen = $imagen;
         }
 
         try {
@@ -96,6 +112,7 @@ class ControladorProducto extends Controller
             $producto->refresh();
         }
 
+        $titulo = "Modificar Producto";
         $aCategorias = Categoria::all();
         return view("sistema.producto-nuevo", compact("titulo", "producto", "aCategorias"));
     }
@@ -136,7 +153,7 @@ class ControladorProducto extends Controller
             $row[] = $producto->descripcion;
 
             if ($producto->imagen) {
-                $row[] = '<img src="/files/'. $producto->imagen .'" class="img-fluid">';
+                $row[] = '<img src="/storage/productos/'. $producto->imagen .'" class="img-fluid">';
             } else {
                 $row[] = '';
             }

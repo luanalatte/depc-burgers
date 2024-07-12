@@ -4,12 +4,15 @@ return [
 
     'confirmed'            => 'La confirmación de :attribute no coincide.',
     'email'                => 'El campo :attribute debe ser una dirección de correo válida.',
+    'integer'              => 'El campo :attribute debe ser un número entero.',
+    'mimes'                => 'El tipo de archivo adjuntado no es válido. Se aceptan: :values',
     'min'                  => [
         'numeric' => 'El campo :attribute debe ser al menos :min.',
         'file'    => 'El archivo :attribute debe ser de al menos :min kilobytes.',
         'string'  => 'El campo :attribute debe tener al menos :min caracteres.',
         'array'   => 'El campo :attribute debe tener al menos :min items.',
     ],
+    'present'              => 'El campo :attribute debe estar presente en el formulario.',
     'required'             => 'El campo :attribute es obligatorio.',
     'unique'               => 'El campo :attribute ya existe en el sistema.',
 
@@ -45,12 +48,19 @@ return [
     */
 
     'attributes' => [
-        'txtNombre' => 'nombre',
+        'fileCV' => 'currículum',
+        'fileImagen' => 'imagen',
         'txtApellido' => 'apellido',
-        'txtEmail' => 'email',
         'txtClave' => 'contraseña',
         'txtClaveAntigua' => 'contraseña actual',
         'txtDocumento' => 'documento',
+        'txtDomicilio' => 'domicilio',
+        'txtEmail' => 'email',
+        'txtNombre' => 'nombre',
+        'txtTelefono' => 'teléfono',
+        'lstCategoria' => 'categoría',
+        'txtCantidad' => 'cantidad',
+        'txtPrecio' => 'precio',
     ],
 
 ];

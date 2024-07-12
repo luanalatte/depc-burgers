@@ -24,21 +24,24 @@
 @endsection
 @section('contenido')
 @include('sistema.msg')
+@include('partials.errors')
 <div class="panel-body">
     <form id="form1" method="POST" enctype="multipart/form-data">
         <div class="row">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"></input>
-            <input type="hidden" id="id" name="id" class="form-control" value="{{$globalId}}" required>
+            @if($globalId > 0)
+                <input type="hidden" id="id" name="id" class="form-control" value="{{$globalId}}" required>
+            @endif
             <div class="form-group col-lg-6">
                 <label>Nombre: *</label>
-                <input type="text" id="txtNombre" name="txtNombre" class="form-control" value="{{ $producto->nombre }}" required>
+                <input type="text" id="txtNombre" name="txtNombre" class="form-control" value="{{ old('txtNombre', $producto->nombre) }}" required>
             </div>
             <div class="form-group col-lg-6">
                 <label>Categoría: *</label>
                 <select name="lstCategoria" id="lstCategoria" class="form-control" required>
                     <option value="" selected disabled>Seleccionar</option>
                     @foreach ($aCategorias as $categoria)
-                        @if ($categoria->idcategoria == $producto->fk_idcategoria)
+                        @if ($categoria->idcategoria == old('lstCategoria', $producto->fk_idcategoria))
                         <option value="{{$categoria->idcategoria}}" selected>{{$categoria->nombre}}</option>
                         @else
                         <option value="{{$categoria->idcategoria}}">{{$categoria->nombre}}</option>
@@ -48,7 +51,7 @@
             </div>
             <div class="form-group col-lg-3">
                 <label>Cantidad en stock:</label>
-                <input type="number" min="0" max="999999" id="txtCantidad" name="txtCantidad" class="form-control" value="{{ $producto->cantidad }}">
+                <input type="number" min="0" max="999999" id="txtCantidad" name="txtCantidad" class="form-control" value="{{ old('txtCantidad', $producto->cantidad) }}">
             </div>
             <div class="form-group col-lg-3">
                 <label>Oculto:</label>
@@ -64,17 +67,17 @@
             </div>
             <div class="form-group col-lg-6">
                 <label>Precio: *</label>
-                <input type="number" id="txtPrecio" name="txtPrecio" class="form-control" value="{{ $producto->precio }}" required>
+                <input type="number" id="txtPrecio" name="txtPrecio" class="form-control" value="{{ old('txtPrecio', $producto->precio) }}" required>
             </div>
             <div class="form-group col-12">
                 <label>Descripcion:</label>
-                <textarea name="txtDescripcion" id="txtDescripcion" class="form-control" style="min-height: 5rem;">{{ $producto->descripcion }}</textarea>
+                <textarea name="txtDescripcion" id="txtDescripcion" class="form-control" style="min-height: 5rem;">{{ old('txtDescripcion', $producto->descripcion) }}</textarea>
             </div>
             <div class="form-group col-12">
                 <label>Imagen:</label>
                 <input type="file" name="fileImagen" id="fileImagen" accept=".jpg, .jpeg, .png, .webp, .gif">
                 <br>
-                <img src="/files/{{ $producto->imagen }}" alt="imagen">
+                <img src="/storage/productos/{{ $producto->imagen }}" alt="imagen">
             </div>
         </div>
     </form>

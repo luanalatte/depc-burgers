@@ -22,7 +22,7 @@
               <article class="box product">
                 <div>
                   <div class="img-box">
-                    <img src="files/{{$producto->imagen}}" alt="Imagen">
+                    <img src="/storage/productos/{{$producto->imagen}}" alt="Imagen">
                   </div>
                   <div class="detail-box">
                     <h5>{{$producto->nombre}}</h5>

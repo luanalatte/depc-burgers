@@ -144,7 +144,7 @@
                         <tr>
                             <td><a href="/admin/producto/{{ $producto->idproducto }}">{{ $producto->nombre }}</a></td>
                             <td>{{ $producto->pivot->cantidad }}</td>
-                            <td><img src="/files/{{ $producto->imagen }}" alt="imagen de producto" width="100"></td>
+                            <td><img src="/storage/productos/{{ $producto->imagen }}" alt="imagen de producto" width="100"></td>
                         </tr>
                         @endforeach
                     </tbody>
