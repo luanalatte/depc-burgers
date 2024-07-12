@@ -88,6 +88,7 @@ return new class extends Migration
             $table->foreignIdFor(Pedido::class, 'fk_idpedido')->onDelete('cascade');
             $table->foreignIdFor(Producto::class, 'fk_idproducto')->onDelete('restrict');
             $table->unsignedSmallInteger('cantidad');
+            $table->unsignedDecimal('precio', 10, 2);
         });
 
         Schema::create('postulaciones', function (Blueprint $table) {

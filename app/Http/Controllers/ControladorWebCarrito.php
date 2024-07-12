@@ -104,7 +104,10 @@ class ControladorWebCarrito extends Controller
         try {
             $pedidoProductos = [];
             foreach ($carrito->productos as $producto) {
-                $pedidoProductos[$producto->idproducto] = ['cantidad' => $producto->pivot->cantidad];
+                $pedidoProductos[$producto->idproducto] = [
+                    'cantidad' => $producto->pivot->cantidad,
+                    'precio' => $producto->precio,
+                ];
             }
 
             $pedido->save();

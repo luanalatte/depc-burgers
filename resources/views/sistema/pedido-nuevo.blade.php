@@ -136,6 +136,7 @@
                         <tr>
                             <th>Producto</th>
                             <th>Cantidad</th>
+                            <th>Precio (al momento del pedido)</th>
                             <th>Imagen</th>
                         </tr>
                     </thead>
@@ -144,6 +145,7 @@
                         <tr>
                             <td><a href="/admin/producto/{{ $producto->idproducto }}">{{ $producto->nombre }}</a></td>
                             <td>{{ $producto->pivot->cantidad }}</td>
+                            <td>{{ $producto->pivot->precio }}</td>
                             <td><img src="/storage/productos/{{ $producto->imagen }}" alt="imagen de producto" width="100"></td>
                         </tr>
                         @endforeach
