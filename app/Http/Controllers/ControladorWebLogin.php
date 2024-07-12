@@ -22,9 +22,11 @@ class ControladorWebLogin extends Controller
         return view('web.login');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Session::flush(); // TODO: no usar flush?
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect('/');
     }
 
