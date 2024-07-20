@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Entidades\Categoria;
+use App\Entidades\Producto;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -30,13 +32,26 @@ class BurgersSeeder extends Seeder
             ['nombre' => 'Cancelado', 'color' => 'danger'],
         ]);
 
-        DB::table('categorias')->insert([
-            ['nombre' => 'Hamburguesas', 'posicion' => 30],
-            ['nombre' => 'Papas Fritas', 'posicion' => 20],
-            ['nombre' => 'Menú Infantil', 'posicion' => 10],
-            ['nombre' => 'Bebidas', 'posicion' => 0],
-            ['nombre' => 'Extras', 'posicion' => -10],
-        ]);
+        Categoria::factory()
+            ->state(['nombre' => 'Hamburguesas', 'posicion' => 30])
+            ->has(Producto::factory()->count(4))
+            ->create();
+        Categoria::factory()
+            ->state(['nombre' => 'Papas Fritas', 'posicion' => 20])
+            ->has(Producto::factory()->count(4))
+            ->create();
+        Categoria::factory()
+            ->state(['nombre' => 'Menú Infantil', 'posicion' => 10])
+            ->has(Producto::factory()->count(4))
+            ->create();
+        Categoria::factory()
+            ->state(['nombre' => 'Bebidas', 'posicion' => 0])
+            ->has(Producto::factory()->count(4))
+            ->create();
+        Categoria::factory()
+            ->state(['nombre' => 'Extras', 'posicion' => -10])
+            ->has(Producto::factory()->count(4))
+            ->create();
 
         DB::table('sucursales')->insert([
             [

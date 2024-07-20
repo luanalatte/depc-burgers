@@ -22,7 +22,11 @@
               <article class="box product">
                 <div>
                   <div class="img-box">
-                    <img src="/storage/productos/{{$producto->imagen}}" alt="Imagen">
+                  @if ($producto->imagen)
+                    <img src="/storage/productos/{{ $producto->imagen }}" alt="{{ $producto->nombre }}">
+                  @else
+                    <p class="text-dark">Producto sin imagen</p>
+                  @endif
                   </div>
                   <div class="detail-box">
                     <h5>{{$producto->nombre}}</h5>

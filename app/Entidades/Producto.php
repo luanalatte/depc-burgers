@@ -2,8 +2,10 @@
 
 namespace App\Entidades;
 
+use Database\Factories\ProductoFactory;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +14,8 @@ require_once app_path() . "/start/funciones_generales.php";
 
 class Producto extends Model
 {
+    use HasFactory;
+
     protected $table = 'productos';
     protected $primaryKey = 'idproducto';
 
@@ -114,5 +118,10 @@ class Producto extends Model
         $this->oculto = $request->boolean('lstOculto');
         $this->precio = $request->input('txtPrecio');
         $this->descripcion = $request->input('txtDescripcion');
+    }
+
+    protected static function newFactory()
+    {
+        return ProductoFactory::new();
     }
 }
