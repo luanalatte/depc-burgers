@@ -31,10 +31,10 @@ class Cliente extends Model
             'telefono'
         )->with([
             'pedidosActivos' => function ($query) {
-                $query->select('idpedido', 'fk_idcliente', 'total', 'pagado')->incluirEstado()->incluirSucursal();
+                $query->select('idpedido', 'fk_idcliente', 'total', 'pagado', 'fecha')->incluirEstado()->incluirSucursal();
             },
             'historialDePedidos' => function ($query) {
-                $query->select('idpedido', 'fk_idcliente', 'total', 'pagado')->incluirEstado()->incluirSucursal();
+                $query->select('idpedido', 'fk_idcliente', 'total', 'pagado', 'fecha')->incluirEstado()->incluirSucursal();
             },
         ]);
     }

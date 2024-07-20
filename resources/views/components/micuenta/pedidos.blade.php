@@ -2,7 +2,7 @@
 <table class="table border">
   <thead>
     <tr>
-      <th>Pedido</th>
+      <th>Fecha</th>
       <th>Total</th>
       <th>Estado</th>
       <th>Pagado</th>
@@ -13,8 +13,8 @@
   <tbody>
     @foreach($pedidos as $pedido)
       <tr>
-        <td>{{ $pedido->idpedido }}</td>
-        <td>{{ $pedido->total }}</td>
+        <td>{{ date("d/m/Y H:i", strtotime($pedido->fecha)); }}</td>
+        <td>$ {{ number_format($pedido->total, 2, ",", ".") }}</td>
         <td>{{ $pedido->estado }}</td>
         <td>{{ $pedido->pagado ? "Sí" : "No" }}</td>
         <td>{{ $pedido->sucursal }}</td>
