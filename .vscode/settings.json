@@ -1,0 +1,30 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "vendor/": true
+    },
+    "liveSassCompile.settings.generateMap": true,
+    "liveSassCompile.settings.formats": [
+        // {
+        //     "format": "expanded",
+        //     "extensionName": ".css",
+        //     "savePath": "~/../css",
+        //     "savePathReplacementPairs": null
+        // },
+        {
+            "format": "compressed",
+            "extensionName": ".min.css",
+            "savePath": "~/../css",
+            "savePathReplacementPairs": null
+        }
+    ],
+    "liveSassCompile.settings.rootIsWorkspace": true,
+    "liveSassCompile.settings.includeItems": [
+        "/public/web/scss/style.scss"
+    ],
+}

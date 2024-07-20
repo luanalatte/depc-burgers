@@ -56,6 +56,11 @@ class Pedido extends Model
         return $query->whereIn('fk_idestado', [1, 2]);
     }
 
+    public function scopeInactivo(Builder $query)
+    {
+        return $query->whereNotIn('fk_idestado', [1, 2]);
+    }
+
     public function scopeIncluirCliente(Builder $query)
     {
         if(is_null($query->getQuery()->columns)){
