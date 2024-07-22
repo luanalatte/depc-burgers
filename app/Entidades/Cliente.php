@@ -29,14 +29,7 @@ class Cliente extends Model
             'dni',
             'email',
             'telefono'
-        )->with([
-            'pedidosActivos' => function ($query) {
-                $query->select('idpedido', 'fk_idcliente', 'total', 'pagado', 'fecha')->incluirEstado()->incluirSucursal();
-            },
-            'historialDePedidos' => function ($query) {
-                $query->select('idpedido', 'fk_idcliente', 'total', 'pagado', 'fecha')->incluirEstado()->incluirSucursal();
-            },
-        ]);
+        );
     }
 
     public function scopeGrilla(Builder $query, int $orderColumnIdx = 0, string $orderDirection = "asc")
@@ -70,12 +63,12 @@ class Cliente extends Model
 
     public function pedidosActivos()
     {
-        return $this->hasMany(Pedido::class, 'fk_idcliente')->activo();
+        return $this->hasMany(Pedido::class, 'fk_idcliente')->miCuenta()->activo();
     }
 
     public function historialDePedidos()
     {
-        return $this->hasMany(Pedido::class, 'fk_idcliente')->inactivo();
+        return $this->hasMany(Pedido::class, 'fk_idcliente')->miCuenta()->inactivo();
     }
 
     public function cargarDesdeRequest(Request $request)

@@ -61,6 +61,13 @@ class Pedido extends Model
         return $query->whereNotIn('fk_idestado', [1, 2]);
     }
 
+    public function scopeMiCuenta(Builder $query)
+    {
+        $query->select(
+            'idpedido', 'fk_idcliente', 'total', 'pagado', 'fecha'
+        )->incluirEstado()->incluirSucursal();
+    }
+
     public function scopeIncluirCliente(Builder $query)
     {
         if(is_null($query->getQuery()->columns)){
